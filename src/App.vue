@@ -1,27 +1,63 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+  <div class='app'>
+    <div class='title'>按钮：</div>
+    <div class='btns'>
+      <Button @click='onClick' icon='plane'>
+        default-icon
+      </Button>
+      <Button @click='onClick' icon='address-book' round type='success'>
+        round-success
+      </Button>
+      <Button @click='onClick' icon='search' circular>
+        circular
+      </Button>
+      <Button @click='onClick' size='small' type='primary'>
+        small
+      </Button>
+      <Button @click='onClick' type='warning'>
+        medium
+      </Button>
+      <Button @click='onClick' size='large' type='error' round>
+        large
+      </Button>
+      <Button @click='onClick' size='small' icon='close' disabled>
+      </Button>
+    </div>
+  </div>
 </template>
 
-<script lang="ts">
+<script lang='ts'>
 import { defineComponent } from 'vue';
-import HelloWorld from './components/HelloWorld.vue';
+import Button from './components/button/index.vue';
 
 export default defineComponent({
   name: 'App',
   components: {
-    HelloWorld,
+    Button,
+  },
+  setup() {
+    return {
+      onClick() {
+        console.log('onClick');
+      },
+    };
   },
 });
 </script>
 
-<style lang="less">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style lang='less'>
+  .app {
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  .title {
+    margin: 5px 0;
+  }
+
+  .btns {
+    .ki-btn {
+      margin-right: 10px;
+    }
+  }
 </style>

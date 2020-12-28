@@ -1,0 +1,88 @@
+.ki-btn {
+  color: var(--color);
+  font-size: 14px;
+  outline: none;
+  background-color: #fff;
+  border-radius: 3px;
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: all .3s;
+
+  &:hover {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+  }
+
+  .fa {
+    font-size: 16px;
+  }
+}
+
+.ki-btn.medium {
+  padding: 8px 20px;
+}
+
+.ki-btn.small {
+  padding: 6px 15px;
+}
+
+.ki-btn.large {
+  padding: 10px 25px;
+}
+
+.circular.medium {
+  width: 45px;
+  height: 45px;
+}
+
+.circular.small {
+  width: 40px;
+  height: 40px;
+}
+
+.circular.large {
+  width: 50px;
+  height: 50px;
+}
+
+.ki-btn[disabled] {
+  cursor: not-allowed;
+  opacity: .5;
+}
+
+.round {
+  border-radius: 20px;
+}
+
+.circular {
+  border-radius: 50%;
+  padding: 0 !important;
+}
+
+.theme(@color, @active-color) {
+  color: #fff;
+  background-color: @color;
+  border-color: @color;
+
+  &:hover {
+    color: #fff;
+    background-color: @active-color;
+    border-color: @active-color;
+  }
+};
+
+.primary {
+  .theme(var(--primary-color), var(--primary-active-color));
+}
+
+.success {
+  .theme(var(--success-color), var(--success-active-color));
+}
+
+.error {
+  .theme(var(--error-color), var(--error-active-color));
+}
+
+.warning {
+  .theme(var(--warning-color), var(--warning-active-color));
+}
