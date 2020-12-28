@@ -1,0 +1,40 @@
+.ki-alert {
+  padding: 10px 15px;
+  border-radius: 3px;
+  position: relative;
+
+  .theme(@color) {
+    color: #fff;
+    font-size: 14px;
+    background-color: @color;
+  }
+
+  .fa {
+    margin-right: 8px;
+  }
+
+  &.info {
+    .theme(var(--info-color));
+  }
+
+  &.success {
+    .theme(var(--success-color));
+  }
+
+  &.error {
+    .theme(var(--error-color));
+  }
+
+  &.warning {
+    .theme(var(--warning-color));
+  }
+
+  .close {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    padding: 5px;
+  }
+}

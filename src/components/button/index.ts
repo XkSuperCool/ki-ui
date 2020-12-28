@@ -1,10 +1,9 @@
-<script lang='ts'>
 import { defineComponent, h, PropType } from 'vue';
-import Icon from '../icon/index.vue';
+import { ComponentSize } from '@/types/common';
+import Icon from '../icon';
 import './style.less';
 
 export type ButtonType = 'primary' | 'success' | 'error' | 'warning';
-export type ButtonSize = 'small' | 'medium' | 'large';
 
 export default defineComponent({
   name: 'Button',
@@ -13,7 +12,7 @@ export default defineComponent({
       type: String as PropType<ButtonType>,
     },
     size: {
-      type: String as PropType<ButtonSize>,
+      type: String as PropType<ComponentSize>,
       default: 'medium',
     },
     icon: String, // icon 图标
@@ -37,4 +36,3 @@ export default defineComponent({
     ]);
   },
 });
-</script>

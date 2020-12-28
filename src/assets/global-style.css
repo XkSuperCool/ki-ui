@@ -7,21 +7,26 @@
 
     /* 主要颜色 */
     --primary-color: #1890ff;
-    --primary-active-color: #40a9ff;
 
     /* 成功颜色 */
     --success-color: #67c23a;
-    --success-active-color: #85ce61;
 
     /* 信息颜色 */
     --info-color: #909399;
-    --info-active-color: #a6a9ad;
 
     /* 警告颜色 */
     --warning-color: #e6a23c;
-    --warning-active-color: #ebb563;
 
     /* 错误颜色 */
     --error-color: #f56c6c;
-    --error-active-color: #f78989;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
 }

@@ -16,73 +16,74 @@
   .fa {
     font-size: 16px;
   }
-}
 
-.ki-btn.medium {
-  padding: 8px 20px;
-}
 
-.ki-btn.small {
-  padding: 6px 15px;
-}
-
-.ki-btn.large {
-  padding: 10px 25px;
-}
-
-.circular.medium {
-  width: 45px;
-  height: 45px;
-}
-
-.circular.small {
-  width: 40px;
-  height: 40px;
-}
-
-.circular.large {
-  width: 50px;
-  height: 50px;
-}
-
-.ki-btn[disabled] {
-  cursor: not-allowed;
-  opacity: .5;
-}
-
-.round {
-  border-radius: 20px;
-}
-
-.circular {
-  border-radius: 50%;
-  padding: 0 !important;
-}
-
-.theme(@color, @active-color) {
-  color: #fff;
-  background-color: @color;
-  border-color: @color;
-
-  &:hover {
-    color: #fff;
-    background-color: @active-color;
-    border-color: @active-color;
+  &.medium {
+    padding: 8px 20px;
   }
-};
 
-.primary {
-  .theme(var(--primary-color), var(--primary-active-color));
-}
+  &.small {
+    padding: 6px 15px;
+  }
 
-.success {
-  .theme(var(--success-color), var(--success-active-color));
-}
+  &.large {
+    padding: 10px 25px;
+  }
 
-.error {
-  .theme(var(--error-color), var(--error-active-color));
-}
+  &.circular.medium {
+    width: 45px;
+    height: 45px;
+  }
 
-.warning {
-  .theme(var(--warning-color), var(--warning-active-color));
+  &.circular.small {
+    width: 40px;
+    height: 40px;
+  }
+
+  &.circular.large {
+    width: 50px;
+    height: 50px;
+  }
+
+  &[disabled] {
+    cursor: not-allowed;
+    opacity: .5;
+  }
+
+  &.round {
+    border-radius: 20px;
+  }
+
+  &.circular {
+    border-radius: 50%;
+    padding: 0 !important;
+  }
+
+  .theme(@color, @active-color) {
+    color: #fff;
+    background-color: @color;
+    border-color: @color;
+
+    &:hover {
+      color: #fff;
+      background-color: @active-color;
+      border-color: @active-color;
+    }
+  };
+
+  &.primary {
+    .theme(var(--primary-color), #40a9ff);
+  }
+
+  &.success {
+    .theme(var(--success-color), #85ce61);
+  }
+
+  &.error {
+    .theme(var(--error-color), #f78989);
+  }
+
+  &.warning {
+    .theme(var(--warning-color), #ebb563);
+  }
 }
