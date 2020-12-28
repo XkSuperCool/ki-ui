@@ -26,22 +26,13 @@ export default defineComponent({
       emit('close');
     };
 
-    const iconType = ref('');
-    switch (props.type) {
-      case 'success':
-        iconType.value = 'check-circle';
-        break;
-      case 'error':
-        iconType.value = 'times-circle';
-        break;
-      case 'warning':
-        iconType.value = 'exclamation-circle';
-        break;
-      case 'info':
-        iconType.value = 'info-circle';
-        break;
-      default: break;
-    }
+    // 状态对应的 icon
+    const iconMap = {
+      success: 'check-circle',
+      error: 'times-circle',
+      warning: 'exclamation-circle',
+      info: 'info-circle',
+    };
 
     return () => h(Transition, { name: 'fade' }, {
       default() {
@@ -53,7 +44,7 @@ export default defineComponent({
           ],
         }, [
           h('div', [
-            props.icon && h(Icon, { type: iconType.value }),
+            props.icon && h(Icon, { type: iconMap[props.type] }),
             slots.default && slots.default(),
           ]),
           props.closable ? h('span', {
