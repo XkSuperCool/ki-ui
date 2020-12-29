@@ -17,7 +17,7 @@
       <Button @click='onClick' type='warning'>
         medium
       </Button>
-      <Button @click='onClick' size='large' type='error' round>
+      <Button @click='onClick' size='large' type='error'>
         large
       </Button>
       <Button @click='onClick' size='small' icon='close' disabled>
@@ -30,13 +30,23 @@
       <alert type='warning' icon>提示文案</alert>
       <alert type='error' closable @close='handleClose'>提示文案</alert>
     </div>
+    <div class='title'>Message</div>
+    <div class='btns'>
+      <Button type='success' @click='showMessage("success")'>成功提示</Button>
+      <Button type='error' @click='showMessage("error")'>失败提示</Button>
+      <Button type='warning' @click='showMessage("warning")'>警告提示</Button>
+      <Button type='info' @click='showMessage("info")'>信息提示</Button>
+    </div>
   </div>
 </template>
 
 <script lang='ts'>
 import { defineComponent } from 'vue';
-import Button from './components/button';
-import Alert from './components/alert';
+import {
+  Button,
+  Alert,
+  Message,
+} from '@/components';
 
 export default defineComponent({
   name: 'App',
@@ -51,6 +61,20 @@ export default defineComponent({
       },
       handleClose() {
         console.log('close');
+      },
+      showMessage(type: string) {
+        switch (type) {
+          case 'success':
+            Message.success('成功提示');
+            break;
+          case 'error':
+            Message.error({ showIcon: false, content: '失败提示' });
+            break;
+          case 'warning':
+            Message.warning({ content: '警告提示', iconClass: 'plane', offset: 50 });
+            break;
+          default: Message.info('信息提示');
+        }
       },
     };
   },

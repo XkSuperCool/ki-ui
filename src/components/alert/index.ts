@@ -1,16 +1,15 @@
 import {
   defineComponent, h, PropType, ref, Transition,
 } from 'vue';
+import { StatusType } from '@/types/common';
 import Icon from '../icon';
 import './style.less';
-
-export type AlertType = 'success' | 'info' | 'error' | 'warning';
 
 export default defineComponent({
   name: 'Alert',
   props: {
     type: {
-      type: String as PropType<AlertType>,
+      type: String as PropType<StatusType>,
       default: 'success',
     },
     closable: Boolean,
