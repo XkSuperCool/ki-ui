@@ -1,0 +1,49 @@
+.ki-modal {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+
+  &.mask {
+    background-color: rgba(0, 0, 0, .3);
+  }
+
+  .ki-modal-main {
+    background-color: #fff;
+    position: absolute;
+    left: 50%;
+    top: 20%;
+    transform: translateX(-50%);
+    border-radius: 3px;
+
+    .ki-m-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 20px 0 20px;
+
+      .ki-h-title {
+        font-size: 20px;
+        color: var(--color);
+      }
+
+      .ki-h-close {
+        font-size: 20px;
+        color: var(--primary-color);
+        cursor: pointer;
+        padding-left: 5px;
+      }
+    }
+
+    .ki-modal-content {
+      color: var(--color);
+      padding: 30px 20px;
+    }
+
+    .ki-modal-footer {
+      color: var(--color);
+      padding: 0 20px 20px 20px;
+    }
+  }
+}

@@ -37,15 +37,35 @@
       <Button type='warning' @click='showMessage("warning")'>警告提示</Button>
       <Button type='info' @click='showMessage("info")'>信息提示</Button>
     </div>
+    <div class='title'>Modal</div>
+    <div>
+      <Modal v-model:visible='visible' title='提示标题' @before-close='handleBeforeClose'>
+        <div>
+          modal 示例
+        </div>
+        <template v-slot:footer>
+          <Button @click='onClick' size='small' type='success'>
+            确定
+          </Button>
+          <Button @click='onClick' size='small' type='error'>
+            取消
+          </Button>
+        </template>
+      </Modal>
+      <Button @click='handleShowModal'>
+        Modal
+      </Button>
+    </div>
   </div>
 </template>
 
 <script lang='ts'>
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import {
   Button,
   Alert,
   Message,
+  Modal,
 } from '@/components';
 
 export default defineComponent({
@@ -53,8 +73,11 @@ export default defineComponent({
   components: {
     Button,
     Alert,
+    Modal,
   },
   setup() {
+    const visible = ref(true);
+
     return {
       onClick() {
         console.log('onClick');
@@ -75,6 +98,14 @@ export default defineComponent({
             break;
           default: Message.info('信息提示');
         }
+      },
+      visible,
+      handleShowModal() {
+        visible.value = true;
+      },
+      handleBeforeClose(done: () => void) {
+        console.log(3121);
+        done();
       },
     };
   },
