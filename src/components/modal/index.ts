@@ -1,4 +1,4 @@
-import { h, Teleport, defineComponent, watch } from 'vue';
+import { h, Teleport, defineComponent, watch, getCurrentInstance } from 'vue';
 import './style.less';
 
 export default defineComponent({
@@ -21,11 +21,15 @@ export default defineComponent({
       type: Boolean,
       default: true,
     },
+    offset: {
+      type: String,
+      default: '20%',
+    },
   },
   emits: ['update:visible', 'before-close', 'open', 'close'],
   setup(props, { emit, slots }) {
     const handleClose = () => {
-      // TODO: 未判断是否传递了 before-close 参数
+      // TODO: bug 未判断是否传递了 before-close 参数
       emit('before-close', () => {
         emit('update:visible', false);
       });
@@ -34,7 +38,7 @@ export default defineComponent({
     // 点击遮罩层隐藏 modal
     const handleClickMask = (event: MouseEvent) => {
       if ((event.target as any)?.className === 'ki-modal mask') {
-        emit('update:visible', false);
+        handleClose();
       }
     };
 
@@ -60,6 +64,7 @@ export default defineComponent({
       class: 'ki-modal-main',
       style: {
         width: props.width,
+        top: props.offset,
       },
     },[
       h('div', {

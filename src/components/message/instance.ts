@@ -5,16 +5,14 @@ Message.Instance = () => {
   const container = document.createElement('div');
   const instance = createApp(Message).mount(container);
   const message = instance.$el;
-  // 组件方法挂载到了 render 函数上
-  const { render } = instance.$ as any;
   document.body.appendChild(message);
 
   return {
     add(option: MessageOption) {
-      return render.add(option);
+      return (instance.$ as any).add(option);
     },
     remove(name: string) {
-      render.remove(name);
+      (instance.$ as any).remove(name);
     },
   };
 };

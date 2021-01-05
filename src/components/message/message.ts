@@ -1,5 +1,5 @@
 import {
-  defineComponent, h, reactive, TransitionGroup, computed,
+  defineComponent, h, reactive, TransitionGroup, computed, getCurrentInstance,
 } from 'vue';
 import { StatusType } from '@/types/common';
 import Icon from '../icon';
@@ -56,7 +56,12 @@ export default defineComponent({
       return offsets[offsets.length - 1];
     });
 
-    const render = () => h('div', {
+    // 方法挂载到当前组件的实例上
+    const instance = getCurrentInstance();
+    (instance as any).add = add;
+    (instance as any).remove = remove;
+
+    return () => h('div', {
       class: ['ki-message'],
       style: {
         top: offset.value ? `${offset.value}px` : '20px',
@@ -77,10 +82,5 @@ export default defineComponent({
         },
       }),
     ]);
-
-    render.add = add;
-    render.remove = remove;
-
-    return render;
   },
 });
