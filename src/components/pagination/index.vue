@@ -1,5 +1,5 @@
 <template>
-  <div class='ki-pagination'>
+  <div class='ki-pagination' :class='{mini: mini}' v-if='!(hideOnSinglePage && paginationCount === 1)'>
     <div class='total' v-if='isTotal'>共 {{total}} 条</div>
     <ul class='ki-pagination-container' :class='{background: background}'>
       <li class='ki-pagination-item prev' @click='handlePrevPage'>
@@ -55,6 +55,9 @@
         <icon type='angle-right'/>
       </li>
     </ul>
+    <div class='elevator' v-if='elevator'>
+      前往 <input type='number' :value='1' @blur='handleElevatorBlur' /> 页
+    </div>
   </div>
 </template>
 
@@ -65,6 +68,7 @@ import {
   ref,
   reactive,
   watch,
+  PropType,
 } from 'vue';
 import Icon from '../icon';
 
@@ -83,12 +87,20 @@ export default defineComponent({
       type: Number,
       default: 10,
     },
+    pageSizes: {
+      type: Array as PropType<number[]>,
+    },
+    elevator: {
+      type: Boolean,
+    },
     currentPage: {
       type: Number,
       default: 1,
       validator: (val: number) => val >= 1,
     },
     isTotal: Boolean,
+    mini: Boolean,
+    hideOnSinglePage: Boolean, // 只有一页时隐藏分页
   },
   emits: ['currentChange', 'update:currentPage'],
   setup(props, { emit }) {
@@ -186,6 +198,14 @@ export default defineComponent({
       }
     };
 
+    // 电梯
+    const handleElevatorBlur = (event: FocusEvent) => {
+      const value = parseInt((event.target as any)?.value, 10);
+      if (!(value > paginationCount.value || value < 1)) {
+        handleClickPaginationItem(value);
+      }
+    };
+
     watch(privateCurrentPage, (value) => {
       emit('currentChange', value);
       emit('update:currentPage', value);
@@ -207,6 +227,7 @@ export default defineComponent({
       handleNextPage,
       handlePrevPage,
       isShowCenterArr,
+      handleElevatorBlur,
     };
   },
 });

@@ -3,8 +3,11 @@
     当前页：{{currentPage}}
     <pagination
       background
-      :total='100'
+      :total='200'
       isTotal
+      elevator
+      mini
+      hide-on-single-page
       v-model:current-page='currentPage'
     />
     <button @click='change'>change</button>

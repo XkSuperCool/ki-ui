@@ -2,10 +2,57 @@
   display: flex;
   align-items: center;
 
+  &.mini {
+    .total, .ki-pagination-item, .elevator {
+      font-size: 12px;
+    }
+
+    .ki-pagination-item {
+      width: 24px;
+      height: 24px;
+      line-height: 24px;
+    }
+
+    .elevator input[type='number'] {
+      font-size: 12px;
+      width: 24px;
+      height: 20px;
+    }
+  }
+
   .total {
     color: var(--color-minor);
     font-size: 14px;
     margin-right: 6px;
+  }
+
+  .elevator {
+    color: var(--color-minor);
+    font-size: 14px;
+    margin-left: 6px;
+    display: flex;
+    align-items: center;
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+    }
+
+    input[type='number'] {
+      color: var(--color);
+      -moz-appearance: textfield;
+      width: 46px;
+      height: 28px;
+      border-radius: 4px;
+      text-align: center;
+      border: 1px solid #dcdfe6;
+      margin: 0 6px;
+      outline: none;
+
+      &:focus {
+        border: 1px solid var(--primary-shallow-color);
+      }
+    }
   }
 
   .ki-pagination-container {
