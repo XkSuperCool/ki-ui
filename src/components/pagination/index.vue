@@ -126,15 +126,24 @@ export default defineComponent({
         leftPaginationArr.splice(0, leftPaginationArr.length, 1);
       }
       if (privateCurrentPage.value - diff + count >= paginationCount.value && rightPaginationArr.length === 1) {
-        const arr = generatePaginationArr();
+        // 通过总页数 - 当前页，计算出 rightArr 应该在当前页面的基础上补充多少页码（+1 是为了算上当前页码）
+        const excess = (paginationCount.value - privateCurrentPage.value) + 1;
+        const arr: number[] = []; // 页码数组
         /**
-         * 最后一位只可能是 paginationCount.value 或 paginationCount.value - 1，这两个值，如果是 paginationCount.value - 1
-         * 则需要将 paginationCount.value 推到最后，这时 arr.length 就多了一位，所以通过 shift 方法删除第一位
+         * 循环添加页码，生成数组如：[当前页，excess -（0+1), excess -（1+1)],
+         * 假如总页数为 10，当前页为 7，那么就是
+         *  excess = 10 - 7 = 3
+         *  [7 - ( 3 - (0+1)), 7- (3-(1+1)), ...] -> [5, 6, 7]
          */
-        if (arr[arr.length - 1] !== paginationCount.value) {
-          arr.push(paginationCount.value);
-          arr.shift();
+        // eslint-disable-next-line no-plusplus
+        for (let i = 0; i < excess; i++) {
+          arr.push(paginationCount.value - (excess - (i + 1)));
         }
+        /**
+         * 根据 arr.length 和 count 来判断应该在 arr 前面补充几个页码
+         */
+        arr.unshift(...Array(count - arr.length).fill(1).map((_, index) => arr[0] - (count - arr.length - index)));
+        // 生成 rightArr
         rightPaginationArr.splice(0, rightPaginationArr.length, ...arr);
       }
     };
@@ -178,8 +187,14 @@ export default defineComponent({
     };
 
     watch(privateCurrentPage, (value) => {
-      emit('update:currentPage', value);
       emit('currentChange', value);
+      emit('update:currentPage', value);
+    });
+
+    watch(props, (val) => {
+      if (val.currentPage !== privateCurrentPage.value) {
+        handleClickPaginationItem(val.currentPage);
+      }
     });
 
     return {

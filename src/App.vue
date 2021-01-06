@@ -7,6 +7,7 @@
       isTotal
       v-model:current-page='currentPage'
     />
+    <button @click='change'>change</button>
   </div>
 </template>
 
@@ -22,8 +23,13 @@ export default defineComponent({
   setup() {
     const currentPage = ref(1);
 
+    const change = () => {
+      currentPage.value = Math.floor(Math.random() * 10 + 1);
+    };
+
     return {
       currentPage,
+      change,
     };
   },
 });
