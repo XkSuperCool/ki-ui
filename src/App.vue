@@ -11,17 +11,26 @@
       v-model:current-page='currentPage'
     />
     <button @click='change'>change</button>
+    <hr />
+    <Select>
+      <Option>成都</Option>
+      <Option>济南</Option>
+      <Option>长沙</Option>
+      <Option>北京</Option>
+    </Select>
   </div>
 </template>
 
 <script lang='ts'>
 import { defineComponent, ref } from 'vue';
-import { Pagination } from '@/components';
+import { Pagination, Select } from '@/components';
 
 export default defineComponent({
   name: 'App',
   components: {
     Pagination,
+    Select,
+    Option: Select.Option,
   },
   setup() {
     const currentPage = ref(1);
