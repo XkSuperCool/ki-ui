@@ -3,7 +3,10 @@
     --color: #606266;
 
     /* 次文本色 */
-    --color-minor: #606266;
+    --color-minor: #909399;
+
+    --disabled-background-color: #f5f7fa;
+    --disabled-color: #c0c4cc;
 
     /* 边框颜色 */
     --border-color: #d9d9d9;
