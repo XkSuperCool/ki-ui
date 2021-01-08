@@ -6,6 +6,7 @@
       :total='200'
       isTotal
       elevator
+      mini
       hide-on-single-page
       :page-sizes="[10, 20, 30, 40]"
       :page-size="20"

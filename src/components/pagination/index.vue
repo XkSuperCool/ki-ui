@@ -1,12 +1,12 @@
 <template>
   <div class='ki-pagination' :class='{mini: mini}' v-if='!(hideOnSinglePage && paginationCount === 1)'>
     <div class='total' v-if='isTotal'>共 {{total}} 条</div>
-    <Select v-if='pageSizes.length' v-model='privatePageSize'>
+    <Select v-if='pageSizes.length && !mini' v-model='privatePageSize'>
       <Option
         v-for='(size, index) in pageSizes'
         :key='size + index'
         :value='size'
-        :label='size'
+        :label='size + "条/页"'
       />
     </Select>
     <ul class='ki-pagination-container' :class='{background: background}'>
