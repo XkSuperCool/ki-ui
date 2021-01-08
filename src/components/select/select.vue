@@ -1,32 +1,34 @@
 <template>
-  <div
-    class='ki-select'
-    :class='{disabled: disabled, focus: focus}'
-    :style='width && {width: width}'
-    @click.stop='handleFocus'
-  >
+  <div class='ki-select' :style='width && {width: width}' @click.stop='handleFocus'>
+    <div class='ki-select-tag' v-if='multiple' ref='selectTagRef'>
+      <span v-for='option in selectOption' :key='option.value'>
+        {{option.label}},
+      </span>
+      <input />
+    </div>
     <div
-      class='content'
-      @mouseenter='clearable && handleMouse(true)'
-      @mouseleave='clearable && handleMouse(false)'
+      class='ki-select-container'
+      :class='{disabled: disabled, focus: focus}'
     >
-      <div class='select-container'>
-        <div class='ki-select-tag' v-if='multiple'>
-          <span v-for='option in selectOption' :key='option.value'>{{option.label}},</span>
-        </div>
+      <div
+        class='content'
+        @mouseenter='clearable && handleMouse(true)'
+        @mouseleave='clearable && handleMouse(false)'
+      >
         <input
-          v-if='!multiple'
           class='ki-select-input'
+          disabled
           :value='multiple ? "" : selectOption[0]?.label'
           :placeholder='selectOption.length ? "" : "请选择"'
+          :style='{height: selectTagEleHeight + "px"}'
         />
+        <icon type='times-circle-o' class='icon close' v-if='isShowClearIcon' @click.stop='handleClear' />
+        <icon type='angle-down' class='icon' v-else />
       </div>
-      <icon type='times-circle-o' class='icon close' v-if='isShowClearIcon' @click.stop='handleClear' />
-      <icon type='angle-down' class='icon' v-else />
-    </div>
-    <div class='ki-options' v-show='focus'>
-      <div class='ki-options-content'>
-        <slot></slot>
+      <div class='ki-options' v-show='focus'>
+        <div class='ki-options-content'>
+          <slot></slot>
+        </div>
       </div>
     </div>
   </div>
@@ -41,6 +43,7 @@ import {
   onBeforeUnmount,
   provide,
   computed,
+  nextTick,
 } from 'vue';
 import Icon from '../icon';
 import { Option } from './option.vue';
@@ -93,6 +96,10 @@ export default defineComponent({
       focus.value = false;
     };
 
+    // 多选模式下 tag div 数据
+    const selectTagRef = ref<any>(null);
+    const selectTagEleHeight = ref(0);
+
     // 修改 Option
     const changOption = (params: ChangeOptionParams) => {
       const { option, active } = params;
@@ -104,6 +111,10 @@ export default defineComponent({
           selectOption.push(option);
         }
         emit('update:modelValue', selectOption.map((item: Option) => item.value));
+        nextTick(() => {
+          // 因为 tag 是定位在 select-container 上面的，修改 option 获取下 tag 的高度，然后让 select-container 也变高
+          selectTagEleHeight.value = (selectTagRef.value as Element).getBoundingClientRect().height;
+        });
       } else {
         selectOption.splice(0, 1, option);
         emit('update:modelValue', selectOption[0].value);
@@ -140,6 +151,8 @@ export default defineComponent({
       focus,
       enterSelect,
       selectOption,
+      selectTagRef,
+      selectTagEleHeight,
       isShowClearIcon,
       handleFocus,
       handleMouse,

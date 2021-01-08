@@ -47,7 +47,7 @@ export default defineComponent({
   },
   setup() {
     const currentPage = ref(1);
-    const selectValue = ref([1]);
+    const selectValue = ref([2]);
 
     const change = () => {
       currentPage.value = Math.floor(Math.random() * 10 + 1);

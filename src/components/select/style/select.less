@@ -1,4 +1,8 @@
 .ki-select {
+  position: relative;
+}
+
+.ki-select-container {
   //width: 240px;
   min-height: 40px;
   appearance: none;
@@ -8,6 +12,7 @@
   outline: none;
   border-radius: 4px;
   border: 1px solid var(--border-color);
+  box-sizing: border-box;
 
   .icon {
     color: var(--border-color);
@@ -42,20 +47,13 @@
     min-height: 40px;
   }
 
-  .ki-select-tag {
-    line-height: 40px;
-    font-size: 14px;
-    color: var(--color);
-    padding-left: 10px;
-  }
-
   .ki-select-input {
     width: 100%;
     min-height: 40px;
     font-size: 14px;
     outline: none;
     background-color: initial;
-    padding: 0 10px;
+    padding-left: 10px;
     box-sizing: border-box;
     border: none;
     border-radius: 4px;
@@ -127,16 +125,39 @@
   }
 }
 
-.ki-select.disabled .ki-select-input {
+.ki-select-container.disabled .ki-select-input {
   background-color: var(--disabled-background-color);
   cursor: not-allowed;
 }
 
-.ki-select .ki-option-group:last-child {
+.ki-select-container .ki-option-group:last-child {
   padding: 0;
 
   &::after {
     padding: 0;
     border: none;
+  }
+}
+
+.ki-select-tag {
+  font-size: 14px;
+  padding: 0 12px 0 10px;
+  box-sizing: border-box;
+  position: absolute;
+  min-height: 40px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  z-index: 2030;
+
+  input {
+    width: 20px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+  }
+
+  span {
+    line-height: 2;
   }
 }
