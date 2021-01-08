@@ -20,7 +20,9 @@
       <icon type='angle-down' class='icon' v-else />
     </div>
     <div class='ki-options' v-show='focus'>
-      <slot></slot>
+      <div class='ki-options-content'>
+        <slot></slot>
+      </div>
     </div>
   </div>
 </template>
