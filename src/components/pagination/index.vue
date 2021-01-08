@@ -1,6 +1,14 @@
 <template>
   <div class='ki-pagination' :class='{mini: mini}' v-if='!(hideOnSinglePage && paginationCount === 1)'>
     <div class='total' v-if='isTotal'>共 {{total}} 条</div>
+    <Select v-if='pageSizes.length' v-model='privatePageSize'>
+      <Option
+        v-for='(size, index) in pageSizes'
+        :key='size + index'
+        :value='size'
+        :label='size'
+      />
+    </Select>
     <ul class='ki-pagination-container' :class='{background: background}'>
       <li class='ki-pagination-item prev' @click='handlePrevPage'>
         <icon type='angle-left'/>
@@ -69,13 +77,17 @@ import {
   reactive,
   watch,
   PropType,
+  toRef,
 } from 'vue';
 import Icon from '../icon';
+import Select from '../select';
 
 export default defineComponent({
   name: 'Pagination',
   components: {
     Icon,
+    Select,
+    Option: Select.Option,
   },
   props: {
     background: Boolean,
@@ -89,6 +101,7 @@ export default defineComponent({
     },
     pageSizes: {
       type: Array as PropType<number[]>,
+      default: () => [],
     },
     elevator: {
       type: Boolean,
@@ -102,12 +115,27 @@ export default defineComponent({
     mini: Boolean,
     hideOnSinglePage: Boolean, // 只有一页时隐藏分页
   },
-  emits: ['currentChange', 'update:currentPage'],
+  emits: ['currentChange', 'pageSizeChange', 'update:currentPage'],
   setup(props, { emit }) {
     const count = 5;
     const diff = (count - 1) / 2;
     const privateCurrentPage = ref<number>(props.currentPage);
-    const paginationCount = computed<number>(() => Math.ceil(props.total / props.pageSize));
+    const privatePageSize = ref<number>(0);
+    const pageRef = toRef(props, 'pageSize');
+    if (props.pageSizes.length) {
+      let pages = -1;
+      if (props.pageSize) {
+        const index = props.pageSizes.findIndex((item) => item === props.pageSize);
+        if (index !== -1) {
+          const pageSizesRef = toRef(props, 'pageSizes');
+          pages = pageSizesRef.value[index];
+        }
+      }
+      privatePageSize.value = pages === -1 ? props.pageSizes[0] : pages;
+    } else {
+      privatePageSize.value = pageRef.value;
+    }
+    const paginationCount = computed<number>(() => Math.ceil(props.total / privatePageSize.value));
 
     // 分页数组
     function generatePaginationArr() {
@@ -211,6 +239,12 @@ export default defineComponent({
       emit('update:currentPage', value);
     });
 
+    watch(privatePageSize, (val) => {
+      rightPaginationArr.splice(rightPaginationArr.length - 1, 1, paginationCount.value);
+      handlePrevPage(1);
+      emit('pageSizeChange', val);
+    });
+
     watch(props, (val) => {
       if (val.currentPage !== privateCurrentPage.value) {
         handleClickPaginationItem(val.currentPage);
@@ -220,6 +254,7 @@ export default defineComponent({
     return {
       paginationCount,
       privateCurrentPage,
+      privatePageSize,
       leftPaginationArr,
       centerPaginationArr,
       rightPaginationArr,

@@ -1,10 +1,11 @@
 .ki-select {
   position: relative;
+  height: 40px;
+  min-height: 40px;
 }
 
 .ki-select-container {
-  //width: 240px;
-  min-height: 40px;
+  height: 100%;
   appearance: none;
   -moz-appearance: none;
   -webkit-appearance: none;
@@ -44,12 +45,12 @@
   }
 
   .content {
-    min-height: 40px;
+    height: 100%;
   }
 
   .ki-select-input {
     width: 100%;
-    min-height: 40px;
+    height: 100%;
     font-size: 14px;
     outline: none;
     background-color: initial;
@@ -69,6 +70,7 @@
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
     box-sizing: border-box;
     z-index: 2021;
+    background-color: #fff;
 
     &:before {
       content: '';
@@ -94,7 +96,7 @@
     overflow-y: hidden;
 
     &:hover {
-      overflow-y: scroll !important;
+      overflow-y: auto !important;
 
       /* 设置滚动条的样式 */
       &::-webkit-scrollbar {

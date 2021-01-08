@@ -20,7 +20,7 @@
           disabled
           :value='multiple ? "" : selectOption[0]?.label'
           :placeholder='selectOption.length ? "" : "请选择"'
-          :style='{height: selectTagEleHeight + "px"}'
+          :style='multiple && {height: selectTagEleHeight + "px"}'
         />
         <icon type='times-circle-o' class='icon close' v-if='isShowClearIcon' @click.stop='handleClear' />
         <icon type='angle-down' class='icon' v-else />
