@@ -12,7 +12,8 @@
     />
     <Button @click='change'>change</Button>
     <hr />
-    <Select v-model='selectValue' width='240px' clearable>
+    {{selectValue}}
+    <Select v-model='selectValue' width='240px' clearable multiple>
       <OptionGroup label='热门城市'>
         <Option :value='5' label='青岛'></Option>
         <Option :value='6' label='天津'></Option>
@@ -46,7 +47,7 @@ export default defineComponent({
   },
   setup() {
     const currentPage = ref(1);
-    const selectValue = ref(2);
+    const selectValue = ref([1]);
 
     const change = () => {
       currentPage.value = Math.floor(Math.random() * 10 + 1);

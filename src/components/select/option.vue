@@ -1,10 +1,11 @@
 <template>
   <div
     class='ki-option'
-    :class='{active: isActive, disabled: disabled}'
+    :class='{active: isActive, disabled: disabled, multiple: multiple}'
     @click.stop='handleSelect'
   >
     {{label}}
+    <Icon type='check' class='arrow' />
   </div>
 </template>
 
@@ -16,6 +17,9 @@ import {
   computed,
 } from 'vue';
 
+import { ChangeOptionParams } from './select.vue';
+import Icon from '../icon';
+
 export interface Option {
   label: string | number;
   value: string | number;
@@ -23,6 +27,9 @@ export interface Option {
 
 export default defineComponent({
   name: 'Option',
+  components: {
+    Icon,
+  },
   props: {
     label: {
       type: [String, Number],
@@ -35,11 +42,15 @@ export default defineComponent({
     disabled: Boolean,
   },
   setup(props) {
-    const selectOption = inject<Option>('option');
-    const changeOption = inject<(option: Option) => void>('changeOption');
+    const selectProps = inject<any>('selectProps');
+    const multiple = computed(() => selectProps.multiple);
+    const changeOption = inject<(params: ChangeOptionParams) => void>('changeOption');
     const isActive = computed(() => {
-      if (selectOption) {
-        return selectOption.value === props.value && props.disabled === false;
+      if (!props.disabled) {
+        if (selectProps.multiple && Array.isArray(selectProps.modelValue)) {
+          return selectProps.modelValue.some((value: string | number) => props.value === value);
+        }
+        return selectProps.modelValue === props.value;
       }
       return false;
     });
@@ -48,29 +59,32 @@ export default defineComponent({
       if (props.disabled) {
         return;
       }
-      if (selectOption && changeOption) {
+      if (changeOption) {
         changeOption({
-          label: props.label,
-          value: props.value,
+          option: {
+            label: props.label,
+            value: props.value,
+          },
+          active: true,
         });
       }
     };
 
     onMounted(() => {
-      if (selectOption && selectOption.value === props.value && props.disabled === false) {
+      if (isActive.value) {
         handleSelect();
       }
     });
 
     return {
       isActive,
-      selectOption,
       handleSelect,
+      multiple,
     };
   },
 });
 </script>
 
 <style scoped lang='less'>
-  @import './style/option.less';
+@import './style/option.less';
 </style>
