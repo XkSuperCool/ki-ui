@@ -1,34 +1,41 @@
 <template>
   <div class='ki-select' :style='width && {width: width}' @click.stop='handleFocus'>
-    <div class='ki-select-tag' v-if='multiple' ref='selectTagRef'>
-      <span v-for='option in selectOption' :key='option.value'>
-        {{option.label}},
-      </span>
-      <input />
-    </div>
     <div
-      class='ki-select-container'
-      :class='{disabled: disabled, focus: focus}'
+      class='content'
+      :class='{focus: focus}'
+      @mouseenter='clearable && handleMouse(true)'
+      @mouseleave='clearable && handleMouse(false)'
     >
       <div
-        class='content'
+        class='ki-select-tag'
+        v-if='multiple'
+        ref='selectTagRef'
         @mouseenter='clearable && handleMouse(true)'
         @mouseleave='clearable && handleMouse(false)'
       >
-        <input
-          class='ki-select-input'
-          disabled
-          :value='multiple ? "" : selectOption[0]?.label'
-          :placeholder='selectOption.length ? "" : "请选择"'
-          :style='multiple && {height: selectTagEleHeight + "px"}'
-        />
-        <icon type='times-circle-o' class='icon close' v-if='isShowClearIcon' @click.stop='handleClear' />
-        <icon type='angle-down' class='icon' v-else />
+      <span v-for='option in selectOption' :key='option.value'>
+        {{option.label}},
+      </span>
+        <input />
       </div>
-      <div class='ki-options' v-show='focus'>
-        <div class='ki-options-content'>
-          <slot></slot>
-        </div>
+      <div
+        class='ki-select-container'
+        :class='{disabled: disabled, focus: focus}'
+      >
+        <input
+            class='ki-select-input'
+            disabled
+            :value='multiple ? "" : selectOption[0]?.label'
+            :placeholder='selectOption.length ? "" : "请选择"'
+            :style='multiple && {height: selectTagEleHeight + "px"}'
+        />
+      </div>
+      <icon type='times-circle-o' class='icon close' v-if='isShowClearIcon' @click.stop='handleClear' />
+      <icon type='angle-down' class='icon' v-else />
+    </div>
+    <div class='ki-options' v-show='focus'>
+      <div class='ki-options-content'>
+        <slot></slot>
       </div>
     </div>
   </div>
@@ -100,6 +107,12 @@ export default defineComponent({
     const selectTagRef = ref<any>(null);
     const selectTagEleHeight = ref(0);
 
+    // 计算 Select 高度
+    const computedSelectHeight = () => nextTick(() => {
+      // 因为 tag 是定位在 select-container 上面的，修改 option 获取下 tag 的高度，然后让 select-container 也变高
+      selectTagEleHeight.value = (selectTagRef.value as Element).getBoundingClientRect().height;
+    });
+
     // 修改 Option
     const changOption = (params: ChangeOptionParams) => {
       const { option, active } = params;
@@ -111,10 +124,7 @@ export default defineComponent({
           selectOption.push(option);
         }
         emit('update:modelValue', selectOption.map((item: Option) => item.value));
-        nextTick(() => {
-          // 因为 tag 是定位在 select-container 上面的，修改 option 获取下 tag 的高度，然后让 select-container 也变高
-          selectTagEleHeight.value = (selectTagRef.value as Element).getBoundingClientRect().height;
-        });
+        computedSelectHeight();
       } else {
         selectOption.splice(0, 1, option);
         emit('update:modelValue', selectOption[0].value);
@@ -138,6 +148,9 @@ export default defineComponent({
       selectOption.splice(0, selectOption.length);
       emit('update:modelValue', props.multiple ? [] : '');
       chanceFocus();
+      if (props.multiple) {
+        computedSelectHeight();
+      }
     };
 
     onMounted(() => {
