@@ -7,7 +7,7 @@
 
 <script lang='ts'>
 import {
-  defineComponent, PropType, computed, ref,
+  defineComponent, PropType, ref,
 } from 'vue';
 
 import { ComponentSize, StatusType } from '@/types/common';
