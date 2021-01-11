@@ -1,5 +1,5 @@
 <template>
-  <div class='ki-tag' :class='tagClass' v-if='isClose' :style='{backgroundColor: color}'>
+  <div class='ki-tag' :class='[type, size]' v-if='isClose' :style='{backgroundColor: color}'>
     <slot></slot>
     <div class='ki-tag-close' v-if='closable' @click.stop='handleClose'>×</div>
   </div>
@@ -12,13 +12,15 @@ import {
 
 import { ComponentSize, StatusType } from '@/types/common';
 
-type TagSize = ComponentSize | 'mini';
+export type TagSize = ComponentSize | 'mini';
+export type TagType = StatusType | 'primary';
 
 export default defineComponent({
   name: 'Tag',
   props: {
     type: {
-      type: String as PropType<StatusType>,
+      type: String as PropType<TagType>,
+      default: 'primary',
     },
     size: {
       type: String as PropType<TagSize>,
@@ -30,11 +32,6 @@ export default defineComponent({
   emits: ['on-close'],
   setup(props, { emit }) {
     const isClose = ref(true);
-    const tagClass = computed(() => [
-      props.type ? props.type : 'primary',
-      props.size,
-    ]);
-
     // 关闭
     const handleClose = () => {
       emit('on-close');
@@ -42,7 +39,6 @@ export default defineComponent({
     };
 
     return {
-      tagClass,
       isClose,
       handleClose,
     };
