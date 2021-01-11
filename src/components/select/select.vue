@@ -13,10 +13,10 @@
         @mouseenter='clearable && handleMouse(true)'
         @mouseleave='clearable && handleMouse(false)'
       >
-      <span v-for='option in selectOption' :key='option.value'>
-        {{option.label}},
-      </span>
-        <input />
+        <Tag v-for='option in selectOption' :key='option.value' size='small' closable @on-close='handleTagClose(option.value)'>
+          {{option.label}}
+        </Tag>
+        <input v-if='search' />
       </div>
       <div
         class='ki-select-container'
@@ -53,6 +53,7 @@ import {
   nextTick,
 } from 'vue';
 import Icon from '../icon';
+import Tag from '../tag/index.vue';
 import { Option } from './option.vue';
 
 export interface ChangeOptionParams {
@@ -64,6 +65,7 @@ export default defineComponent({
   name: 'Select',
   components: {
     Icon,
+    Tag,
   },
   props: {
     modelValue: {
@@ -73,6 +75,7 @@ export default defineComponent({
     disabled: Boolean,
     clearable: Boolean,
     multiple: Boolean,
+    search: Boolean,
   },
   emits: ['update:modelValue'],
   setup(props, { emit }) {
@@ -153,6 +156,16 @@ export default defineComponent({
       }
     };
 
+    // 多选的 tag 关闭
+    const handleTagClose = (value: string | number) => {
+      const index = selectOption.findIndex((item) => item.value === value);
+      if (index !== -1) {
+        selectOption.splice(index, 1);
+        emit('update:modelValue', selectOption.map((item: Option) => item.value));
+        computedSelectHeight();
+      }
+    };
+
     onMounted(() => {
       document.addEventListener('click', chanceFocus);
     });
@@ -170,6 +183,7 @@ export default defineComponent({
       handleFocus,
       handleMouse,
       handleClear,
+      handleTagClose,
     };
   },
 });

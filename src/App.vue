@@ -1,19 +1,18 @@
 <template>
   <div class='app'>
-    当前页：{{currentPage}}
-    <pagination
-      background
-      :total='200'
-      isTotal
-      elevator
-      hide-on-single-page
-      :page-sizes="[10, 20, 30, 40]"
-      :page-size="20"
-      v-model:current-page='currentPage'
-    />
-    <Button @click='change'>change</Button>
-    <hr />
-    {{selectValue}}
+<!--    当前页：{{currentPage}}-->
+<!--    <pagination-->
+<!--      background-->
+<!--      :total='200'-->
+<!--      isTotal-->
+<!--      elevator-->
+<!--      hide-on-single-page-->
+<!--      :page-sizes="[10, 20, 30, 40]"-->
+<!--      :page-size="20"-->
+<!--      v-model:current-page='currentPage'-->
+<!--    />-->
+<!--    <Button @click='change'>change</Button>-->
+<!--    <hr />-->
     <Select v-model='selectValue' width='240px' clearable multiple>
       <OptionGroup label='热门城市'>
         <Option :value='5' label='青岛'></Option>
@@ -28,23 +27,35 @@
         <Option :value='4' label='北京'></Option>
         <Option :value='1' label='成都'></Option>
         <Option :value='2' label='济南'></Option>
+        <Option :value='10' label='呼和浩特'></Option>
       </OptionGroup>
     </Select>
+    <hr>
+    <div class='tags'>
+      <Tag size='mini'>超小标签</Tag>
+      <Tag size='small'>小标签</Tag>
+      <Tag size='medium'>中标签</Tag>
+      <Tag size='large'>大标签</Tag>
+    </div>
   </div>
 </template>
 
 <script lang='ts'>
 import { defineComponent, ref } from 'vue';
-import { Pagination, Select, Button } from '@/components';
+import {
+  // Pagination,
+  Select, Button,
+  Tag,
+} from '@/components';
 
 export default defineComponent({
   name: 'App',
   components: {
-    Pagination,
+    // Pagination,
     Select,
     Option: Select.Option,
     OptionGroup: Select.OptionGroup,
-    Button,
+    Tag,
   },
   setup() {
     const currentPage = ref(1);
@@ -81,5 +92,9 @@ export default defineComponent({
 
   .ki-alert {
     margin-bottom: 5px;
+  }
+
+  .tags > div {
+    margin-right: 3px;
   }
 </style>

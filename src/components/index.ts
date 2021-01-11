@@ -5,6 +5,7 @@ import Message from './message';
 import Modal from './modal';
 import Pagination from './pagination/index.vue';
 import Select from './select';
+import Tag from './tag/index.vue';
 
 export {
   Alert,
@@ -14,4 +15,5 @@ export {
   Modal,
   Pagination,
   Select,
+  Tag,
 };
