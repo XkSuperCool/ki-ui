@@ -1,7 +1,7 @@
 <template>
   <div class='ki-tag' :class='tagClass' v-if='isClose' :style='{backgroundColor: color}'>
     <slot></slot>
-    <div class='ki-tag-close' v-if='closable' @click='handleClose'>×</div>
+    <div class='ki-tag-close' v-if='closable' @click.stop='handleClose'>×</div>
   </div>
 </template>
 

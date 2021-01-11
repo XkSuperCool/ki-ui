@@ -35,7 +35,7 @@
       <Tag size='mini'>超小标签</Tag>
       <Tag size='small'>小标签</Tag>
       <Tag size='medium'>中标签</Tag>
-      <Tag size='large'>大标签</Tag>
+      <Tag size='large' closable>大标签</Tag>
     </div>
   </div>
 </template>
