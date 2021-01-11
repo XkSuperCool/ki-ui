@@ -1,19 +1,6 @@
 <template>
   <div class='app'>
-<!--    当前页：{{currentPage}}-->
-<!--    <pagination-->
-<!--      background-->
-<!--      :total='200'-->
-<!--      isTotal-->
-<!--      elevator-->
-<!--      hide-on-single-page-->
-<!--      :page-sizes="[10, 20, 30, 40]"-->
-<!--      :page-size="20"-->
-<!--      v-model:current-page='currentPage'-->
-<!--    />-->
-<!--    <Button @click='change'>change</Button>-->
-<!--    <hr />-->
-    <Select v-model='selectValue' width='240px' clearable multiple>
+    <Select v-model='selectValue' width='240px' clearable filterable>
       <OptionGroup label='热门城市'>
         <Option :value='5' label='青岛'></Option>
         <Option :value='6' label='天津'></Option>
@@ -43,15 +30,13 @@
 <script lang='ts'>
 import { defineComponent, ref } from 'vue';
 import {
-  // Pagination,
-  Select, Button,
+  Select,
   Tag,
 } from '@/components';
 
 export default defineComponent({
   name: 'App',
   components: {
-    // Pagination,
     Select,
     Option: Select.Option,
     OptionGroup: Select.OptionGroup,
@@ -59,7 +44,7 @@ export default defineComponent({
   },
   setup() {
     const currentPage = ref(1);
-    const selectValue = ref([2]);
+    const selectValue = ref();
 
     const change = () => {
       currentPage.value = Math.floor(Math.random() * 10 + 1);

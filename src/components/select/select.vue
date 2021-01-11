@@ -13,21 +13,21 @@
         @mouseenter='clearable && handleMouse(true)'
         @mouseleave='clearable && handleMouse(false)'
       >
-        <Tag v-for='option in selectOption' :key='option.value' size='small' closable @on-close='handleTagClose(option.value)'>
+        <Tag v-for='option in selectOption' :key='option.value' size='mini' closable @on-close='handleTagClose(option.value)' type='info'>
           {{option.label}}
         </Tag>
-        <input v-if='search' />
+        <input v-if='false' />
       </div>
       <div
         class='ki-select-container'
         :class='{disabled: disabled, focus: focus}'
       >
         <input
-            class='ki-select-input'
-            disabled
-            :value='multiple ? "" : selectOption[0]?.label'
-            :placeholder='selectOption.length ? "" : "请选择"'
-            :style='multiple && {height: selectTagEleHeight + "px"}'
+          disabled
+          class='ki-select-input'
+          :value='multiple ? "" : selectOption[0]?.label'
+          :placeholder='selectOption.length ? "" : "请选择"'
+          :style='{height: selectTagEleHeight + "px"}'
         />
       </div>
       <icon type='times-circle-o' class='icon close' v-if='isShowClearIcon' @click.stop='handleClear' />
@@ -75,7 +75,6 @@ export default defineComponent({
     disabled: Boolean,
     clearable: Boolean,
     multiple: Boolean,
-    search: Boolean,
   },
   emits: ['update:modelValue'],
   setup(props, { emit }) {
@@ -107,13 +106,15 @@ export default defineComponent({
     };
 
     // 多选模式下 tag div 数据
-    const selectTagRef = ref<any>(null);
-    const selectTagEleHeight = ref(0);
+    const selectTagRef = ref<HTMLDivElement | null>(null);
+    const selectTagEleHeight = ref(40);
 
     // 计算 Select 高度
     const computedSelectHeight = () => nextTick(() => {
       // 因为 tag 是定位在 select-container 上面的，修改 option 获取下 tag 的高度，然后让 select-container 也变高
-      selectTagEleHeight.value = (selectTagRef.value as Element).getBoundingClientRect().height;
+      if (selectTagRef.value) {
+        selectTagEleHeight.value = selectTagRef.value.getBoundingClientRect().height;
+      }
     });
 
     // 修改 Option
