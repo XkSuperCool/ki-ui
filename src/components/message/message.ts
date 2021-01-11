@@ -37,9 +37,12 @@ export default defineComponent({
       const _option = Object.assign(option, { name });
       messages.push(_option);
 
-      setTimeout(() => {
-        remove(name);
-      }, _option.delay);
+      // 等于 -1 时则不会隐藏该 message
+      if (_option.delay !== -1) {
+        setTimeout(() => {
+          remove(name);
+        }, _option.delay);
+      }
 
       return name;
     };

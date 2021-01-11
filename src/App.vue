@@ -1,6 +1,6 @@
 <template>
   <div class='app'>
-    <Select v-model='selectValue' width='240px' clearable filterable>
+    <Select v-model='selectValue' width='240px' clearable multiple filterable>
       <OptionGroup label='热门城市'>
         <Option :value='5' label='青岛'></Option>
         <Option :value='6' label='天津'></Option>
@@ -44,7 +44,7 @@ export default defineComponent({
   },
   setup() {
     const currentPage = ref(1);
-    const selectValue = ref();
+    const selectValue = ref([2]);
 
     const change = () => {
       currentPage.value = Math.floor(Math.random() * 10 + 1);
