@@ -1,59 +1,25 @@
 <template>
   <div class='app'>
-    <Select v-model='selectValue' width='240px' clearable multiple filterable>
-      <OptionGroup label='热门城市'>
-        <Option :value='5' label='青岛'></Option>
-        <Option :value='6' label='天津'></Option>
-      </OptionGroup>
-      <OptionGroup label='推荐城市'>
-        <Option :value='7' label='四川'></Option>
-        <Option :value='8' label='重庆'></Option>
-      </OptionGroup>
-      <OptionGroup label='网红城市'>
-        <Option :value='3' label='长沙'></Option>
-        <Option :value='4' label='北京'></Option>
-        <Option :value='1' label='成都'></Option>
-        <Option :value='2' label='济南'></Option>
-        <Option :value='10' label='呼和浩特'></Option>
-      </OptionGroup>
-    </Select>
-    <hr>
-    <div class='tags'>
-      <Tag size='mini'>超小标签</Tag>
-      <Tag size='small'>小标签</Tag>
-      <Tag size='medium'>中标签</Tag>
-      <Tag size='large' closable>大标签</Tag>
-    </div>
+    {{name}}<br>
+    <ki-input style='width: 300px;' placeholder='请输入您的名称' v-model='name' clearable></ki-input>
   </div>
 </template>
 
 <script lang='ts'>
 import { defineComponent, ref } from 'vue';
 import {
-  Select,
-  Tag,
+  Input,
 } from '@/components';
 
 export default defineComponent({
   name: 'App',
   components: {
-    Select,
-    Option: Select.Option,
-    OptionGroup: Select.OptionGroup,
-    Tag,
+    KiInput: Input,
   },
   setup() {
-    const currentPage = ref(1);
-    const selectValue = ref([2]);
-
-    const change = () => {
-      currentPage.value = Math.floor(Math.random() * 10 + 1);
-    };
-
+    const name = ref();
     return {
-      currentPage,
-      change,
-      selectValue,
+      name,
     };
   },
 });

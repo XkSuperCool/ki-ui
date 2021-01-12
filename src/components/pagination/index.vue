@@ -228,7 +228,7 @@ export default defineComponent({
 
     // 电梯
     const handleElevatorBlur = (event: FocusEvent) => {
-      const value = parseInt((event.target as any)?.value, 10);
+      const value = parseInt((event.target as HTMLInputElement)?.value, 10);
       if (!(value > paginationCount.value || value < 1)) {
         handleClickPaginationItem(value);
       }

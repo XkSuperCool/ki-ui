@@ -6,6 +6,7 @@ import Modal from './modal';
 import Pagination from './pagination/index.vue';
 import Select from './select';
 import Tag from './tag/index.vue';
+import Input from './input/index.vue';
 
 export {
   Alert,
@@ -16,4 +17,5 @@ export {
   Pagination,
   Select,
   Tag,
+  Input,
 };

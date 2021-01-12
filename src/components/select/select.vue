@@ -26,7 +26,7 @@
           disabled
           class='ki-select-input'
           :value='multiple ? "" : selectOption[0]?.label'
-          :placeholder='selectOption.length ? "" : "请选择"'
+          :placeholder='selectOption.length ? "" : placeholder'
           :style='{height: selectTagEleHeight + "px"}'
         />
       </div>
@@ -75,6 +75,10 @@ export default defineComponent({
     disabled: Boolean,
     clearable: Boolean,
     multiple: Boolean,
+    placeholder: {
+      type: String,
+      default: '请选择',
+    },
   },
   emits: ['update:modelValue'],
   setup(props, { emit }) {

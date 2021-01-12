@@ -5,8 +5,12 @@
     /* 次文本色 */
     --color-minor: #909399;
 
+    /* 禁用颜色 */
     --disabled-background-color: #f5f7fa;
     --disabled-color: #c0c4cc;
+
+    /* placeholder */
+    --placeholder-color: #b8b7b7;
 
     /* 边框颜色 */
     --border-color: #d9d9d9;

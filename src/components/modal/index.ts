@@ -1,4 +1,4 @@
-import { h, Teleport, defineComponent, watch, getCurrentInstance } from 'vue';
+import { h, Teleport, defineComponent, watch } from 'vue';
 import './style.less';
 
 export default defineComponent({
@@ -37,7 +37,7 @@ export default defineComponent({
 
     // 点击遮罩层隐藏 modal
     const handleClickMask = (event: MouseEvent) => {
-      if ((event.target as any)?.className === 'ki-modal mask') {
+      if ((event.target as HTMLDivElement)?.className === 'ki-modal mask') {
         handleClose();
       }
     };
