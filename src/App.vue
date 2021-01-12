@@ -1,7 +1,14 @@
 <template>
   <div class='app'>
     {{name}}<br>
-    <ki-input style='width: 300px;' placeholder='请输入您的名称' v-model='name' clearable></ki-input>
+    <ki-input style='width: 300px;' placeholder='请输入您的名称' v-model='name' clearable suffix-icon='grav' prefix-icon="grav">
+      <template v-slot:suffix-icon>
+        <span>1</span>
+      </template>
+      <template v-slot:prefix-icon>
+        <span>1</span>
+      </template>
+    </ki-input>
   </div>
 </template>
 

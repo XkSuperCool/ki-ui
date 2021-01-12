@@ -5,6 +5,10 @@
   display: inline-block;
   position: relative;
 
+  &:hover .right-icons .close {
+    display: block;
+  }
+
   input {
     color: var(--color);
     font-size: inherit;
@@ -13,12 +17,12 @@
     appearance: none;
     -moz-appearance: none;
     -webkit-appearance: none;
-    position: relative;
     outline: none;
     border-radius: 4px;
     border: 1px solid var(--border-color);
-    padding: 0 10px;
+    padding: 0 25px 0 10px;
     box-sizing: border-box;
+    transition: all .4s;
 
     &::placeholder {
       color: var(--placeholder-color);
@@ -30,10 +34,6 @@
 
     &:hover {
       border-color: #c0c4cc;
-
-      + .right-icons .close {
-        display: block;
-      }
     }
   }
 
@@ -46,15 +46,29 @@
     }
   }
 
-  .right-icons {
-    font-size: 15px;
+  input.paddingLeft {
+    padding-left: 30px;
+  }
+
+  .icon-position {
     color: var(--border-color);
-    position: absolute;
-    right: 5px;
+    font-size: 15px;
     height: 100%;
+    position: absolute;
     top: 0;
     display: flex;
     align-items: center;
+    z-index: 10;
+  }
+
+  .left-icon {
+    .icon-position();
+    left: 10px;
+  }
+
+  .right-icons {
+    .icon-position();
+    right: 5px;
 
     .fa {
       cursor: pointer;
@@ -64,10 +78,6 @@
 
     .close {
       display: none;
-
-      &:hover {
-        display: block;
-      }
     }
   }
 }

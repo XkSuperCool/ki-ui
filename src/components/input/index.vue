@@ -1,15 +1,21 @@
 <template>
   <div class='ki-input'>
+    <div class='left-icon'>
+      <Icon :type='suffixIcon' v-if='prefixIcon'></Icon>
+      <slot name='prefix-icon' v-else></slot>
+    </div>
     <input
       :type='type'
       :value='modelValue'
-      :class='{disabled: disabled}'
+      :class='{disabled: disabled, paddingLeft: isPaddingLeft }'
       :placeholder='placeholder'
       :disabled='disabled'
       @input='handleInput'
       @focus='handleFocus'
     />
     <div class='right-icons'>
+      <Icon :type='suffixIcon' v-if='suffixIcon'></Icon>
+      <slot name='suffix-icon' v-else></slot>
       <Icon
         type='times-circle-o close'
         v-if='clearable && modelValue'
@@ -20,7 +26,7 @@
 </template>
 
 <script lang='ts'>
-import { defineComponent } from 'vue';
+import { defineComponent, computed } from 'vue';
 import Icon from '../icon';
 
 export default defineComponent({
@@ -40,9 +46,13 @@ export default defineComponent({
     disabled: Boolean,
     modelValue: String,
     clearable: Boolean,
+    suffixIcon: String,
+    prefixIcon: String,
   },
   emits: ['update:modelValue', 'input', 'focus'],
-  setup(props, { emit }) {
+  setup(props, { emit, slots }) {
+    const isPaddingLeft = computed(() => props.prefixIcon || slots['prefix-icon']);
+
     const handleInput = (event: InputEvent) => {
       emit('update:modelValue', (event.target as HTMLInputElement).value);
       emit('input', event);
@@ -55,6 +65,7 @@ export default defineComponent({
     const handleClear = () => emit('update:modelValue', '');
 
     return {
+      isPaddingLeft,
       handleInput,
       handleFocus,
       handleClear,
