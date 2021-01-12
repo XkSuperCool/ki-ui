@@ -1,7 +1,7 @@
 <template>
   <div class='ki-input'>
     <div class='left-icon'>
-      <Icon :type='suffixIcon' v-if='prefixIcon'></Icon>
+      <Icon :type='prefixIcon' v-if='prefixIcon'></Icon>
       <slot name='prefix-icon' v-else></slot>
     </div>
     <input
