@@ -1,15 +1,11 @@
-.ki-input {
+.ki-input-inner {
+  font-size: 14px;
   width: 100%;
   height: 43px;
-  font-size: 14px;
   display: inline-block;
   position: relative;
 
-  &:hover .right-icons .close {
-    display: block;
-  }
-
-  input {
+  .input {
     color: var(--color);
     font-size: inherit;
     height: 100%;
@@ -22,7 +18,7 @@
     border: 1px solid var(--border-color);
     padding: 0 25px 0 10px;
     box-sizing: border-box;
-    transition: all .4s;
+    transition: color .4s, border-color .4s;
 
     &::placeholder {
       color: var(--placeholder-color);
@@ -37,13 +33,26 @@
     }
   }
 
-  input.disabled {
-    cursor: not-allowed;
-    background-color: var(--disabled-background-color);
+  input, textarea {
+    .input();
 
-    &:hover {
-      border-color: var(--border-color);
+    &.disabled {
+      cursor: not-allowed;
+      background-color: var(--disabled-background-color);
+
+      &:hover {
+        border-color: var(--border-color);
+      }
     }
+  }
+}
+
+.ki-input {
+  height: 100%;
+  position: relative;
+
+  &:hover .right-icons .close {
+    display: block;
   }
 
   input.paddingLeft {
@@ -79,5 +88,11 @@
     .close {
       display: none;
     }
+  }
+}
+
+.ki-textarea {
+  textarea {
+    padding: 5px 10px;
   }
 }

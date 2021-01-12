@@ -1,26 +1,39 @@
 <template>
-  <div class='ki-input'>
-    <div class='left-icon'>
-      <Icon :type='prefixIcon' v-if='prefixIcon'></Icon>
-      <slot name='prefix-icon' v-else></slot>
+  <div class='ki-input-inner'>
+    <div v-if='type === "textarea"' class='ki-textarea'>
+      <textarea
+        :rows='row'
+        :disabled='disabled'
+        :value='modelValue'
+        :placeholder='placeholder'
+        :class='{disabled: disabled}'
+        @input='handleInput'
+        @focus='handleFocus'
+      ></textarea>
     </div>
-    <input
-      :type='type'
-      :value='modelValue'
-      :class='{disabled: disabled, paddingLeft: isPaddingLeft }'
-      :placeholder='placeholder'
-      :disabled='disabled'
-      @input='handleInput'
-      @focus='handleFocus'
-    />
-    <div class='right-icons'>
-      <Icon :type='suffixIcon' v-if='suffixIcon'></Icon>
-      <slot name='suffix-icon' v-else></slot>
-      <Icon
-        type='times-circle-o close'
-        v-if='clearable && modelValue'
-        @click.stop='handleClear'
+    <div class='ki-input' v-else>
+      <div class='left-icon'>
+        <Icon :type='prefixIcon' v-if='prefixIcon'></Icon>
+        <slot name='prefix-icon' v-else></slot>
+      </div>
+      <input
+        :type='type'
+        :value='modelValue'
+        :class='{disabled: disabled, paddingLeft: isPaddingLeft}'
+        :placeholder='placeholder'
+        :disabled='disabled'
+        @input='handleInput'
+        @focus='handleFocus'
       />
+      <div class='right-icons'>
+        <Icon :type='suffixIcon' v-if='suffixIcon'></Icon>
+        <slot name='suffix-icon' v-else></slot>
+        <Icon
+          type='times-circle-o close'
+          v-if='clearable && modelValue'
+          @click.stop='handleClear'
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -42,6 +55,10 @@ export default defineComponent({
     type: {
       type: String,
       default: 'text',
+    },
+    row: {
+      type: Number,
+      default: 2,
     },
     disabled: Boolean,
     modelValue: String,
