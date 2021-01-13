@@ -1,7 +1,6 @@
 .ki-input-inner {
   font-size: 14px;
   width: 100%;
-  height: 43px;
   display: inline-block;
   position: relative;
 
@@ -45,6 +44,40 @@
       }
     }
   }
+
+  .length {
+    font-size: 12px;
+    color: var(--color-minor);
+    margin-right: 5px;
+  }
+
+  &.mini {
+    height: 28px;
+
+    .append, .prepend {
+      padding: 5px 10px;
+    }
+  }
+
+  &.small {
+    height: 36px;
+
+    .append, .prepend {
+      padding: 10px 10px;
+    }
+  }
+
+  &.medium {
+    height: 40px;
+  }
+
+  &.large {
+    height: 44px;
+
+    .append, .prepend {
+      padding: 14px 10px;
+    }
+  }
 }
 
 .ki-input {
@@ -61,13 +94,15 @@
     display: block;
   }
 
-  input.paddingLeft {
-    padding-left: 30px;
-  }
+  input {
+    &.paddingLeft {
+      padding-left: 30px;
+    }
 
-  input.input-prepend {
-    border-bottom-right-radius: 0;
-    border-top-right-radius: 0;
+    &.input-prepend {
+      border-bottom-right-radius: 0;
+      border-top-right-radius: 0;
+    }
   }
 
   .icon-position {
@@ -106,7 +141,7 @@
     font-size: 14px;
     flex: 1;
     height: 100%;
-    padding: 13px 10px;
+    padding: 12px 10px;
     background-color: #f5f7fa;
     border: 1px solid var(--border-color);
     box-sizing: border-box;

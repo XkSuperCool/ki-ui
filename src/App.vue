@@ -1,8 +1,20 @@
 <template>
   <div class='app'>
     {{name}}<br>
-    <ki-input style='width: 300px;' type='password' v-model='name' show-password >
+    <ki-input size='mini' style='width: 300px;'>
+      <template v-slot:append>231</template>
+      <template v-slot:prepend>231</template>
     </ki-input>
+    <ki-input size='small' style='width: 300px;'>
+      <template v-slot:append>231</template>
+    </ki-input>
+    <ki-input style='width: 300px;'>
+      <template v-slot:append>231</template>
+    </ki-input>
+    <ki-input style='width: 300px;' type='text' size='large' v-model='name' show-password clearable :maxLength="16" show-word-limit>
+      <template v-slot:append>231</template>
+    </ki-input>
+    <ki-input type='textarea'></ki-input>
   </div>
 </template>
 

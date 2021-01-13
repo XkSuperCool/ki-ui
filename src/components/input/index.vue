@@ -1,6 +1,6 @@
 <template>
-  <div class='ki-input-inner'>
-    <div v-if='inputType === "textarea"' class='ki-textarea'>
+  <div class='ki-input-inner' :class='size'>
+    <div v-if='type === "textarea"' class='ki-textarea'>
       <textarea
         :rows='row'
         :disabled='disabled'
@@ -27,11 +27,17 @@
           :class='{disabled: disabled, paddingLeft: isPaddingLeft, "input-prepend": isShowPrependSlot}'
           :placeholder='placeholder'
           :disabled='disabled'
+          :min='minLength'
+          :max='maxLength'
           @input='handleInput'
           @focus='handleFocus'
           @blur='handleBlur'
+          ref='inputRef'
         />
         <div class='right-icons'>
+          <span class='length' v-if='showWordLimit && type === "text"'>
+            {{modelValue ? modelValue.length : '0'}}/{{maxLength ?? '*'}}
+          </span>
           <Icon :type='suffixIcon' v-if='suffixIcon'></Icon>
           <slot name='suffix-icon' v-else></slot>
           <Icon type='eye' v-if='type === "password" && modelValue && showPassword' @click.stop='handleToggleInputType' />
@@ -47,9 +53,12 @@
 
 <script lang='ts'>
 import {
-  defineComponent, computed, ref, onUpdated,
+  defineComponent, computed, ref, onUpdated, PropType,
 } from 'vue';
+import { ComponentSize } from '@/types/common';
 import Icon from '../icon';
+
+export type InputSize = ComponentSize | 'mini';
 
 export default defineComponent({
   name: 'Input',
@@ -69,16 +78,24 @@ export default defineComponent({
       type: Number,
       default: 2,
     },
+    size: {
+      type: String as PropType<InputSize>,
+      default: 'medium',
+    },
     disabled: Boolean,
     modelValue: String,
     clearable: Boolean,
     suffixIcon: String,
     prefixIcon: String,
     showPassword: Boolean,
+    minLength: [Number, String],
+    maxLength: [Number, String],
+    showWordLimit: Boolean,
   },
   emits: ['update:modelValue', 'input', 'focus', 'blur', 'clear'],
   setup(props, { emit, slots }) {
     const inputType = ref(props.type);
+    const inputRef = ref(null);
     const isPaddingLeft = computed(() => props.prefixIcon || slots['prefix-icon']);
     const isShowPrependSlot = ref(slots.prepend !== undefined);
     const isShowAppendSlot = ref(slots.append !== undefined);
@@ -91,7 +108,12 @@ export default defineComponent({
 
     // input 事件
     const handleInput = (event: InputEvent) => {
-      emit('update:modelValue', (event.target as HTMLInputElement).value);
+      const { value } = event.target as HTMLInputElement;
+      if (props.maxLength && value.length > props.maxLength && props.modelValue) {
+        (inputRef.value as any as HTMLInputElement).value = props.modelValue;
+        return;
+      }
+      emit('update:modelValue', value);
       emit('input', event);
     };
 
@@ -115,13 +137,14 @@ export default defineComponent({
     };
 
     return {
+      inputRef,
+      inputType,
       isPaddingLeft,
       isShowPrependSlot,
       isShowAppendSlot,
       handleInput,
       handleFocus,
       handleClear,
-      inputType,
       handleToggleInputType,
       handleBlur,
     };
