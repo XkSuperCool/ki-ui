@@ -1,20 +1,10 @@
 <template>
   <div class='app'>
-    {{name}}<br>
-    <ki-input size='mini' style='width: 300px;'>
-      <template v-slot:append>231</template>
-      <template v-slot:prepend>231</template>
-    </ki-input>
-    <ki-input size='small' style='width: 300px;'>
-      <template v-slot:append>231</template>
-    </ki-input>
-    <ki-input style='width: 300px;'>
-      <template v-slot:append>231</template>
-    </ki-input>
-    <ki-input style='width: 300px;' type='text' size='large' v-model='name' show-password clearable :maxLength="16" show-word-limit>
-      <template v-slot:append>231</template>
-    </ki-input>
-    <ki-input type='textarea'></ki-input>
+    <Form :rules='rules'>
+      <FormItem label='密码' prop='password'>
+        <ki-input type='password' v-model='password' style='width: 300px' show-password placeholder='请输入密码' />
+      </FormItem>
+    </Form>
   </div>
 </template>
 
@@ -22,17 +12,27 @@
 import { defineComponent, ref } from 'vue';
 import {
   Input,
+  Form,
 } from '@/components';
 
 export default defineComponent({
   name: 'App',
   components: {
     KiInput: Input,
+    Form,
+    FormItem: Form.Item,
   },
   setup() {
-    const name = ref();
+    const password = ref();
+    const rules = {
+      password: [
+        { required: true, message: '请输入密码', trigger: 'input' },
+        { min: 10, message: '最小10位', trigger: 'input' },
+      ],
+    };
     return {
-      name,
+      password,
+      rules,
     };
   },
 });

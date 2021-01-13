@@ -53,10 +53,16 @@
 
 <script lang='ts'>
 import {
-  defineComponent, computed, ref, onUpdated, PropType,
+  defineComponent,
+  computed,
+  ref,
+  onUpdated,
+  PropType,
+  inject,
 } from 'vue';
 import { ComponentSize } from '@/types/common';
 import Icon from '../icon';
+import { VALIDATE_FUNCTION } from '../form/form-item.vue';
 
 export type InputSize = ComponentSize | 'mini';
 
@@ -100,6 +106,9 @@ export default defineComponent({
     const isShowPrependSlot = ref(slots.prepend !== undefined);
     const isShowAppendSlot = ref(slots.append !== undefined);
 
+    // inject
+    const validate = inject<(value: any) => void>(VALIDATE_FUNCTION);
+
     onUpdated(() => {
       // 更新后重新计算 slot 是否显示
       isShowPrependSlot.value = slots.prepend !== undefined;
@@ -115,6 +124,9 @@ export default defineComponent({
       }
       emit('update:modelValue', value);
       emit('input', event);
+      if (validate) {
+        validate(value);
+      }
     };
 
     // 聚焦事件
