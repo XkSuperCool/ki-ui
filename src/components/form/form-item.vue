@@ -1,6 +1,6 @@
 <template>
   <div class='ki-form-item'>
-    <label class='label' :style='{width: labelWidth}'>
+    <label class='label' :class='{required: required}' :style='{width: labelWidth}'>
       {{label}}
     </label>
     <div class='ki-form-item-inner'>
@@ -17,10 +17,18 @@ import {
   inject,
   ref,
 } from 'vue';
-import Schema, { RuleItem } from 'async-validator';
-import { FORM_REF, FormRef } from './form.vue';
+import type { Ref } from 'vue';
+import Schema from 'async-validator';
+import { FORM_REF } from './form.vue';
+import type { FormRuleItem, FormRef } from './form.vue';
 
 export const VALIDATE_FUNCTION = Symbol.for('validate');
+export const VALIDATE_STATUS = Symbol.for('validate-status');
+
+export interface EventValidateObject {
+  change?: (value: any) => void;
+  blur?: (value: any) => void;
+}
 
 export default defineComponent({
   name: 'FormItem',
@@ -34,11 +42,12 @@ export default defineComponent({
   },
   setup(props) {
     const form = inject<FormRef>(FORM_REF);
+    const required = ref(false);
     const validateStatus = ref(true);
     const validateMessage = ref('');
 
     // 获取校验规则
-    const getRole = (): RuleItem[] => {
+    const getRole = (): FormRuleItem[] => {
       if (props.prop && form) {
         return form.rules[props.prop] ? form.rules[props.prop] : [];
       }
@@ -46,22 +55,50 @@ export default defineComponent({
     };
 
     // 校验函数
-    const validate = (value: any) => {
-      validateStatus.value = true;
+    const validate = (value: any, role: FormRuleItem[]): Promise<boolean> => new Promise((resolve) => {
       const validator = new Schema({
-        [props.prop as string]: getRole(),
+        [props.prop as string]: role,
       });
-      validator.validate({ [props.prop as string]: value }, { firstFields: true }, (errors) => {
-        if (errors.length) {
-          validateStatus.value = false;
-          validateMessage.value = errors[0].message;
+      validator.validate({ [props.prop as string]: value }, { firstFields: true }).then(() => {
+        validateStatus.value = true;
+      }).catch(({ errors }) => {
+        validateStatus.value = false;
+        validateMessage.value = errors[0].message;
+      }).finally(() => {
+        resolve(validateStatus.value);
+      });
+    });
+
+    // 生成对应事件的校验函数
+    const generateEventValidate = (eventName: string) => {
+      const role = getRole().filter((r) => {
+        // 判断是否有必选校验
+        if (r.required) {
+          required.value = true;
         }
+        return r.trigger === eventName;
       });
+      return role.length ? (value: any) => validate(value, role) : undefined;
     };
 
-    provide(VALIDATE_FUNCTION, validate);
+    const blurValidate = generateEventValidate('blur');
+    const changeValidate = generateEventValidate('change');
+    if (form && props.prop) {
+      const arr = [];
+      if (blurValidate) arr.push(blurValidate);
+      if (changeValidate) arr.push(changeValidate);
+      if (arr.length) {
+        form.pushValidateFunctionArr(props.prop, arr);
+      }
+    }
+    provide<EventValidateObject>(VALIDATE_FUNCTION, {
+      blur: blurValidate,
+      change: changeValidate,
+    });
+    provide<Ref<boolean>>(VALIDATE_STATUS, validateStatus);
 
     return {
+      required,
       validateStatus,
       validateMessage,
     };

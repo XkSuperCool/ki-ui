@@ -1,18 +1,25 @@
 <template>
   <div class='app'>
-    <Form :rules='rules'>
+    <Form :rules='rules' ref='form' :model='formModel'>
+      <FormItem label='用户名' prop='username'>
+        <ki-input type='text' v-model='formModel.username' style='width: 300px' placeholder='请输入用户名' />
+      </FormItem>
       <FormItem label='密码' prop='password'>
-        <ki-input type='password' v-model='password' style='width: 300px' show-password placeholder='请输入密码' />
+        <ki-input type='password' v-model='formModel.password' style='width: 300px' show-password placeholder='请输入密码' />
       </FormItem>
     </Form>
+    <Button @click="validate">校验</Button>
+    <Button>重置</Button>
   </div>
 </template>
 
 <script lang='ts'>
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, reactive } from 'vue';
 import {
   Input,
   Form,
+  Button,
+  Message,
 } from '@/components';
 
 export default defineComponent({
@@ -21,18 +28,41 @@ export default defineComponent({
     KiInput: Input,
     Form,
     FormItem: Form.Item,
+    Button,
   },
   setup() {
-    const password = ref();
+    const form = ref(null);
+    const formModel = reactive({
+      password: '',
+      username: '',
+    });
     const rules = {
       password: [
-        { required: true, message: '请输入密码', trigger: 'input' },
-        { min: 10, message: '最小10位', trigger: 'input' },
+        { required: true, message: '请输入密码', trigger: 'blur' },
+        { min: 10, message: '最小10位', trigger: 'blur' },
+      ],
+      username: [
+        { required: true, message: '请输入用户名', trigger: 'change' },
+        { min: 3, message: '最小3位', trigger: 'blur' },
+        { max: 6, message: '最大6位', trigger: 'blur' },
       ],
     };
+
+    const validate = () => {
+      // eslint-disable-next-line consistent-return
+      (form.value as any).$.validate().then((status: boolean) => {
+        if (!status) {
+          return Message.error('请按照规范填写表单');
+        }
+        Message.success('用户注册成功');
+      });
+    };
+
     return {
-      password,
+      formModel,
       rules,
+      form,
+      validate,
     };
   },
 });

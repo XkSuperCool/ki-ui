@@ -6,7 +6,7 @@
         :disabled='disabled'
         :value='modelValue'
         :placeholder='placeholder'
-        :class='{disabled: disabled}'
+        :class='{disabled: disabled, error: validateStatus}'
         @input='handleInput'
         @focus='handleFocus'
         @blur='handleBlur'
@@ -24,7 +24,7 @@
         <input
           :type='inputType'
           :value='modelValue'
-          :class='{disabled: disabled, paddingLeft: isPaddingLeft, "input-prepend": isShowPrependSlot}'
+          :class='{disabled: disabled, paddingLeft: isPaddingLeft, "input-prepend": isShowPrependSlot, error: !validateStatus}'
           :placeholder='placeholder'
           :disabled='disabled'
           :min='minLength'
@@ -62,7 +62,8 @@ import {
 } from 'vue';
 import { ComponentSize } from '@/types/common';
 import Icon from '../icon';
-import { VALIDATE_FUNCTION } from '../form/form-item.vue';
+import { VALIDATE_FUNCTION, VALIDATE_STATUS } from '../form/form-item.vue';
+import type { EventValidateObject } from '../form/form-item.vue';
 
 export type InputSize = ComponentSize | 'mini';
 
@@ -107,7 +108,8 @@ export default defineComponent({
     const isShowAppendSlot = ref(slots.append !== undefined);
 
     // inject
-    const validate = inject<(value: any) => void>(VALIDATE_FUNCTION);
+    const validateObj = inject<EventValidateObject>(VALIDATE_FUNCTION);
+    const validateStatus = inject(VALIDATE_STATUS);
 
     onUpdated(() => {
       // 更新后重新计算 slot 是否显示
@@ -124,8 +126,8 @@ export default defineComponent({
       }
       emit('update:modelValue', value);
       emit('input', event);
-      if (validate) {
-        validate(value);
+      if (validateObj && validateObj.change) {
+        validateObj.change(value);
       }
     };
 
@@ -135,7 +137,12 @@ export default defineComponent({
     };
 
     // 失去焦点事件
-    const handleBlur = (event: InputEvent) => emit('blur', event);
+    const handleBlur = (event: InputEvent) => {
+      emit('blur', event);
+      if (validateObj && validateObj.blur) {
+        validateObj.blur(props.modelValue);
+      }
+    };
 
     // 清除 input value
     const handleClear = () => {
@@ -154,6 +161,7 @@ export default defineComponent({
       isPaddingLeft,
       isShowPrependSlot,
       isShowAppendSlot,
+      validateStatus,
       handleInput,
       handleFocus,
       handleClear,
