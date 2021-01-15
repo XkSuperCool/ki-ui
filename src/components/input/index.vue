@@ -61,9 +61,9 @@ import {
   inject,
 } from 'vue';
 import { ComponentSize } from '@/types/common';
+import generateValidateData from '@/mixins/generateValidateData';
 import Icon from '../icon';
-import validate from '@/utils/validate';
-import { VALIDATE_FUNCTION, VALIDATE_STATUS } from '../form/form-item.vue';
+import { VALIDATE_FUNCTION } from '../form/form-item.vue';
 import type { EventValidateObject } from '../form/form-item.vue';
 
 export type InputSize = ComponentSize | 'mini';
@@ -107,10 +107,10 @@ export default defineComponent({
     const isPaddingLeft = computed(() => props.prefixIcon || slots['prefix-icon']);
     const isShowPrependSlot = ref(slots.prepend !== undefined);
     const isShowAppendSlot = ref(slots.append !== undefined);
+    const { validateStatus, validate } = generateValidateData();
 
     // inject
     const validateObj = inject<EventValidateObject>(VALIDATE_FUNCTION);
-    const validateStatus = inject(VALIDATE_STATUS);
 
     onUpdated(() => {
       // 更新后重新计算 slot 是否显示

@@ -23,7 +23,6 @@ import { FORM_REF } from './form.vue';
 import type { FormRuleItem, FormRef } from './form.vue';
 
 export const VALIDATE_FUNCTION = Symbol.for('validate');
-export const VALIDATE_STATUS = Symbol.for('validate-status');
 
 export interface EventValidateObject {
   change?: (value: any) => Promise<boolean>;
@@ -95,7 +94,6 @@ export default defineComponent({
       blur: blurValidate,
       change: changeValidate,
     });
-    provide<Ref<boolean>>(VALIDATE_STATUS, validateStatus);
 
     return {
       required,
