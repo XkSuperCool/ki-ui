@@ -62,6 +62,7 @@ import {
 } from 'vue';
 import { ComponentSize } from '@/types/common';
 import Icon from '../icon';
+import validate from '@/utils/validate';
 import { VALIDATE_FUNCTION, VALIDATE_STATUS } from '../form/form-item.vue';
 import type { EventValidateObject } from '../form/form-item.vue';
 
@@ -126,9 +127,7 @@ export default defineComponent({
       }
       emit('update:modelValue', value);
       emit('input', event);
-      if (validateObj && validateObj.change) {
-        validateObj.change(value);
-      }
+      validate(value, validateObj?.change);
     };
 
     // 聚焦事件
@@ -139,9 +138,7 @@ export default defineComponent({
     // 失去焦点事件
     const handleBlur = (event: InputEvent) => {
       emit('blur', event);
-      if (validateObj && validateObj.blur) {
-        validateObj.blur(props.modelValue);
-      }
+      validate(props.modelValue, validateObj?.blur);
     };
 
     // 清除 input value

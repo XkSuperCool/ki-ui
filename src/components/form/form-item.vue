@@ -26,8 +26,8 @@ export const VALIDATE_FUNCTION = Symbol.for('validate');
 export const VALIDATE_STATUS = Symbol.for('validate-status');
 
 export interface EventValidateObject {
-  change?: (value: any) => void;
-  blur?: (value: any) => void;
+  change?: (value: any) => Promise<boolean>;
+  blur?: (value: any) => Promise<boolean>;
 }
 
 export default defineComponent({
