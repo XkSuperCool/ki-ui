@@ -6,7 +6,7 @@
         :disabled='disabled'
         :value='modelValue'
         :placeholder='placeholder'
-        :class='{disabled: disabled, error: validateStatus}'
+        :class='{disabled: disabled, error: !validateStatus}'
         @input='handleInput'
         @focus='handleFocus'
         @blur='handleBlur'

@@ -30,6 +30,7 @@ export default defineComponent({
         props.circular ? 'circular' : '',
       ],
       disabled: props.disabled,
+      type: 'button',
     }, [
       props.icon && h(Icon, { type: props.icon }),
       slots.default && !props.circular ? slots.default() : '',

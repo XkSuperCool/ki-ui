@@ -7,9 +7,14 @@
       <FormItem label='密码' prop='password'>
         <ki-input type='password' v-model='formModel.password' style='width: 300px' show-password placeholder='请输入密码' />
       </FormItem>
+      <FormItem label='描述' prop='desc'>
+        <ki-input type='textarea' :row='5' v-model='formModel.desc' style='width: 300px' show-password placeholder='请输入描述' />
+      </FormItem>
+      <FormItem>
+        <Button @click="validate">校验</Button>
+        <Button>重置</Button>
+      </FormItem>
     </Form>
-    <Button @click="validate">校验</Button>
-    <Button>重置</Button>
   </div>
 </template>
 
@@ -35,6 +40,7 @@ export default defineComponent({
     const formModel = reactive({
       password: '',
       username: '',
+      desc: '',
     });
     const rules = {
       password: [
@@ -45,6 +51,10 @@ export default defineComponent({
         { required: true, message: '请输入用户名', trigger: 'change' },
         { min: 3, message: '最小3位', trigger: 'blur' },
         { max: 6, message: '最大6位', trigger: 'blur' },
+      ],
+      desc: [
+        { min: 10, message: '最小10位', trigger: 'change' },
+        { max: 200, message: '最大200位', trigger: 'change' },
       ],
     };
 
