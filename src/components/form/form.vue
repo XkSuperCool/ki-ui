@@ -11,8 +11,9 @@ import {
   provide,
   reactive,
   getCurrentInstance,
+  toRef,
 } from 'vue';
-import type { ComponentInternalInstance } from 'vue';
+import type { ComponentInternalInstance, Ref } from 'vue';
 import { RuleItem } from 'async-validator';
 
 export const FORM_REF = Symbol.for('form');
@@ -30,11 +31,13 @@ export interface FormModel {
 export interface FormRef {
   rules: Rules;
   model: FormModel;
+  showMessage?: boolean;
   changeFields: (key: string, field: Field) => void;
+  labelWidth: Ref<string>;
 }
 
 export interface ValidateFun {
-  (value: any): Promise<boolean>;
+  (): Promise<boolean>;
 }
 
 export interface Field {
@@ -62,6 +65,14 @@ export default defineComponent({
       type: Object as PropType<FormModel>,
       required: true,
     },
+    showMessage: {
+      type: Boolean,
+      default: true,
+    },
+    labelWidth: {
+      type: String,
+      default: 'auto',
+    },
   },
   setup(props) {
     /**
@@ -83,8 +94,13 @@ export default defineComponent({
 
     // inject
     provide<FormRef>(FORM_REF, {
+      /*
+      * TODO: 待优化：provider 下去的属性丢失了响应性，解决方案：使用 toRefs 传递 props
+      * */
       rules: props.rules,
       model: props.model,
+      showMessage: props.showMessage,
+      labelWidth: toRef(props, 'labelWidth'),
       changeFields,
     });
 
@@ -94,15 +110,18 @@ export default defineComponent({
     (instance as FormInstance).validate = async (callback: (status: boolean) => void) => {
       let validateStatus = true;
       // eslint-disable-next-line no-restricted-syntax
-      for (const key of Object.keys(props.model)) {
-        const validateFun = fields[key]?.validates;
-        if (validateFun && validateFun.length) {
+      for (const { validates } of Object.values(fields)) {
+        if (validates && validates.length) {
           // eslint-disable-next-line no-restricted-syntax
-          for (const fun of validateFun) {
+          for (const fun of validates) {
             // eslint-disable-next-line no-await-in-loop
-            const status = await fun(props.model[key]);
+            const status = await fun();
             if (!status && validateStatus) {
               validateStatus = false;
+            }
+            if (!status) {
+              // 如果一个 Item 里的一个校验规则 error，则这个 Item 就没必要再进行后续的校验了。
+              break;
             }
           }
         }

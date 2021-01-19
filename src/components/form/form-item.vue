@@ -1,11 +1,13 @@
 <template>
   <div class='ki-form-item'>
-    <label class='label' :class='{required: required}' :style='{width: labelWidth}'>
+    <label class='label' :class='{required: isRequired}' :style='{width: itemLabelWidth}' v-if='label'>
       {{label}}
     </label>
     <div class='ki-form-item-inner'>
       <slot></slot>
-      <div class='error-prompt' v-if='!validateStatus'>{{validateMessage}}</div>
+      <div class='error-prompt' v-if='!validateStatus && isShowMessage'>
+        {{validateMessage}}
+      </div>
     </div>
   </div>
 </template>
@@ -16,8 +18,10 @@ import {
   provide,
   inject,
   ref,
+  watch,
+  toRef,
 } from 'vue';
-import type { Ref } from 'vue';
+import type { Ref, PropType } from 'vue';
 import Schema from 'async-validator';
 import { FORM_REF } from './form.vue';
 import type { Field, FormRuleItem, FormRef } from './form.vue';
@@ -26,8 +30,8 @@ export const VALIDATE_FUNCTION = Symbol.for('validate');
 export const VALIDATE_STATUS = Symbol.for('validate-status');
 
 export interface EventValidateObject {
-  change?: (value: any) => Promise<boolean>;
-  blur?: (value: any) => Promise<boolean>;
+  change?: () => Promise<boolean>;
+  blur?: () => Promise<boolean>;
 }
 
 export default defineComponent({
@@ -39,10 +43,20 @@ export default defineComponent({
       default: 'auto',
     },
     prop: String,
+    showMessage: {
+      type: Boolean,
+      default: undefined,
+    },
+    required: Boolean,
+    requiredErrorMsg: String,
+    requiredTrigger: {
+      type: String as PropType<'change' | 'blur'>,
+      default: 'blur',
+    },
   },
   setup(props) {
     const form = inject<FormRef>(FORM_REF);
-    const required = ref(false);
+    const isRequired = ref(false);
     const validateStatus = ref(true);
     const validateMessage = ref('');
     // 保存初始化 value，用于重置表单
@@ -50,18 +64,29 @@ export default defineComponent({
 
     // 获取校验规则
     const getRole = (): FormRuleItem[] => {
-      if (props.prop && form) {
-        return form.rules[props.prop] ? form.rules[props.prop] : [];
+      if (props.prop && form && form.rules) {
+        if (form.rules[props.prop]) {
+          return form.rules[props.prop];
+        }
+        if (props.required) {
+          return [
+            {
+              required: true,
+              message: props.requiredErrorMsg ?? `${props.prop} field is required`,
+              trigger: props.requiredTrigger,
+            },
+          ];
+        }
       }
       return [];
     };
 
     // 校验函数
-    const validate = (value: any, role: FormRuleItem[]): Promise<boolean> => new Promise((resolve) => {
+    const validate = (role: FormRuleItem[]): Promise<boolean> => new Promise((resolve) => {
       const validator = new Schema({
         [props.prop as string]: role,
       });
-      validator.validate({ [props.prop as string]: value }, { firstFields: true }).then(() => {
+      validator.validate({ [props.prop as string]: form?.model[props.prop as string] }, { firstFields: true }).then(() => {
         validateStatus.value = true;
       }).catch(({ errors }) => {
         validateStatus.value = false;
@@ -76,11 +101,11 @@ export default defineComponent({
       const role = getRole().filter((r) => {
         // 判断是否有必选校验
         if (r.required) {
-          required.value = true;
+          isRequired.value = true;
         }
         return r.trigger === eventName;
       });
-      return role.length ? (value: any) => validate(value, role) : undefined;
+      return role.length ? () => validate(role) : undefined;
     };
 
     // 重置函数
@@ -114,10 +139,40 @@ export default defineComponent({
     });
     provide<Ref<boolean>>(VALIDATE_STATUS, validateStatus);
 
+    // 是否显示错误信息
+    const isShowMessage = ref(props.showMessage);
+    if (isShowMessage.value === undefined) {
+      if (form?.showMessage) {
+        isShowMessage.value = form?.showMessage;
+      }
+    }
+
+    // 控制 label width
+    const itemLabelWidth = ref<string>(props.labelWidth);
+    if (itemLabelWidth.value === 'auto') {
+      if (form?.labelWidth) {
+        itemLabelWidth.value = form?.labelWidth.value;
+      }
+    }
+    if (form && form.labelWidth.value !== 'auto') {
+      watch((form as FormRef).labelWidth, (value: string) => {
+        if (props.labelWidth === 'auto') {
+          itemLabelWidth.value = value;
+        }
+      });
+    }
+    if (props.labelWidth !== 'auto') {
+      watch(toRef(props, 'labelWidth'), (value: string) => {
+        itemLabelWidth.value = value;
+      });
+    }
+
     return {
-      required,
+      isRequired,
+      itemLabelWidth,
       validateStatus,
       validateMessage,
+      isShowMessage,
     };
   },
 });
