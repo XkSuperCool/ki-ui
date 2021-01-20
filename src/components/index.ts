@@ -8,6 +8,7 @@ import Select from './select';
 import Tag from './tag/index.vue';
 import Input from './input/index.vue';
 import Form from './form';
+import Carousel from './carousel/index';
 
 export {
   Alert,
@@ -20,4 +21,5 @@ export {
   Tag,
   Input,
   Form,
+  Carousel,
 };

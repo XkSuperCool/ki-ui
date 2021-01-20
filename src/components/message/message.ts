@@ -1,6 +1,7 @@
 import {
   defineComponent, h, reactive, TransitionGroup, computed, getCurrentInstance,
 } from 'vue';
+import type { ComponentInternalInstance } from 'vue';
 import { StatusType } from '@/types/common';
 import Icon from '../icon';
 import themeOptions from './theme';
@@ -15,6 +16,15 @@ export interface MessageOption {
   iconClass?: string;
   offset?: number;
 }
+
+export interface MessageCtx {
+  add: (option: MessageOption) => string,
+  remove: (name: string) => void,
+}
+
+export type MessageInstance = ComponentInternalInstance & {
+  ctx: MessageCtx;
+};
 
 let index = 0;
 const getUuid = (): string => `message-${index++}`;
@@ -61,8 +71,8 @@ export default defineComponent({
 
     // 方法挂载到当前组件的实例上
     const instance = getCurrentInstance();
-    (instance as any).add = add;
-    (instance as any).remove = remove;
+    (instance as MessageInstance).ctx.add = add;
+    (instance as MessageInstance).ctx.remove = remove;
 
     return () => h('div', {
       class: ['ki-message'],
