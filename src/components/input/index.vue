@@ -112,7 +112,11 @@ export default defineComponent({
     const validateObj = inject<EventValidateObject>(VALIDATE_FUNCTION);
 
     onUpdated(() => {
-      // 更新后重新计算 slot 是否显示
+      /**
+       * 更新后重新计算 slot 是否显示，
+       * 因为删除 slot 时不会同步到页面，但是会触发 update，所以在这里修改 isShowPrependSlot、isShowAppendSlot，
+       * 让修改同步到页面上。
+       */
       isShowPrependSlot.value = slots.prepend !== undefined;
       isShowAppendSlot.value = slots.append !== undefined;
     });

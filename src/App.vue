@@ -1,14 +1,20 @@
 <template>
   <div class='app'>
-    <Form :rules='rules' ref='form' :model='formModel' label-width='60px'>
+    <Form :rules='rules' ref='form' :model='formModel' label-width='80px' style='width: 500px' >
       <FormItem label='用户名' prop='username'>
-        <ki-input type='text' v-model='formModel.username' style='width: 300px' placeholder='请输入用户名' />
+        <ki-input type='text' v-model='formModel.username' placeholder='请输入用户名' />
       </FormItem>
       <FormItem label='密码' prop='password'>
-        <ki-input type='password' v-model='formModel.password' style='width: 300px' show-password placeholder='请输入密码' />
+        <ki-input type='password' v-model='formModel.password' show-password placeholder='请输入密码' />
       </FormItem>
       <FormItem label='描述' required prop='desc'>
-        <ki-input type='textarea' :row='5' v-model='formModel.desc' style='width: 300px' show-password placeholder='请输入描述' />
+        <ki-input type='textarea' :row='5' v-model='formModel.desc' show-password placeholder='请输入描述' />
+      </FormItem>
+      <FormItem label='性别' required prop='gender' required-trigger='blur'>
+        <ki-select v-model='formModel.gender' clearable multiple>
+          <Option label='男' value='男'></Option>
+          <Option label='女' value='女'></Option>
+        </ki-select>
       </FormItem>
       <FormItem>
         <Button @click='validate'>校验</Button>
@@ -25,6 +31,7 @@ import {
   Form,
   Button,
   Message,
+  Select,
 } from '@/components';
 
 export default defineComponent({
@@ -34,6 +41,8 @@ export default defineComponent({
     Form,
     FormItem: Form.Item,
     Button,
+    KiSelect: Select,
+    Option: Select.Option,
   },
   setup() {
     const form = ref(null);
@@ -41,6 +50,7 @@ export default defineComponent({
       password: '',
       username: '小明',
       desc: '',
+      gender: [],
     });
     const rules = {
       password: [

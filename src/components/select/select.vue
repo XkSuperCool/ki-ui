@@ -13,14 +13,14 @@
         @mouseenter='clearable && handleMouse(true)'
         @mouseleave='clearable && handleMouse(false)'
       >
-        <Tag v-for='option in selectOption' :key='option.value' size='mini' closable @on-close='handleTagClose(option.value)' type='info'>
+        <Tag v-for='option in selectOption' :key='option.value' size='mini' closable @on-close='handleTagClose(option)' type='info'>
           {{option.label}}
         </Tag>
         <input v-if='false' />
       </div>
       <div
         class='ki-select-container'
-        :class='{disabled: disabled, focus: focus}'
+        :class='{disabled: disabled, focus: focus, error: !validateStatus}'
       >
         <input
           disabled
@@ -33,8 +33,8 @@
       <icon type='times-circle-o' class='icon close' v-if='isShowClearIcon' @click.stop='handleClear' />
       <icon type='angle-down' class='icon' v-else />
     </div>
-    <div class='ki-options' v-show='focus'>
-      <div class='ki-options-content'>
+    <div class='ki-options' v-show='focus' ref='optionsRef'>
+      <div class='ki-options-content' :class='{ "max-height": exceedMaxHeight }'>
         <slot></slot>
       </div>
     </div>
@@ -51,10 +51,15 @@ import {
   provide,
   computed,
   nextTick,
+  inject,
+  watch,
+  toRef,
 } from 'vue';
 import Icon from '../icon';
 import Tag from '../tag/index.vue';
 import { Option } from './option.vue';
+import { VALIDATE_FUNCTION, VALIDATE_STATUS } from '../form/form-item.vue';
+import type { EventValidateObject } from '../form/form-item.vue';
 
 export interface ChangeOptionParams {
   option: Option;
@@ -91,6 +96,13 @@ export default defineComponent({
       console.error('modelValue 只能为 string | number');
     }
 
+    // 获取 options Dom 计算 Dom 高度
+    const optionsRef = ref<HTMLDivElement>();
+    const exceedMaxHeight = ref(false); // 是否超出了 options 的最大高度
+
+    const validate = inject<EventValidateObject>(VALIDATE_FUNCTION);
+    const validateStatus = inject<boolean>(VALIDATE_STATUS);
+
     // 选中的 options 数组定于
     const selectOption = reactive<Option[]>([]);
     provide('selectProps', props);
@@ -102,11 +114,24 @@ export default defineComponent({
       if (props.disabled) {
         return;
       }
+      // 获取 Options DOM 高度，判断是否超出 300
+      if (!exceedMaxHeight.value) {
+        setTimeout(() => {
+          if (optionsRef.value !== undefined) {
+            exceedMaxHeight.value = optionsRef.value.getBoundingClientRect().height > 300;
+          }
+        }, 0);
+      }
       focus.value = true;
     };
     // 取消聚焦
     const chanceFocus = () => {
-      focus.value = false;
+      if (focus.value) {
+        focus.value = false;
+        if (validate?.blur) {
+          validate.blur();
+        }
+      }
     };
 
     // 多选模式下 tag div 数据
@@ -138,6 +163,9 @@ export default defineComponent({
         emit('update:modelValue', selectOption[0].value);
         chanceFocus();
       }
+      if (validate?.change) {
+        validate.change();
+      }
     };
     provide<(params: ChangeOptionParams) => void>('changeOption', changOption);
 
@@ -152,24 +180,36 @@ export default defineComponent({
     const isShowClearIcon = computed(() => props.clearable && enterSelect.value && selectOption[0]?.value);
 
     // 清除选项
-    const handleClear = () => {
+    const handleClear = (isValidate = true) => {
       selectOption.splice(0, selectOption.length);
       emit('update:modelValue', props.multiple ? [] : '');
       chanceFocus();
       if (props.multiple) {
         computedSelectHeight();
       }
+      if (validate?.change && isValidate) {
+        validate.change();
+      }
     };
 
     // 多选的 tag 关闭
-    const handleTagClose = (value: string | number) => {
-      const index = selectOption.findIndex((item) => item.value === value);
-      if (index !== -1) {
-        selectOption.splice(index, 1);
-        emit('update:modelValue', selectOption.map((item: Option) => item.value));
-        computedSelectHeight();
-      }
+    const handleTagClose = (option: Option) => {
+      changOption({
+        option,
+        active: true,
+      });
     };
+
+    // 监听 modelValue 变化
+    watch(toRef(props, 'modelValue'), (value: unknown) => {
+      if (
+        (value === '' || (Array.isArray(value) && value.length === 0))
+        && selectOption.length
+      ) {
+        // false，重置 select 值时不用调用校验函数了
+        handleClear(false);
+      }
+    });
 
     onMounted(() => {
       document.addEventListener('click', chanceFocus);
@@ -185,6 +225,9 @@ export default defineComponent({
       selectTagRef,
       selectTagEleHeight,
       isShowClearIcon,
+      validateStatus,
+      optionsRef,
+      exceedMaxHeight,
       handleFocus,
       handleMouse,
       handleClear,

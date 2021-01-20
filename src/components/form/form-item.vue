@@ -23,6 +23,7 @@ import {
 } from 'vue';
 import type { Ref, PropType } from 'vue';
 import Schema from 'async-validator';
+import type { RuleType } from 'async-validator';
 import { FORM_REF } from './form.vue';
 import type { Field, FormRuleItem, FormRef } from './form.vue';
 
@@ -69,8 +70,15 @@ export default defineComponent({
           return form.rules[props.prop];
         }
         if (props.required) {
+          let type: string = typeof form.model[props.prop];
+          if (type === 'object' && Array.isArray(form.model[props.prop])) {
+            type = 'array';
+          } else if (type !== 'string' && type !== 'number' && type !== 'boolean') {
+            type = 'any';
+          }
           return [
             {
+              type: type as RuleType,
               required: true,
               message: props.requiredErrorMsg ?? `${props.prop} field is required`,
               trigger: props.requiredTrigger,
