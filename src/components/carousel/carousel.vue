@@ -1,18 +1,167 @@
 <template>
-  <div class='ki-carousel'>
-    <slot></slot>
+  <div class='ki-carousel' ref='carouselRef'>
+    <div :style='{height: height}'>
+      <slot></slot>
+      <Transition name='fade'>
+        <div v-if='isShowControllerButton && controller'>
+          <Button @click='prevCarouse' class='ki-c-prev-btn' circular size='small' icon='angle-left' />
+          <Button @click='nextCarouse' class='ki-c-next-btn' circular size='small' icon='angle-right' />
+        </div>
+      </Transition>
+    </div>
+    <ul class='control-point'>
+      <li
+        v-for='(item, index) in items'
+        :key='item.uid'
+        :class='{active: activeIndex === index}'
+        @click='handleClickControlPoint(index)'
+      >
+      </li>
+    </ul>
   </div>
 </template>
 
 <script lang='ts'>
 import {
   defineComponent,
+  reactive,
+  provide,
+  ref,
+  onMounted,
+  onBeforeUnmount,
+  Transition,
 } from 'vue';
+import type { ComponentInternalInstance } from 'vue';
+import Button from '../button';
+import type { CarouselInstance } from './carousel-item.vue';
+
+export const CAROUSEL_INSTANCE = Symbol.for('carousel_instance');
+export interface Carousel {
+  addItem: (instance: CarouselInstance) => void;
+  items: ComponentInternalInstance[];
+}
 
 export default defineComponent({
   name: 'Carousel',
-  setup() {
+  props: {
+    autoplay: Boolean,
+    height: {
+      type: String,
+      default: '300px',
+    },
+    controller: {
+      type: Boolean,
+      default: true,
+    },
+    interval: {
+      type: Number,
+      default: 3000,
+    },
+  },
+  components: {
+    Button,
+    Transition,
+  },
+  setup(props) {
+    const items = reactive<CarouselInstance[]>([]);
+    const addItem = (instance: CarouselInstance) => items.push(instance);
+
+    const activeIndex = ref(0);
+    let flag = true;
+    // 下一个
+    const nextCarouse = (index?: any) => {
+      if (flag) {
+        flag = false;
+        setTimeout(() => {
+          const oldIndex = activeIndex.value;
+          if (activeIndex.value === (items.length - 1)) {
+            activeIndex.value = 0;
+          } else {
+            activeIndex.value += 1;
+          }
+          if (index && typeof index === 'number') {
+            activeIndex.value = index;
+          }
+          items.forEach((item) => {
+            item.ctx.toggleCarouse(activeIndex.value, oldIndex, 'left');
+          });
+          flag = true;
+        }, 200);
+      }
+    };
+    // 上一个
+    const prevCarouse = () => {
+      if (flag) {
+        flag = false;
+        setTimeout(() => {
+          const oldIndex = activeIndex.value;
+          if (activeIndex.value === 0) {
+            activeIndex.value = items.length - 1;
+          } else {
+            activeIndex.value -= 1;
+          }
+          items.forEach((item) => {
+            item.ctx.toggleCarouse(activeIndex.value, oldIndex, 'right');
+          });
+          flag = true;
+        }, 200);
+      }
+    };
+    // 点击控制点
+    const handleClickControlPoint = (index: number) => {
+      console.log(index);
+      nextCarouse(index);
+    };
+
+    provide<Carousel>(CAROUSEL_INSTANCE, {
+      addItem,
+      items,
+    });
+
+    let autoPlayTimerId = 0;
+    const carouselRef = ref<HTMLDivElement | null>(null);
+    const autoplay = () => {
+      if (props.autoplay) {
+        autoPlayTimerId = setTimeout(() => {
+          nextCarouse();
+          autoplay();
+        }, props.interval);
+      }
+    };
+
+    const isShowControllerButton = ref(false); // 是否显示控制按钮
+    const carouselRefMouseenter = () => {
+      clearTimeout(autoPlayTimerId);
+      isShowControllerButton.value = true;
+    };
+    const carouselRefMouseLeave = () => {
+      autoplay();
+      isShowControllerButton.value = false;
+    };
+
+    onMounted(() => {
+      autoplay();
+      if (carouselRef.value) {
+        carouselRef.value.addEventListener('mouseenter', carouselRefMouseenter);
+        carouselRef.value.addEventListener('mouseleave', carouselRefMouseLeave);
+      }
+    });
+
+    onBeforeUnmount(() => {
+      if (carouselRef.value) {
+        carouselRef.value.removeEventListener('mouseenter', carouselRefMouseenter);
+        carouselRef.value.removeEventListener('mouseleave', carouselRefMouseLeave);
+      }
+    });
+
     return {
+      items,
+      activeIndex,
+      carouselRef,
+      isShowControllerButton,
+      nextCarouse,
+      prevCarouse,
+      handleClickControlPoint,
     };
   },
 });

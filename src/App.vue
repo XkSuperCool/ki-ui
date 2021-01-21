@@ -1,10 +1,9 @@
 <template>
   <div class='app'>
     {{appName}}
-    <div style='width: 400px'>
-      <carousel>
-        <div></div>
-        <carousel-item style='height: 100px' v-for='value in list' :key='value' class='item'>
+    <div style='width: 700px; margin: 0 auto;'>
+      <carousel autoplay>
+        <carousel-item style='height: 300px' v-for='value in list' :key='value' class='item'>
           {{value}}
         </carousel-item>
       </carousel>
@@ -44,5 +43,18 @@ export default defineComponent({
   .item {
     color: #000;
     background-color: grey;
+
+    &:nth-of-type(2) {
+      background-color: green;
+    }
+    &:nth-of-type(3) {
+      background-color: slateblue;
+    }
+    &:nth-of-type(4) {
+      background-color: deepskyblue;
+    }
+    &:nth-of-type(5) {
+      background-color: indianred;
+    }
   }
 </style>

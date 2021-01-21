@@ -1,3 +1,60 @@
 .ki-carousel {
   position: relative;
+  overflow-x: hidden;
+
+  .ki-c-prev-btn,
+  .ki-c-next-btn {
+    position: absolute;
+    z-index: 10;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, .2);
+    border: none;
+
+    ::v-deep span:before {
+      color: rgba(255, 255, 255, .6);
+    }
+  }
+
+  .ki-c-prev-btn {
+    left: 15px;
+  }
+
+  .ki-c-next-btn {
+    right: 15px;
+  }
+
+  .control-point {
+    list-style: none;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    padding: 0;
+
+    li {
+      width: 25px;
+      height: 2px;
+      display: inline-block;
+      margin-right: 8px;
+      cursor: pointer;
+      padding: 8px 0;
+
+      &::before {
+        content: '';
+        display: block;
+        height: 2px;
+        background-color: rgba(255, 255, 255, .4);
+      }
+    }
+
+    li:last-child {
+      margin-right: 0;
+    }
+
+    li.active::before {
+      background-color: #fff;
+    }
+  }
 }
