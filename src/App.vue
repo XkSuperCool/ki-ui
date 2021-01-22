@@ -2,7 +2,7 @@
   <div class='app'>
     {{appName}}
     <div style='width: 700px; margin: 0 auto;'>
-      <carousel autoplay>
+      <carousel autoplay height='300px'>
         <carousel-item style='height: 300px' v-for='value in list' :key='value.id' class='item'>
           <img :src='value.path' />
         </carousel-item>

@@ -12,7 +12,12 @@
     border: none;
 
     ::v-deep span:before {
+      font-size: 32px;
       color: rgba(255, 255, 255, .6);
+    }
+
+    &:hover {
+      background-color: rgba(0, 0, 0, .6);
     }
   }
 
@@ -25,16 +30,16 @@
   }
 
   .control-point {
+    width: 100%;
+    text-align: center;
     list-style: none;
     position: absolute;
     bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
     margin: 0;
     padding: 0;
 
     li {
-      width: 25px;
+      width: 4%;
       height: 2px;
       display: inline-block;
       margin-right: 8px;

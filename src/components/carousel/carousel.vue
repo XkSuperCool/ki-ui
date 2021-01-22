@@ -4,8 +4,8 @@
       <slot></slot>
       <Transition name='fade'>
         <div v-if='isShowControllerButton && controller'>
-          <Button @click='prevCarouse' class='ki-c-prev-btn' circular size='small' icon='angle-left' />
-          <Button @click='nextCarouse' class='ki-c-next-btn' circular size='small' icon='angle-right' />
+          <Button @click='prevCarouse' size='large' class='ki-c-prev-btn' circular icon='angle-left' />
+          <Button @click='nextCarouse' size='large' class='ki-c-next-btn' circular icon='angle-right' />
         </div>
       </Transition>
     </div>
