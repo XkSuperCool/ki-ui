@@ -69,21 +69,17 @@ export default defineComponent({
     const activeIndex = ref(0);
     let flag = true;
     // 下一个
-    const nextCarouse = (index?: any) => {
+    const nextCarouse = () => {
       if (flag) {
         flag = false;
         setTimeout(() => {
-          const oldIndex = activeIndex.value;
           if (activeIndex.value === (items.length - 1)) {
             activeIndex.value = 0;
           } else {
             activeIndex.value += 1;
           }
-          if (index && typeof index === 'number') {
-            activeIndex.value = index;
-          }
           items.forEach((item) => {
-            item.ctx.toggleCarouse(activeIndex.value, oldIndex, 'left');
+            item.ctx.toggleCarouse(activeIndex.value, 'left');
           });
           flag = true;
         }, 200);
@@ -94,23 +90,32 @@ export default defineComponent({
       if (flag) {
         flag = false;
         setTimeout(() => {
-          const oldIndex = activeIndex.value;
           if (activeIndex.value === 0) {
             activeIndex.value = items.length - 1;
           } else {
             activeIndex.value -= 1;
           }
           items.forEach((item) => {
-            item.ctx.toggleCarouse(activeIndex.value, oldIndex, 'right');
+            item.ctx.toggleCarouse(activeIndex.value, 'right');
           });
           flag = true;
         }, 200);
       }
     };
+    // 将事件组合为一个对象，方便调用
+    const event = { nextCarouse, prevCarouse };
     // 点击控制点
     const handleClickControlPoint = (index: number) => {
-      console.log(index);
-      nextCarouse(index);
+      if (activeIndex.value !== index) {
+        const diff = Math.abs(index - activeIndex.value);
+        const eventName = index > activeIndex.value ? 'nextCarouse' : 'prevCarouse';
+        event[eventName]();
+        // eslint-disable-next-line no-plusplus
+        for (let i = 0; i < (diff - 1); i++) {
+          // 延时后续调用，时间比 nextCarouse/prevCarouse 要长一点，使其前面的动画能先完成
+          setTimeout(event[eventName], 350 * (i + 1));
+        }
+      }
     };
 
     provide<Carousel>(CAROUSEL_INSTANCE, {

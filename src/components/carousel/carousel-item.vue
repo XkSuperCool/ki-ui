@@ -12,7 +12,6 @@ import {
   inject,
   ref,
   reactive,
-  onUpdated,
 } from 'vue';
 import type { ComponentInternalInstance } from 'vue';
 import { CAROUSEL_INSTANCE } from './carousel.vue';
@@ -20,7 +19,7 @@ import type { Carousel } from './carousel.vue';
 
 export type CarouselInstance = ComponentInternalInstance & {
   ctx: {
-    toggleCarouse: (idx: number, oldIndex: number, direction: 'left' | 'right') => void;
+    toggleCarouse: (idx: number, direction: 'left' | 'right') => void;
   };
 }
 
@@ -43,22 +42,20 @@ export default defineComponent({
       }
     };
 
-    const toggleCarouse = (idx: number, oldIndex: number, direction: 'left' | 'right') => {
-      // const diff = idx - oldIndex; // 4 - 2 = 2;
-      // const nextArr = Array(diff).fill(1).map((_, arrIndex) => idx - (arrIndex + 1));
+    const toggleCarouse = (idx: number, direction: 'left' | 'right') => {
       if (index.value === idx) {
         // 处理 active carouse
         setTranslateX(0);
         domClass[0] = 'transition';
       } else if (index.value === (idx - 1) || (idx === 0 && carouseInstance && (index.value === carouseInstance?.items.length - 1))) {
-        // 处理 active carouse 的下一张，放置到其右侧
+        // 处理 active carouse 的上一张，放置到其左侧
         domClass[0] = 'transition';
         if (direction === 'right') {
           domClass.pop();
         }
         setTranslateX(100, '-');
       } else if (index.value === (idx + 1) || ((idx + 1) === carouseInstance?.items.length && index.value === 0)) {
-        // 处理 active carouse 的上一张，放置到其左侧
+        // 处理 active carouse 的下一张，放置到其右侧
         domClass.pop();
         if (direction === 'right') {
           domClass[0] = 'transition';
@@ -83,9 +80,6 @@ export default defineComponent({
     };
 
     onMounted(initialization);
-    onUpdated(() => {
-      //
-    });
 
     return {
       style,

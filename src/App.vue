@@ -3,8 +3,8 @@
     {{appName}}
     <div style='width: 700px; margin: 0 auto;'>
       <carousel autoplay>
-        <carousel-item style='height: 300px' v-for='value in list' :key='value' class='item'>
-          {{value}}
+        <carousel-item style='height: 300px' v-for='value in list' :key='value.id' class='item'>
+          <img :src='value.path' />
         </carousel-item>
       </carousel>
     </div>
@@ -28,7 +28,40 @@ export default defineComponent({
 
     return {
       appName,
-      list: [1, 2, 3, 4, 5],
+      list: [
+        {
+          id: 1,
+          path: `https://picsum.photos/700/300?random=${Math.floor(Math.random() * 200 + 1)}`,
+        },
+        {
+          id: 2,
+          path: `https://picsum.photos/700/300?random=${Math.floor(Math.random() * 200 + 1)}`,
+        },
+        {
+          id: 3,
+          path: `https://picsum.photos/700/300?random=${Math.floor(Math.random() * 200 + 1)}`,
+        },
+        {
+          id: 4,
+          path: `https://picsum.photos/700/300?random=${Math.floor(Math.random() * 200 + 1)}`,
+        },
+        {
+          id: 5,
+          path: `https://picsum.photos/700/300?random=${Math.floor(Math.random() * 200 + 1)}`,
+        },
+        {
+          id: 6,
+          path: `https://picsum.photos/700/300?random=${Math.floor(Math.random() * 200 + 1)}`,
+        },
+        {
+          id: 7,
+          path: `https://picsum.photos/700/300?random=${Math.floor(Math.random() * 200 + 1)}`,
+        },
+        {
+          id: 8,
+          path: `https://picsum.photos/700/300?random=${Math.floor(Math.random() * 200 + 1)}`,
+        },
+      ],
     };
   },
 });
@@ -42,19 +75,6 @@ export default defineComponent({
 
   .item {
     color: #000;
-    background-color: grey;
-
-    &:nth-of-type(2) {
-      background-color: green;
-    }
-    &:nth-of-type(3) {
-      background-color: slateblue;
-    }
-    &:nth-of-type(4) {
-      background-color: deepskyblue;
-    }
-    &:nth-of-type(5) {
-      background-color: indianred;
-    }
+    background-color: #a8a6a6;
   }
 </style>
