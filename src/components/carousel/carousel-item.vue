@@ -75,6 +75,9 @@ export default defineComponent({
       nextTick(() => {
         index.value = carouseInstance?.items.findIndex((item) => item.uid === instance?.uid) as number;
         if (index.value !== -1 && carouseInstance) {
+          /**
+           * 顺序很重要，所以需要下面这样写！
+           */
           if (
             (carouseInstance?.initialIndex.value === 0 && index.value === 1) // initialIndex 为 0
             || index.value === carouseInstance?.initialIndex.value + 1 // initialIndex 不为 0， 且不是最后一张

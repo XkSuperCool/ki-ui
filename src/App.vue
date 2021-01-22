@@ -2,6 +2,14 @@
   <div class='app'>
     {{appName}}
     <div style='width: 700px; margin: 0 auto;'>
+      <carousel height='300px' :initial-index='2' >
+        <carousel-item style='height: 300px' v-for='value in list' :key='value.id' class='item'>
+          <img :src='value.path' />
+        </carousel-item>
+      </carousel>
+    </div>
+    <hr>
+    <div style='width: 700px; margin: 0 auto;'>
       <carousel height='300px' :initial-index='2' autoplay direction='vertical'>
         <carousel-item style='height: 300px' v-for='value in list' :key='value.id' class='item'>
           <img :src='value.path' />
