@@ -1,10 +1,12 @@
 <template>
   <div class='app'>
-    {{appName}}
+    <upload action='https://jsonplaceholder.typicode.com/posts'>
+      <Button type='primary' size='small'>点击上传</Button>
+    </upload>
     <div style='width: 700px; margin: 0 auto;'>
-      <carousel height='300px' :initial-index='2' >
+      <carousel height='300px' :initial-index='2' autoplay>
         <carousel-item style='height: 300px' v-for='value in list' :key='value.id' class='item'>
-          <img :src='value.path' />
+          <img :src='value.path' alt='banner' />
         </carousel-item>
       </carousel>
     </div>
@@ -12,7 +14,7 @@
     <div style='width: 700px; margin: 0 auto;'>
       <carousel height='300px' :initial-index='2' autoplay direction='vertical'>
         <carousel-item style='height: 300px' v-for='value in list' :key='value.id' class='item'>
-          <img :src='value.path' />
+          <img :src='value.path' alt='banner' />
         </carousel-item>
       </carousel>
     </div>
@@ -23,11 +25,15 @@
 import { defineComponent, ref } from 'vue';
 import {
   Carousel,
+  Upload,
+  Button,
 } from '@/components';
 
 export default defineComponent({
   name: 'App',
   components: {
+    Upload,
+    Button,
     Carousel,
     CarouselItem: Carousel.Item,
   },

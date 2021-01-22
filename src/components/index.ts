@@ -9,6 +9,7 @@ import Tag from './tag/index.vue';
 import Input from './input/index.vue';
 import Form from './form';
 import Carousel from './carousel/index';
+import Upload from './upload/index.vue';
 
 export {
   Alert,
@@ -22,4 +23,5 @@ export {
   Input,
   Form,
   Carousel,
+  Upload,
 };
