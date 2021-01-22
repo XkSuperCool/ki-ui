@@ -1,6 +1,6 @@
 .ki-carousel {
   position: relative;
-  overflow-x: hidden;
+  overflow: hidden;
 
   .ki-c-prev-btn,
   .ki-c-next-btn {
@@ -27,6 +27,25 @@
 
   .ki-c-next-btn {
     right: 15px;
+  }
+
+  .controller-btn.vertical {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+
+    .ki-c-prev-btn,
+    .ki-c-next-btn {
+      position: relative;
+      display: block;
+      transform: translateY(-10%) rotate(90deg);
+    }
+
+    .ki-c-next-btn {
+      left: 15px;
+      right: initial;
+      transform: translateY(10%) rotate(90deg);
+    }
   }
 
   .control-point {
@@ -60,6 +79,25 @@
 
     li.active::before {
       background-color: #fff;
+    }
+
+    &.vertical {
+      width: auto;
+      right: 5px;
+      top: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      li {
+        width: 2px;
+        height: 5%;
+
+        &:before {
+          display: block;
+          height: 100%;
+        }
+      }
     }
   }
 }

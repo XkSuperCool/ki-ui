@@ -3,13 +3,13 @@
     <div :style='{height: height}'>
       <slot></slot>
       <Transition name='fade'>
-        <div v-if='isShowControllerButton'>
+        <div v-if='isShowControllerButton' class='controller-btn' :class='{vertical: direction === "vertical" }'>
           <Button @click='prevCarouse' size='small' class='ki-c-prev-btn' circular icon='angle-left' />
           <Button @click='nextCarouse' size='small' class='ki-c-next-btn' circular icon='angle-right' />
         </div>
       </Transition>
     </div>
-    <ul class='control-point'>
+    <ul class='control-point' :class='{vertical: direction === "vertical" }'>
       <li
         v-for='(item, index) in items'
         :key='item.uid'
@@ -42,6 +42,7 @@ export interface Carousel {
   addItem: (instance: CarouselInstance) => void;
   items: ComponentInternalInstance[];
   initialIndex: Ref<number>;
+  direction: 'horizontal' | 'vertical';
 }
 
 export default defineComponent({
@@ -63,6 +64,10 @@ export default defineComponent({
     initialIndex: {
       type: Number,
       default: 0,
+    },
+    direction: {
+      type: String as PropType<'horizontal' | 'vertical'>,
+      default: 'horizontal',
     },
   },
   components: {
@@ -134,7 +139,8 @@ export default defineComponent({
     provide<Carousel>(CAROUSEL_INSTANCE, {
       addItem,
       items,
-      initialIndex: toRef(props,'initialIndex'),
+      initialIndex: toRef(props, 'initialIndex'),
+      direction: props.direction,
     });
 
     let autoPlayTimerId = 0;

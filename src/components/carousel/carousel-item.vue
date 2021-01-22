@@ -35,18 +35,19 @@ export default defineComponent({
     // inject
     const carouseInstance = inject<Carousel>(CAROUSEL_INSTANCE);
 
-    const setTranslateX = (value: number, flag = '+') => {
+    const setTranslate = (value: number, flag = '+') => {
+      const direction = carouseInstance?.direction === 'horizontal' ? 'X' : 'Y';
       if (flag === '-') {
-        style.transform = `translateX(-${value}%)`;
+        style.transform = `translate${direction}(-${value}%)`;
       } else if (flag === '+') {
-        style.transform = `translateX(${value}%)`;
+        style.transform = `translate${direction}(${value}%)`;
       }
     };
 
     const toggleCarouse = (idx: number, direction: 'left' | 'right') => {
       if (index.value === idx) {
         // 处理 active carouse
-        setTranslateX(0);
+        setTranslate(0);
         domClass[0] = 'transition';
       } else if (index.value === (idx - 1) || (idx === 0 && carouseInstance && (index.value === carouseInstance?.items.length - 1))) {
         // 处理 active carouse 的上一张，放置到其左侧
@@ -54,14 +55,14 @@ export default defineComponent({
         if (direction === 'right') {
           domClass.pop();
         }
-        setTranslateX(100, '-');
+        setTranslate(100, '-');
       } else if (index.value === (idx + 1) || ((idx + 1) === carouseInstance?.items.length && index.value === 0)) {
         // 处理 active carouse 的下一张，放置到其右侧
         domClass.pop();
         if (direction === 'right') {
           domClass[0] = 'transition';
         }
-        setTranslateX(100);
+        setTranslate(100);
       }
     };
 
@@ -79,10 +80,10 @@ export default defineComponent({
             || index.value === carouseInstance?.initialIndex.value + 1 // initialIndex 不为 0， 且不是最后一张
             || (index.value === 0 && carouseInstance?.initialIndex.value === carouseInstance?.items.length - 1) // initialIndex 等于最后一张
           ) {
-            setTranslateX(100);
+            setTranslate(100);
           } else if (index.value !== carouseInstance?.initialIndex.value) {
             // 其他
-            setTranslateX(100, '-');
+            setTranslate(100, '-');
           }
         }
       });
