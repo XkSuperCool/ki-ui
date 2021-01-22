@@ -12,6 +12,7 @@ import {
   inject,
   ref,
   reactive,
+  nextTick,
 } from 'vue';
 import type { ComponentInternalInstance } from 'vue';
 import { CAROUSEL_INSTANCE } from './carousel.vue';
@@ -69,14 +70,22 @@ export default defineComponent({
       if (carouseInstance && instance) {
         carouseInstance.addItem(instance);
       }
-      index.value = carouseInstance?.items.findIndex((item) => item.uid === instance?.uid) as number;
-      if (index.value && index.value > 0) {
-        if (index.value === 1) {
-          setTranslateX(100);
-        } else {
-          setTranslateX(100, '-');
+      // 获取当前 item 所在的 index
+      nextTick(() => {
+        index.value = carouseInstance?.items.findIndex((item) => item.uid === instance?.uid) as number;
+        if (index.value !== -1 && carouseInstance) {
+          if (
+            (carouseInstance?.initialIndex.value === 0 && index.value === 1) // initialIndex 为 0
+            || index.value === carouseInstance?.initialIndex.value + 1 // initialIndex 不为 0， 且不是最后一张
+            || (index.value === 0 && carouseInstance?.initialIndex.value === carouseInstance?.items.length - 1) // initialIndex 等于最后一张
+          ) {
+            setTranslateX(100);
+          } else if (index.value !== carouseInstance?.initialIndex.value) {
+            // 其他
+            setTranslateX(100, '-');
+          }
         }
-      }
+      });
     };
 
     onMounted(initialization);

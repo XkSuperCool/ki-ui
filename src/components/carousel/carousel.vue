@@ -33,7 +33,7 @@ import {
   watch,
   toRef,
 } from 'vue';
-import type { ComponentInternalInstance, PropType } from 'vue';
+import type { ComponentInternalInstance, PropType, Ref } from 'vue';
 import Button from '../button';
 import type { CarouselInstance } from './carousel-item.vue';
 
@@ -41,6 +41,7 @@ export const CAROUSEL_INSTANCE = Symbol.for('carousel_instance');
 export interface Carousel {
   addItem: (instance: CarouselInstance) => void;
   items: ComponentInternalInstance[];
+  initialIndex: Ref<number>;
 }
 
 export default defineComponent({
@@ -59,6 +60,10 @@ export default defineComponent({
       type: Number,
       default: 3000,
     },
+    initialIndex: {
+      type: Number,
+      default: 0,
+    },
   },
   components: {
     Button,
@@ -68,7 +73,7 @@ export default defineComponent({
     const items = reactive<CarouselInstance[]>([]);
     const addItem = (instance: CarouselInstance) => items.push(instance);
 
-    const activeIndex = ref(0);
+    const activeIndex = ref(props.initialIndex);
     let flag = true;
     // 下一个
     const nextCarouse = () => {
@@ -119,10 +124,17 @@ export default defineComponent({
         }
       }
     };
+    // 监听 initialIndex
+    watch(toRef(props, 'initialIndex'), (value: number) => {
+      if (value < items.length) {
+        handleClickControlPoint(value);
+      }
+    });
 
     provide<Carousel>(CAROUSEL_INSTANCE, {
       addItem,
       items,
+      initialIndex: toRef(props,'initialIndex'),
     });
 
     let autoPlayTimerId = 0;
