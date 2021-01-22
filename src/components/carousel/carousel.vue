@@ -3,9 +3,9 @@
     <div :style='{height: height}'>
       <slot></slot>
       <Transition name='fade'>
-        <div v-if='isShowControllerButton && controller'>
-          <Button @click='prevCarouse' size='large' class='ki-c-prev-btn' circular icon='angle-left' />
-          <Button @click='nextCarouse' size='large' class='ki-c-next-btn' circular icon='angle-right' />
+        <div v-if='isShowControllerButton'>
+          <Button @click='prevCarouse' size='small' class='ki-c-prev-btn' circular icon='angle-left' />
+          <Button @click='nextCarouse' size='small' class='ki-c-next-btn' circular icon='angle-right' />
         </div>
       </Transition>
     </div>
@@ -30,8 +30,10 @@ import {
   onMounted,
   onBeforeUnmount,
   Transition,
+  watch,
+  toRef,
 } from 'vue';
-import type { ComponentInternalInstance } from 'vue';
+import type { ComponentInternalInstance, PropType } from 'vue';
 import Button from '../button';
 import type { CarouselInstance } from './carousel-item.vue';
 
@@ -49,9 +51,9 @@ export default defineComponent({
       type: String,
       default: '300px',
     },
-    controller: {
-      type: Boolean,
-      default: true,
+    arrow: {
+      type: String as PropType<'hover' | 'always' | 'never'>,
+      default: 'hover',
     },
     interval: {
       type: Number,
@@ -134,14 +136,21 @@ export default defineComponent({
       }
     };
 
-    const isShowControllerButton = ref(false); // 是否显示控制按钮
+    const isShowControllerButton = ref(props.arrow === 'always'); // 是否显示控制按钮
+    watch(toRef(props, 'arrow'), (value: 'hover' | 'always' | 'never') => {
+      isShowControllerButton.value = value === 'always';
+    });
     const carouselRefMouseenter = () => {
       clearTimeout(autoPlayTimerId);
-      isShowControllerButton.value = true;
+      if (props.arrow === 'hover') {
+        isShowControllerButton.value = true;
+      }
     };
     const carouselRefMouseLeave = () => {
       autoplay();
-      isShowControllerButton.value = false;
+      if (props.arrow === 'hover') {
+        isShowControllerButton.value = false;
+      }
     };
 
     onMounted(() => {
