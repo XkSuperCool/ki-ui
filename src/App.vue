@@ -1,7 +1,10 @@
 <template>
   <div class='app'>
-    <upload action='https://jsonplaceholder.typicode.com/posts'>
+    <upload action='http://localhost:3000/tools/upload' :before-upload='handleBeforeUpload'>
       <Button type='primary' size='small'>点击上传</Button>
+      <template #tip>
+        文件上传提示
+      </template>
     </upload>
     <div style='width: 700px; margin: 0 auto;'>
       <carousel height='300px' :initial-index='2' autoplay>
@@ -40,8 +43,11 @@ export default defineComponent({
   setup() {
     const appName = ref('app');
 
+    const handleBeforeUpload = () => true;
+
     return {
       appName,
+      handleBeforeUpload,
       list: [
         {
           id: 1,
