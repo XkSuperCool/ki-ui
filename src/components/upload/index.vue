@@ -103,13 +103,12 @@ export default defineComponent({
       const xhr = new XMLHttpRequest();
       xhr.timeout = 0; // 超时时间
       xhr.withCredentials = props.withCredentials;
-
+      const index = uploadRawFileList.findIndex((item) => item.uid === fileRaw.uid);
       if (xhr.upload) {
         xhr.upload.onprogress = function onprogress(e: UploadProgressEvent) {
           if (e.total > 0) {
             // eslint-disable-next-line no-mixed-operators
             e.precent = e.loaded / e.total * 100;
-            const index = uploadRawFileList.findIndex((item) => item.uid === fileRaw.uid);
             if (index !== -1) {
               // 上传进度更新
               uploadRawFileList[index].precent = e.precent;
@@ -120,7 +119,6 @@ export default defineComponent({
           }
         };
       }
-
       xhr.open('POST', props.action, true);
       // 设置请求头
       const headers = props.headers ?? {};
@@ -143,7 +141,9 @@ export default defineComponent({
             }
             return;
           }
-          console.log('error', xhr.responseText);
+          if (index !== -1) {
+            uploadRawFileList.splice(index, 1);
+          }
           if (props.onError) {
             const response = JSON.parse(xhr.responseText);
             props.onError(response, fileRaw, uploadRawFileList);
