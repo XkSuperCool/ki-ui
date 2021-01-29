@@ -19,10 +19,52 @@
       font-size: 14px;
       padding: 2px 5px;
       border-radius: 3px;
+      margin-top: 10px;
+      position: relative;
 
       &:hover {
         color: var(--primary-color);
         background-color: #eeeded;
+      }
+
+      .progress {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        height: 2px;
+        border-radius: 3px;
+        transition: width .3s;
+        background-color: var(--success-shallow-color);
+      }
+    }
+
+    .ki-upload-list-item.picture {
+      padding: 10px;
+      box-sizing: border-box;
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      border-radius: 6px;
+
+      .content {
+        width: 0;
+        flex: 1;
+        position: relative;
+      }
+
+      img {
+        width: 70px;
+        height: 70px;
+        object-fit: cover;
+        margin-right: 10px;
+      }
+
+      &:hover {
+        background-color: initial;
+      }
+
+      .progress {
+        bottom: -10px;
       }
     }
   }

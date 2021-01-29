@@ -1,6 +1,6 @@
 <template>
   <div class='app'>
-    <upload action='http://localhost:3000/tools/upload' :before-upload='handleBeforeUpload'>
+    <upload multiple action='https://jsonplaceholder.typicode.com/posts/' :before-upload='handleBeforeUpload' list-type='picture' style='width: 300px;'>
       <Button type='primary' size='small'>点击上传</Button>
       <template #tip>
         文件上传提示
