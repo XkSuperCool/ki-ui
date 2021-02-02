@@ -108,7 +108,7 @@ export default defineComponent({
     onSuccess: Function as PropType<(response: unknown, file: FileRaw, fileList: FileRaw[]) => void>,
     onProgress: Function as PropType<(event: UploadProgressEvent, file: FileRaw, fileList: FileRaw[]) => void>,
     onError: Function as PropType<(response: unknown, file: FileRaw, fileList: FileRaw[]) => void>,
-    onExceed: Function as PropType<(files: FileList, fileList: FileRaw[]) => boolean>,
+    onExceed: Function as PropType<(files: File[], fileList: FileRaw[]) => boolean>,
     beforeUpload: Function as PropType<(file: FileRaw) => boolean | Promise<never>>,
     beforeRemove: Function as PropType<(file: FileRaw, fileList: FileRaw[]) => boolean>,
   },
@@ -241,7 +241,7 @@ export default defineComponent({
         // limit 判断
         if (typeof props.limit === 'number' && (uploadRawFileList.length >= props.limit || inputFileRef?.value?.files.length > props.limit)) {
           if (typeof props.onExceed === 'function') {
-            props.onExceed(inputFileRef?.value?.files, uploadRawFileList);
+            props.onExceed(Array.from(inputFileRef?.value?.files), uploadRawFileList);
           }
           return;
         }
@@ -267,6 +267,12 @@ export default defineComponent({
      * 拖拽 change
      * */
     const handleDragChange = (file: File) => {
+      if (typeof props.limit === 'number' && uploadRawFileList.length >= props.limit) {
+        if (typeof props.onExceed === 'function') {
+          props.onExceed([file], uploadRawFileList);
+        }
+        return;
+      }
       generateUpload(file);
     };
 
