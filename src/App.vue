@@ -1,6 +1,7 @@
 <template>
   <div class='app'>
     <upload
+      drag
       accept='.png'
       multiple
       action='https://jsonplaceholder.typicode.com/posts/'
@@ -9,15 +10,10 @@
       :before-remove='handleBeforeRemove'
       :on-exceed='handleExceed'
       :limit='3'
-      ref='uploadRef'
-      :auto-upload='false'
     >
-      <Button type='primary' size='small'>点击上传</Button>
-      <template #tip>
-        文件上传提示
-      </template>
+      <div class='upload-icon'><Icon type='cloud-upload' /></div>
+      <div class='upload-text'>将文件拖拽到此处，或<span>点击上传</span></div>
     </upload>
-    <Button @click='onClick'>上传</Button>
   </div>
 </template>
 
@@ -25,7 +21,7 @@
 import { defineComponent, ref } from 'vue';
 import {
   Upload,
-  Button,
+  Icon,
   Message,
 } from '@/components';
 
@@ -33,11 +29,10 @@ export default defineComponent({
   name: 'App',
   components: {
     Upload,
-    Button,
+    Icon,
   },
   setup() {
     const appName = ref('app');
-    const uploadRef = ref(null);
 
     const handleBeforeRemove = () => true;
 
@@ -45,18 +40,10 @@ export default defineComponent({
       Message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
     };
 
-    const onClick = () => {
-      if (uploadRef.value) {
-        (uploadRef.value as any).$.ctx.submit();
-      }
-    };
-
     return {
       appName,
-      uploadRef,
       handleBeforeRemove,
       handleExceed,
-      onClick,
     };
   },
 });

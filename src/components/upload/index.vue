@@ -1,7 +1,8 @@
 <template>
   <div class='ki-upload' :class='{disabled: disabled}'>
     <div @click='handleFileSelect'>
-      <slot></slot>
+      <DragUpload v-if='drag' :disabled='disabled' @change='handleDragChange'><slot></slot></DragUpload>
+      <slot v-else></slot>
       <input type='file' :name='name' class='ki-input-file' :multiple='multiple' ref='inputFileRef' @change='handleFileChange' :accept='accept'/>
     </div>
     <div class='ki-upload-tip'>
@@ -12,9 +13,12 @@
         <template v-if='listType === "text"'>
           <Icon type='file-text-o' />
           {{fileRaw.name}}
-          <div class='progress' :style='{width: fileRaw.precent + "%"}' v-if='fileRaw.precent !== 101'></div>
+          <div class='progress' v-if='fileRaw.precent !== 100'>
+            <div class='progress-bar' :style='{width: fileRaw.precent + "%"}'></div>
+            <span>{{Math.floor(fileRaw.precent)}}%</span>
+          </div>
           <Transition name='fade'>
-            <div class='text-icons' v-if='fileRaw.precent === 101'>
+            <div class='text-icons' v-if='fileRaw.precent === 100'>
               <icon type='check-circle-o'  class='icon check-icon' />
               <icon type='times-circle-o'  class='icon close-icon' @click='handleRemoveFile(fileRaw)' />
             </div>
@@ -24,10 +28,13 @@
           <img :src='getFileImagesURL(fileRaw.raw)' :alt='fileRaw.name'>
           <div class='content'>
             {{fileRaw.name}}
-            <div class='progress' :style='{width: fileRaw.precent + "%"}' v-if='fileRaw.precent !== 101'></div>
+            <div class='progress-picture' v-if='fileRaw.precent !== 100'>
+              <div class='progress-bar' :style='{width: fileRaw.precent + "%"}'></div>
+              <span>{{Math.floor(fileRaw.precent)}}%</span>
+            </div>
           </div>
           <Transition name='fade'>
-            <div class='picture-icons' v-if='fileRaw.precent === 101'>
+            <div class='picture-icons' v-if='fileRaw.precent === 100'>
               <icon type='check'  class='icon check-icon' />
               <icon type='close'  class='icon close-icon' @click='handleRemoveFile(fileRaw)' />
             </div>
@@ -48,6 +55,7 @@ import {
 } from 'vue';
 import type { ComponentInternalInstance, PropType } from 'vue';
 import Icon from '../icon';
+import DragUpload from './drag-upload.vue';
 
 export type UploadProgressEvent = ProgressEvent & { precent?: number };
 
@@ -92,6 +100,7 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    drag: Boolean,
     limit: Number,
     multiple: Boolean,
     headers: Object,
@@ -106,6 +115,7 @@ export default defineComponent({
   components: {
     Icon,
     Transition,
+    DragUpload,
   },
   setup(props) {
     const uploadRawFileList = reactive<FileRaw[]>([]);
@@ -138,8 +148,8 @@ export default defineComponent({
             // eslint-disable-next-line no-mixed-operators
             e.precent = e.loaded / e.total * 100;
             if (index !== -1) {
-              // 上传进度更新
-              uploadRawFileList[index].precent = e.precent;
+              // 上传进度更新，- 0.5 是为了当服务器返回响应后在置为 100
+              uploadRawFileList[index].precent = e.precent - 0.5;
             }
           }
           if (props.onProgress) {
@@ -163,7 +173,7 @@ export default defineComponent({
       xhr.onreadystatechange = () => {
         if (xhr.readyState === 4) {
           if (xhr.status >= 200 && xhr.status < 300) {
-            uploadRawFileList[index].precent = 101; // 101 为上传成功
+            uploadRawFileList[index].precent = 100; // 100 为上传成功
             if (props.onSuccess) {
               const response = JSON.parse(xhr.responseText);
               props.onSuccess(response, fileRaw, uploadRawFileList);
@@ -206,6 +216,23 @@ export default defineComponent({
     };
 
     /**
+     * 生成 fileFileRaw 并上传
+     * */
+    const generateUpload = (file: File) => {
+      const fileRaw: FileRaw = {
+        raw: file,
+        uid: Date.now(),
+        precent: 0,
+        size: file.size,
+        name: file.name,
+      };
+      uploadRawFileList.push(fileRaw);
+      if (props.autoUpload) {
+        handleFileUpload(fileRaw);
+      }
+    };
+
+    /**
      * change ，添加到 formData 中
      */
     // eslint-disable-next-line consistent-return
@@ -220,17 +247,7 @@ export default defineComponent({
         }
 
         Object.values(inputFileRef.value.files).forEach((file) => {
-          const fileRaw: FileRaw = {
-            raw: file,
-            uid: Date.now(),
-            precent: 0,
-            size: file.size,
-            name: file.name,
-          };
-          uploadRawFileList.push(fileRaw);
-          if (props.autoUpload) {
-            handleFileUpload(fileRaw);
-          }
+          generateUpload(file);
         });
       }
     };
@@ -240,10 +257,17 @@ export default defineComponent({
      * */
     (getCurrentInstance() as UploadComponentInternalInstance).ctx.submit = () => {
       // 过滤没有上传的文件
-      const files = uploadRawFileList.filter((fileRaw) => fileRaw.precent !== 101);
+      const files = uploadRawFileList.filter((fileRaw) => fileRaw.precent !== 100);
       Object.values(files).forEach((fileRaw) => {
         handleFileUpload(fileRaw);
       });
+    };
+
+    /**
+     * 拖拽 change
+     * */
+    const handleDragChange = (file: File) => {
+      generateUpload(file);
     };
 
     /**
@@ -268,6 +292,7 @@ export default defineComponent({
       handleFileChange,
       getFileImagesURL,
       handleRemoveFile,
+      handleDragChange,
     };
   },
 });
