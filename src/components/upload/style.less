@@ -1,4 +1,8 @@
 .ki-upload {
+  &.disabled * {
+    cursor: not-allowed !important;
+  }
+
   .ki-input-file {
     display: none;
   }
@@ -36,6 +40,7 @@
 
       .text-icons {
         float: right;
+        margin-top: 1.5px;
         color: var(--success-color);
       }
 

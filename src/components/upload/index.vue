@@ -1,8 +1,8 @@
 <template>
-  <div class='ki-upload'>
+  <div class='ki-upload' :class='{disabled: disabled}'>
     <div @click='handleFileSelect'>
       <slot></slot>
-      <input type='file' :name='name' class='ki-input-file' :multiple='multiple' ref='inputFileRef' @change='handleFileChange' />
+      <input type='file' :name='name' class='ki-input-file' :multiple='multiple' ref='inputFileRef' @change='handleFileChange' :accept='accept'/>
     </div>
     <div class='ki-upload-tip'>
       <slot name='tip'></slot>
@@ -12,9 +12,9 @@
         <template v-if='listType === "text"'>
           <Icon type='file-text-o' />
           {{fileRaw.name}}
-          <div class='progress' :style='{width: fileRaw.precent + "%"}' ></div>
+          <div class='progress' :style='{width: fileRaw.precent + "%"}' v-if='fileRaw.precent !== 101'></div>
           <Transition name='fade'>
-            <div class='text-icons' v-if='fileRaw.precent === 100'>
+            <div class='text-icons' v-if='fileRaw.precent === 101'>
               <icon type='check-circle-o'  class='icon check-icon' />
               <icon type='times-circle-o'  class='icon close-icon' @click='handleRemoveFile(fileRaw)' />
             </div>
@@ -24,10 +24,10 @@
           <img :src='getFileImagesURL(fileRaw.raw)' :alt='fileRaw.name'>
           <div class='content'>
             {{fileRaw.name}}
-            <div class='progress' :style='{width: fileRaw.precent + "%"}' v-if='fileRaw.precent !== 100'></div>
+            <div class='progress' :style='{width: fileRaw.precent + "%"}' v-if='fileRaw.precent !== 101'></div>
           </div>
           <Transition name='fade'>
-            <div class='picture-icons' v-if='fileRaw.precent === 100'>
+            <div class='picture-icons' v-if='fileRaw.precent === 101'>
               <icon type='check'  class='icon check-icon' />
               <icon type='close'  class='icon close-icon' @click='handleRemoveFile(fileRaw)' />
             </div>
@@ -44,11 +44,18 @@ import {
   ref,
   reactive,
   Transition,
+  getCurrentInstance,
 } from 'vue';
-import type { PropType } from 'vue';
+import type { ComponentInternalInstance, PropType } from 'vue';
 import Icon from '../icon';
 
 export type UploadProgressEvent = ProgressEvent & { precent?: number };
+
+export type UploadComponentInternalInstance = ComponentInternalInstance & {
+  ctx: {
+    submit: () => void;
+  };
+};
 
 export interface FileRaw {
   raw: File;
@@ -81,14 +88,19 @@ export default defineComponent({
       type: Boolean,
       default: true,
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
     limit: Number,
     multiple: Boolean,
     headers: Object,
+    accept: String,
     onSuccess: Function as PropType<(response: unknown, file: FileRaw, fileList: FileRaw[]) => void>,
     onProgress: Function as PropType<(event: UploadProgressEvent, file: FileRaw, fileList: FileRaw[]) => void>,
     onError: Function as PropType<(response: unknown, file: FileRaw, fileList: FileRaw[]) => void>,
     onExceed: Function as PropType<(files: FileList, fileList: FileRaw[]) => boolean>,
-    beforeUpload: Function,
+    beforeUpload: Function as PropType<(file: FileRaw) => boolean | Promise<never>>,
     beforeRemove: Function as PropType<(file: FileRaw, fileList: FileRaw[]) => boolean>,
   },
   components: {
@@ -103,7 +115,7 @@ export default defineComponent({
      * 文件选择，使用事件冒泡触发 input 的 click 事件。
      */
     const handleFileSelect = () => {
-      if (inputFileRef.value) {
+      if (inputFileRef.value && !props.disabled) {
         /**
          * 置空解决 input=file 不能重复上传同一个文件的问题
          * */
@@ -151,6 +163,7 @@ export default defineComponent({
       xhr.onreadystatechange = () => {
         if (xhr.readyState === 4) {
           if (xhr.status >= 200 && xhr.status < 300) {
+            uploadRawFileList[index].precent = 101; // 101 为上传成功
             if (props.onSuccess) {
               const response = JSON.parse(xhr.responseText);
               props.onSuccess(response, fileRaw, uploadRawFileList);
@@ -181,8 +194,8 @@ export default defineComponent({
       if (props.beforeUpload === undefined) {
         return post(file);
       }
-      const before = props.beforeUpload();
-      if (before && before.then) {
+      const before = props.beforeUpload(file);
+      if (before && typeof before !== 'boolean' && before.then) {
         // promise
         before.then(() => {
           post(file);
@@ -220,6 +233,17 @@ export default defineComponent({
           }
         });
       }
+    };
+
+    /**
+     * 手动上传文件
+     * */
+    (getCurrentInstance() as UploadComponentInternalInstance).ctx.submit = () => {
+      // 过滤没有上传的文件
+      const files = uploadRawFileList.filter((fileRaw) => fileRaw.precent !== 101);
+      Object.values(files).forEach((fileRaw) => {
+        handleFileUpload(fileRaw);
+      });
     };
 
     /**
