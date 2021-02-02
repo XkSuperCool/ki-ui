@@ -1,4 +1,6 @@
-import { h, Teleport, defineComponent, watch } from 'vue';
+import { h, Teleport, defineComponent, watch, onMounted, onBeforeUnmount, Transition } from 'vue';
+import type { PropType } from 'vue';
+import Button from '../button';
 import './style.less';
 
 export default defineComponent({
@@ -25,14 +27,37 @@ export default defineComponent({
       type: String,
       default: '20%',
     },
+    beforeClose: {
+      type: Function as PropType<(done: () => void) => void>,
+    },
+    zIndex: {
+      type: Number,
+      default: 1000,
+    },
+    cancelText: {
+      type: String,
+      default: '取消'
+    },
+    okText: {
+      type: String,
+      default: '确定'
+    },
+    teleportBody: {
+      type: Boolean,
+      default: true,
+    },
+    closeOnPressEscape: Boolean,
   },
-  emits: ['update:visible', 'before-close', 'open', 'close'],
+  emits: ['update:visible', 'open', 'close', 'on-cancel', 'on-ok'],
   setup(props, { emit, slots }) {
     const handleClose = () => {
-      // TODO: bug 未判断是否传递了 before-close 参数
-      emit('before-close', () => {
+      if (props.beforeClose && typeof props.beforeClose === 'function') {
+        props.beforeClose(() => {
+          emit('update:visible', false);
+        });
+      } else {
         emit('update:visible', false);
-      });
+      }
     };
 
     // 点击遮罩层隐藏 modal
@@ -52,30 +77,77 @@ export default defineComponent({
       immediate: true,
     });
 
-    return () => props.visible ? h(Teleport, {
-      to: 'body',
-    }, h('div', {
-      class: [
-        'ki-modal',
-        props.mask ? 'mask' : '',
-      ],
-      onClick: handleClickMask,
-    }, h('div', {
-      class: 'ki-modal-main',
-      style: {
-        width: props.width,
-        top: props.offset,
+    /**
+     * 点击取消按钮
+     */
+    const handleOnCancel = () => {
+      emit('on-cancel');
+      handleClose();
+    };
+
+    /**
+     * 点击确定按钮
+     */
+    const handleOnOk = () => {
+      emit('on-ok');
+    };
+
+    /**
+     * 键盘按下回调
+     * @param event
+     */
+    const handleKeydown = (event: KeyboardEvent) => {
+      if (props.visible) {
+        if (event.key === 'Escape') {
+          handleClose();
+        }
+      }
+    };
+
+    onMounted(() => {
+      if (props.closeOnPressEscape) {
+        window.addEventListener('keydown', handleKeydown);
+      }
+    });
+    onBeforeUnmount(() => window.removeEventListener('keydown', handleKeydown));
+
+    return () => h(Transition, {name: 'fade'}, {
+      default() {
+        return props.visible ? h(Teleport, {
+          to: 'body',
+          disabled: !props.teleportBody,
+        }, h('div', {
+          class: [
+            'ki-modal',
+            props.mask ? 'mask' : '',
+          ],
+          style: {
+            zIndex: props.zIndex,
+          },
+          onClick: handleClickMask,
+        }, h('div', {
+          class: 'ki-modal-main',
+          style: {
+            width: props.width,
+            top: props.offset,
+          },
+        },[
+          h('div', {
+            class: 'ki-m-header'
+          }, [
+            h('div', {class: 'ki-h-title'}, props.title),
+            props.showClose && h('span', {class: 'ki-h-close', onClick: handleClose}, '×'),
+          ]),
+          h('div', {class: 'ki-modal-content'}, slots.default && slots.default()),
+          h('div', {class: 'ki-modal-footer'}, slots.footer ? slots.footer() :
+            [
+              h(Button, {style: 'margin-right: 8px;', onClick: handleOnCancel}, {default: () => props.cancelText}),
+              h(Button, {type: 'primary', onClick: handleOnOk}, {default: () => props.okText}),
+            ]
+          ),
+        ]))) : null
       },
-    },[
-      h('div', {
-        class: 'ki-m-header'
-      }, [
-        h('div', {class: 'ki-h-title'}, props.title),
-        props.showClose && h('span', {class: 'ki-h-close', onClick: handleClose}, '×'),
-      ]),
-      h('div', {class: 'ki-modal-content'}, slots.default && slots.default()),
-      h('div', {class: 'ki-modal-footer'}, slots.footer && slots.footer()),
-    ]))) : null;
+    });
   },
 });
 
