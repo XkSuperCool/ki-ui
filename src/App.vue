@@ -1,6 +1,14 @@
 <template>
   <div class='app'>
-    <upload multiple action='https://jsonplaceholder.typicode.com/posts/' :before-upload='handleBeforeUpload' list-type='picture' style='width: 300px;'>
+    <upload
+      multiple
+      action='https://jsonplaceholder.typicode.com/posts/'
+      list-type='picture'
+      style='width: 300px;'
+      :before-remove='handleBeforeRemove'
+      :on-exceed='handleExceed'
+      :limit='3'
+    >
       <Button type='primary' size='small'>点击上传</Button>
       <template #tip>
         文件上传提示
@@ -14,6 +22,7 @@ import { defineComponent, ref } from 'vue';
 import {
   Upload,
   Button,
+  Message,
 } from '@/components';
 
 export default defineComponent({
@@ -25,8 +34,19 @@ export default defineComponent({
   setup() {
     const appName = ref('app');
 
+    const handleBeforeRemove = () => true;
+
+    const handleExceed = (files: FileList, fileList: any) => {
+      Message.warning({
+        content: `当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`,
+        delay: -1,
+      });
+    };
+
     return {
       appName,
+      handleBeforeRemove,
+      handleExceed,
     };
   },
 });

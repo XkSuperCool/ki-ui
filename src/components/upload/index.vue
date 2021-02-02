@@ -12,15 +12,26 @@
         <template v-if='listType === "text"'>
           <Icon type='file-text-o' />
           {{fileRaw.name}}
-          <div class='progress' :style='{width: fileRaw.precent + "%"}' v-if='fileRaw.precent !== 100'></div>
+          <div class='progress' :style='{width: fileRaw.precent + "%"}' ></div>
+          <Transition name='fade'>
+            <div class='text-icons' v-if='fileRaw.precent === 100'>
+              <icon type='check-circle-o'  class='icon check-icon' />
+              <icon type='times-circle-o'  class='icon close-icon' @click='handleRemoveFile(fileRaw)' />
+            </div>
+          </Transition>
         </template>
         <template v-if='listType === "picture"'>
           <img :src='getFileImagesURL(fileRaw.raw)' :alt='fileRaw.name'>
           <div class='content'>
             {{fileRaw.name}}
-            <div class='progress' :style='{width: fileRaw.precent + "%"}' v-if='fileRaw.precent !== 100'>
-            </div>
+            <div class='progress' :style='{width: fileRaw.precent + "%"}' v-if='fileRaw.precent !== 100'></div>
           </div>
+          <Transition name='fade'>
+            <div class='picture-icons' v-if='fileRaw.precent === 100'>
+              <icon type='check'  class='icon check-icon' />
+              <icon type='close'  class='icon close-icon' @click='handleRemoveFile(fileRaw)' />
+            </div>
+          </Transition>
         </template>
       </li>
     </ul>
@@ -32,6 +43,7 @@ import {
   defineComponent,
   ref,
   reactive,
+  Transition,
 } from 'vue';
 import type { PropType } from 'vue';
 import Icon from '../icon';
@@ -69,15 +81,19 @@ export default defineComponent({
       type: Boolean,
       default: true,
     },
+    limit: Number,
     multiple: Boolean,
     headers: Object,
     onSuccess: Function as PropType<(response: unknown, file: FileRaw, fileList: FileRaw[]) => void>,
     onProgress: Function as PropType<(event: UploadProgressEvent, file: FileRaw, fileList: FileRaw[]) => void>,
     onError: Function as PropType<(response: unknown, file: FileRaw, fileList: FileRaw[]) => void>,
+    onExceed: Function as PropType<(files: FileList, fileList: FileRaw[]) => boolean>,
     beforeUpload: Function,
+    beforeRemove: Function as PropType<(file: FileRaw, fileList: FileRaw[]) => boolean>,
   },
   components: {
     Icon,
+    Transition,
   },
   setup(props) {
     const uploadRawFileList = reactive<FileRaw[]>([]);
@@ -182,6 +198,14 @@ export default defineComponent({
     // eslint-disable-next-line consistent-return
     const handleFileChange = () => {
       if (inputFileRef.value && inputFileRef?.value.files && inputFileRef?.value.files.length) {
+        // limit 判断
+        if (typeof props.limit === 'number' && (uploadRawFileList.length >= props.limit || inputFileRef?.value?.files.length > props.limit)) {
+          if (typeof props.onExceed === 'function') {
+            props.onExceed(inputFileRef?.value?.files, uploadRawFileList);
+          }
+          return;
+        }
+
         Object.values(inputFileRef.value.files).forEach((file) => {
           const fileRaw: FileRaw = {
             raw: file,
@@ -198,12 +222,28 @@ export default defineComponent({
       }
     };
 
+    /**
+     * 删除文件
+     */
+    const handleRemoveFile = (file: FileRaw) => {
+      const index = uploadRawFileList.findIndex((item) => item.uid === file.uid);
+      if (props.beforeRemove && typeof props.beforeRemove === 'function') {
+        const bool = props.beforeRemove(file, uploadRawFileList);
+        if (bool) {
+          uploadRawFileList.splice(index, 1);
+        }
+      } else {
+        uploadRawFileList.splice(index, 1);
+      }
+    };
+
     return {
       inputFileRef,
       uploadRawFileList,
       handleFileSelect,
       handleFileChange,
       getFileImagesURL,
+      handleRemoveFile,
     };
   },
 });

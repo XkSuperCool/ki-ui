@@ -17,24 +17,48 @@
     .ki-upload-list-item {
       color: var(--color);
       font-size: 14px;
-      padding: 2px 5px;
+      padding: 2px 5px 4px 5px;
       border-radius: 3px;
       margin-top: 10px;
       position: relative;
+      overflow: hidden;
+
+      .progress {
+        content: '';
+        height: 2px;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        border-radius: 3px;
+        transition: width .3s;
+        background-color: var(--success-shallow-color);
+      }
+
+      .text-icons {
+        float: right;
+        color: var(--success-color);
+      }
+
+      .check-icon {
+        display: block;
+      }
+
+      .close-icon {
+        display: none;
+        cursor: pointer;
+      }
 
       &:hover {
         color: var(--primary-color);
         background-color: #eeeded;
-      }
 
-      .progress {
-        content: '';
-        position: absolute;
-        bottom: -2px;
-        height: 2px;
-        border-radius: 3px;
-        transition: width .3s;
-        background-color: var(--success-shallow-color);
+        .check-icon {
+          display: none;
+        }
+
+        .close-icon {
+          display: block;
+        }
       }
     }
 
@@ -49,6 +73,7 @@
       .content {
         width: 0;
         flex: 1;
+        height: 100%;
         position: relative;
       }
 
@@ -65,6 +90,25 @@
 
       .progress {
         bottom: -10px;
+      }
+
+      .picture-icons {
+        position: absolute;
+        right: -17px;
+        top: -5px;
+        background-color: var(--success-color);
+        width: 46px;
+        height: 26px;
+        transform: rotate(45deg);
+
+        .icon {
+          color: #fff;
+          font-size: 12px;
+          position: absolute;
+          left: 16px;
+          bottom: 2px;
+          transform: rotate(-45deg);
+        }
       }
     }
   }
