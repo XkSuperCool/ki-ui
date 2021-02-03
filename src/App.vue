@@ -14,6 +14,9 @@
     >
       <div class='upload-icon'><Icon type='cloud-upload' /></div>
       <div class='upload-text'>将文件拖拽到此处，或<span>点击上传</span></div>
+      <template #tip>
+        只能上传 .png 类型图片，最多可以上传三张!
+      </template>
     </upload>
   </div>
 </template>
