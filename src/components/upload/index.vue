@@ -1,47 +1,21 @@
 <template>
   <div class='ki-upload' :class='{disabled: disabled}'>
     <div @click='handleFileSelect'>
-      <DragUpload v-if='drag' :disabled='disabled' @change='handleDragChange'><slot></slot></DragUpload>
+      <DragUpload v-if='drag' :disabled='disabled' @change='handleDragChange'>
+        <slot></slot>
+      </DragUpload>
       <slot v-else></slot>
       <input type='file' :name='name' class='ki-input-file' :multiple='multiple' ref='inputFileRef' @change='handleFileChange' :accept='accept'/>
     </div>
     <div class='ki-upload-tip'>
       <slot name='tip'></slot>
     </div>
-    <ul class='ki-upload-list'>
-      <li class='ki-upload-list-item' v-for='fileRaw in uploadRawFileList' :key='fileRaw.name' :class='{picture: listType === "picture"}'>
-        <template v-if='listType === "text"'>
-          <Icon type='file-text-o' />
-          {{fileRaw.name}}
-          <div class='progress' v-if='fileRaw.precent !== 100'>
-            <div class='progress-bar' :style='{width: fileRaw.precent + "%"}'></div>
-            <span>{{Math.floor(fileRaw.precent)}}%</span>
-          </div>
-          <Transition name='fade'>
-            <div class='text-icons' v-if='fileRaw.precent === 100'>
-              <icon type='check-circle-o'  class='icon check-icon' />
-              <icon type='times-circle-o'  class='icon close-icon' @click='handleRemoveFile(fileRaw)' />
-            </div>
-          </Transition>
-        </template>
-        <template v-if='listType === "picture"'>
-          <img :src='getFileImagesURL(fileRaw.raw)' :alt='fileRaw.name'>
-          <div class='content'>
-            {{fileRaw.name}}
-            <div class='progress-picture' v-if='fileRaw.precent !== 100'>
-              <div class='progress-bar' :style='{width: fileRaw.precent + "%"}'></div>
-              <span>{{Math.floor(fileRaw.precent)}}%</span>
-            </div>
-          </div>
-          <Transition name='fade'>
-            <div class='picture-icons' v-if='fileRaw.precent === 100'>
-              <icon type='check'  class='icon check-icon' />
-              <icon type='close'  class='icon close-icon' @click='handleRemoveFile(fileRaw)' />
-            </div>
-          </Transition>
-        </template>
-      </li>
-    </ul>
+    <UploadList
+      v-if='showFileList'
+      :list-type='listType'
+      :upload-raw-file-list='uploadRawFileList'
+      @on-remove='handleRemoveFile'
+    />
   </div>
 </template>
 
@@ -50,12 +24,12 @@ import {
   defineComponent,
   ref,
   reactive,
-  Transition,
+  onMounted,
   getCurrentInstance,
 } from 'vue';
 import type { ComponentInternalInstance, PropType } from 'vue';
-import Icon from '../icon';
 import DragUpload from './drag-upload.vue';
+import UploadList from './upload-list.vue';
 
 export type UploadProgressEvent = ProgressEvent & { precent?: number };
 
@@ -66,11 +40,17 @@ export type UploadComponentInternalInstance = ComponentInternalInstance & {
 };
 
 export interface FileRaw {
-  raw: File;
-  uid: number;
-  precent: number;
-  size: number;
   name: string;
+  precent: number;
+  uid?: number;
+  raw?: File;
+  size?: number;
+  url?: string;
+}
+
+export interface FileListItem {
+  name: string;
+  url: string;
 }
 
 export default defineComponent({
@@ -100,6 +80,14 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    showFileList: {
+      type: Boolean,
+      default: true,
+    },
+    fileList: {
+      type: Array as PropType<FileListItem[]>,
+      default: () => [],
+    },
     drag: Boolean,
     limit: Number,
     multiple: Boolean,
@@ -113,9 +101,8 @@ export default defineComponent({
     beforeRemove: Function as PropType<(file: FileRaw, fileList: FileRaw[]) => boolean>,
   },
   components: {
-    Icon,
-    Transition,
     DragUpload,
+    UploadList,
   },
   setup(props) {
     const uploadRawFileList = reactive<FileRaw[]>([]);
@@ -167,6 +154,9 @@ export default defineComponent({
         }
       }
       const formData = new FormData();
+      if (!fileRaw.raw) {
+        return;
+      }
       formData.append(props.name, fileRaw.raw);
       xhr.send(formData);
       // eslint-disable-next-line consistent-return
@@ -290,6 +280,15 @@ export default defineComponent({
         uploadRawFileList.splice(index, 1);
       }
     };
+
+    onMounted(() => {
+      props.fileList.forEach((file) => {
+        uploadRawFileList.push({
+          ...file,
+          precent: 100,
+        });
+      });
+    });
 
     return {
       inputFileRef,

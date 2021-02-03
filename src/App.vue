@@ -10,6 +10,7 @@
       :before-remove='handleBeforeRemove'
       :on-exceed='handleExceed'
       :limit='3'
+      :file-list='fileList'
     >
       <div class='upload-icon'><Icon type='cloud-upload' /></div>
       <div class='upload-text'>将文件拖拽到此处，或<span>点击上传</span></div>
@@ -40,10 +41,22 @@ export default defineComponent({
       Message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
     };
 
+    const fileList = ref([
+      {
+        name: 'random1.jpg',
+        url: 'https://picsum.photos/200/300?random=1',
+      },
+      {
+        name: 'random2.jpg',
+        url: 'https://picsum.photos/200/300?random=2',
+      },
+    ]);
+
     return {
       appName,
       handleBeforeRemove,
       handleExceed,
+      fileList,
     };
   },
 });
