@@ -10,6 +10,7 @@ import Input from './input/index.vue';
 import Form from './form';
 import Carousel from './carousel/index';
 import Upload from './upload/index.vue';
+import Calendar from './calendar/index.vue';
 
 export {
   Alert,
@@ -24,4 +25,5 @@ export {
   Form,
   Carousel,
   Upload,
+  Calendar,
 };
