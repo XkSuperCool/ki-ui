@@ -1,3 +1,26 @@
+.ki-calendar-header {
+  color: var(--color);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+
+  .date {
+    margin-left: 10px;
+  }
+
+  .options span {
+    color: var(--color);
+    font-size: 14px;
+    margin-right: 10px;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--primary-color);
+    }
+  }
+}
+
 .ki-calendar-table {
   width: 100%;
 
@@ -11,7 +34,8 @@
     tr:first-child td,
     tr:nth-child(2) td,
     tr:nth-child(3) td,
-    tr:nth-child(4) td {
+    tr:nth-child(4) td,
+    tr:nth-child(5) td {
       border-right: none;
       border-bottom: none;
 
@@ -20,7 +44,7 @@
       }
     }
 
-    tr:nth-child(5) td {
+    tr:nth-child(6) td {
       border-right: none;
 
       &:last-child {
@@ -34,7 +58,6 @@
 
     .ki-calendar-day {
       font-size: 14px;
-      height: 88px;
       padding: 10px;
       box-sizing: border-box;
     }
@@ -43,5 +66,15 @@
       background-color: rgba(228, 238, 248, .6);
       cursor: pointer;
     }
+  }
+
+  td.prev,
+  td.next {
+    color: var(--border-color);
+  }
+
+  td.active {
+    color: var(--primary-color);
+    background-color: rgba(228, 238, 248, .6);
   }
 }
