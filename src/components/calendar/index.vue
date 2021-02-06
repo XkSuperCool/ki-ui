@@ -25,12 +25,12 @@
             :class='{
               prev: date.prev,
               next: date.next,
-              active: date.current && calendarActiveDay === date.day,
+              active: calendarActiveItem.day === date.day && calendarActiveItem.month === date.month,
             }'
             @click='handleOnClick(date)'
           >
             <div class='ki-calendar-day' :style='{height: itemHeight + "px"}'>
-              {{date.day}}
+              <slot name='dateCell' :date='date'>{{date.day}}</slot>
             </div>
           </td>
         </tr>
@@ -43,7 +43,6 @@
 import {
   defineComponent,
   onBeforeMount,
-  ref,
   reactive,
 } from 'vue';
 
@@ -64,7 +63,8 @@ export default defineComponent({
       default: 88,
     },
   },
-  setup() {
+  emits: ['on-click'],
+  setup(_, { emit }) {
     const ROW_NUM = 6;
     const COLUMN_NUM = 7;
     const WEEKS = ['一', '二', '三', '四', '五', '六', '日'];
@@ -77,7 +77,7 @@ export default defineComponent({
       firstDayWeek: 1, // 第一天是星期几
     });
     const calendar = reactive<Array<CalendarDateItem>[]>([]);
-    const calendarActiveDay = ref<number>();
+    const calendarActiveItem = reactive<CalendarDateItem>({});
 
     /**
      * 获取当前月份的最后一天和当前月份第一天是星期几
@@ -117,6 +117,7 @@ export default defineComponent({
         // (currentDate.firstDayWeek - 1): 减一后的值才为该填充的数量
         // (columnIndex + 1): index 从 0 开始，所以要加 1
         item.prev = true;
+        item.month = item.month === 1 ? 12 : (item.month as number) - 1;
         item.day = last - (currentDate.firstDayWeek - 1) + (columnIndex + 1);
         return item;
       }
@@ -124,6 +125,7 @@ export default defineComponent({
         item.current = true;
         return item;
       }
+      item.month = item.month === 12 ? 1 : (item.month as number) += 1;
       item.next = true;
       // 总的表格数量 - ( 当前月的天数 + 第一天因为星期偏移的值 ) = 下个月在表格中展示的天数
       const next = (ROW_NUM * COLUMN_NUM) - (currentDate.days + (currentDate.firstDayWeek - 1));
@@ -190,7 +192,10 @@ export default defineComponent({
       } else if (date.next) {
         handleToggleNextMonth();
       }
-      calendarActiveDay.value = date.day as number;
+      calendarActiveItem.day = date.day;
+      calendarActiveItem.month = date.month;
+      currentDate.day = date.day as number;
+      emit('on-click', new Date(currentDate.year, currentDate.month - 1, currentDate.day));
     };
 
     onBeforeMount(() => {
@@ -201,7 +206,7 @@ export default defineComponent({
       WEEKS,
       calendar,
       currentDate,
-      calendarActiveDay,
+      calendarActiveItem,
       handleToggleNextMonth,
       handleTogglePrevMonth,
       handleOnClick,
