@@ -7,6 +7,7 @@
         </div>
         <div class='options'>
           <span @click='handleTogglePrevMonth' class='prev'>上个月</span>
+          <span @click='handleToggleCurrentDate'>今天</span>
           <span @click='handleToggleNextMonth' class='next'>下个月</span>
         </div>
       </div>
@@ -69,10 +70,9 @@ export default defineComponent({
     const COLUMN_NUM = 7;
     const WEEKS = ['一', '二', '三', '四', '五', '六', '日'];
     const currentDate = reactive({
-      date: new Date(),
-      year: new Date().getFullYear(),
-      month: new Date().getMonth() + 1,
-      day: new Date().getDate(),
+      year: 0,
+      month: 0,
+      day: 0,
       days: 0, // 当前月天数
       firstDayWeek: 1, // 第一天是星期几
     });
@@ -144,16 +144,22 @@ export default defineComponent({
     /**
      * 生成日历
      * */
-    const generateCalendar = () => {
+    const generateCalendar = (): CalendarDateItem => {
+      let current: CalendarDateItem = {}; // 当前日期的 item 储存
       getCurrentMonthLastDayAndFirstDayWeek(currentDate.year, currentDate.month);
       calendar.splice(0, calendar.length); // 清空原数组
       for (let rowIndex = 0; rowIndex < ROW_NUM; rowIndex += 1) {
         const arr: CalendarDateItem[] = [];
         for (let columnIndex = 0; columnIndex < COLUMN_NUM; columnIndex += 1) {
-          arr.push(generateCalendarItem(rowIndex, columnIndex));
+          const item = generateCalendarItem(rowIndex, columnIndex);
+          if (item.month === currentDate.month && item.year === currentDate.year && item.day === currentDate.day) {
+            current = item;
+          }
+          arr.push(item);
         }
         calendar.push(arr);
       }
+      return current;
     };
 
     /**
@@ -198,7 +204,20 @@ export default defineComponent({
       emit('on-click', new Date(currentDate.year, currentDate.month - 1, currentDate.day));
     };
 
+    /**
+     * 今天
+     * */
+    const handleToggleCurrentDate = () => {
+      const date = new Date();
+      currentDate.month = date.getMonth() + 1;
+      currentDate.year = date.getFullYear();
+      currentDate.day = date.getDate();
+      const current = generateCalendar();
+      handleOnClick(current);
+    };
+
     onBeforeMount(() => {
+      handleToggleCurrentDate();
       generateCalendar();
     });
 
@@ -207,9 +226,10 @@ export default defineComponent({
       calendar,
       currentDate,
       calendarActiveItem,
+      handleOnClick,
       handleToggleNextMonth,
       handleTogglePrevMonth,
-      handleOnClick,
+      handleToggleCurrentDate,
     };
   },
 });
