@@ -13,7 +13,7 @@
     </slot>
     <table class='ki-calendar-table' :cellspacing='0' :cellpadding='0'>
       <thead>
-        <th v-for='weekItem in weeks' :key='weekItem'>
+        <th v-for='weekItem in WEEKS' :key='weekItem'>
           {{weekItem}}
         </th>
       </thead>
@@ -27,10 +27,9 @@
               next: date.next,
               active: date.current && calendarActiveDay === date.day,
             }'
-            :style='{height: itemHeight + "px"}'
             @click='handleOnClick(date)'
           >
-            <div class='ki-calendar-day'>
+            <div class='ki-calendar-day' :style='{height: itemHeight + "px"}'>
               {{date.day}}
             </div>
           </td>
@@ -66,16 +65,16 @@ export default defineComponent({
     },
   },
   setup() {
-    const rowNum = 6;
-    const columnNum = 7;
-    const weeks = ['一', '二', '三', '四', '五', '六', '日'];
-    const lastDay = ref(0); // 当前月的最后一天
-    const currentMonthFirstDayWeek = ref(1); // 当前月的第一天是星期几
+    const ROW_NUM = 6;
+    const COLUMN_NUM = 7;
+    const WEEKS = ['一', '二', '三', '四', '五', '六', '日'];
     const currentDate = reactive({
       date: new Date(),
       year: new Date().getFullYear(),
       month: new Date().getMonth() + 1,
       day: new Date().getDate(),
+      days: 0, // 当前月天数
+      firstDayWeek: 1, // 第一天是星期几
     });
     const calendar = reactive<Array<CalendarDateItem>[]>([]);
     const calendarActiveDay = ref<number>();
@@ -88,22 +87,22 @@ export default defineComponent({
        * 前面将 week 加了 1，所以这里要再减去
        */
       const week = new Date(year, month - 1, 1).getDay();
-      lastDay.value = new Date(year, month, 0).getDate();
-      currentMonthFirstDayWeek.value = week === 0 ? 7 : week; // 0 为周日
+      currentDate.days = new Date(year, month, 0).getDate();
+      currentDate.firstDayWeek = week === 0 ? 7 : week; // 0 为周日
     };
 
     /**
      * 生成日历每一项
      * */
     const generateCalendarItem = (rowIndex: number, columnIndex: number): CalendarDateItem => {
-      const date = columnIndex + 1 + (rowIndex * 7) - (currentMonthFirstDayWeek.value - 1);
+      const date = columnIndex + 1 + (rowIndex * 7) - (currentDate.firstDayWeek - 1);
       const item: CalendarDateItem = {
         year: currentDate.year,
         month: currentDate.month,
         day: date,
       };
       if (rowIndex === 0) {
-        if (columnIndex + 1 >= currentMonthFirstDayWeek.value) {
+        if (columnIndex + 1 >= currentDate.firstDayWeek) {
           item.current = true;
           return item;
         }
@@ -115,21 +114,21 @@ export default defineComponent({
           // 下个月
           last = new Date(currentDate.year, currentDate.month + 1, 0).getDate();
         }
-        // (currentMonthFirstDayWeek.value - 1): 减一后的值才为该填充的数量
+        // (currentDate.firstDayWeek - 1): 减一后的值才为该填充的数量
         // (columnIndex + 1): index 从 0 开始，所以要加 1
         item.prev = true;
-        item.day = last - (currentMonthFirstDayWeek.value - 1) + (columnIndex + 1);
+        item.day = last - (currentDate.firstDayWeek - 1) + (columnIndex + 1);
         return item;
       }
-      if (date <= lastDay.value) {
+      if (date <= currentDate.days) {
         item.current = true;
         return item;
       }
       item.next = true;
       // 总的表格数量 - ( 当前月的天数 + 第一天因为星期偏移的值 ) = 下个月在表格中展示的天数
-      const next = (rowNum * columnNum) - (lastDay.value + (currentMonthFirstDayWeek.value - 1));
-      const diff = (next - columnNum); // 倒数第二行需要填充的数量
-      const secondLast = columnNum - diff; // 倒数第二行已经填充的数量
+      const next = (ROW_NUM * COLUMN_NUM) - (currentDate.days + (currentDate.firstDayWeek - 1));
+      const diff = (next - COLUMN_NUM); // 倒数第二行需要填充的数量
+      const secondLast = COLUMN_NUM - diff; // 倒数第二行已经填充的数量
       if (rowIndex === 4) {
         // 当前列的 index - 已经填充的数量 + 1 = 实际需要在倒数第二行需要填充的下一个月的值
         item.day = columnIndex - secondLast + 1;
@@ -146,9 +145,9 @@ export default defineComponent({
     const generateCalendar = () => {
       getCurrentMonthLastDayAndFirstDayWeek(currentDate.year, currentDate.month);
       calendar.splice(0, calendar.length); // 清空原数组
-      for (let rowIndex = 0; rowIndex < rowNum; rowIndex += 1) {
+      for (let rowIndex = 0; rowIndex < ROW_NUM; rowIndex += 1) {
         const arr: CalendarDateItem[] = [];
-        for (let columnIndex = 0; columnIndex < columnNum; columnIndex += 1) {
+        for (let columnIndex = 0; columnIndex < COLUMN_NUM; columnIndex += 1) {
           arr.push(generateCalendarItem(rowIndex, columnIndex));
         }
         calendar.push(arr);
@@ -199,14 +198,10 @@ export default defineComponent({
     });
 
     return {
-      rowNum,
-      columnNum,
-      weeks,
-      lastDay,
+      WEEKS,
       calendar,
       currentDate,
       calendarActiveDay,
-      currentMonthFirstDayWeek,
       handleToggleNextMonth,
       handleTogglePrevMonth,
       handleOnClick,
