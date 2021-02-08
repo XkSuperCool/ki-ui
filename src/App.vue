@@ -1,6 +1,8 @@
 <template>
   <div class='app'>
-    <Radio>备选项</Radio>
+    <Radio :label='1' v-model='radio' border>备选项1</Radio>
+    <Radio :label='2' v-model='radio' disabled border>备选项2</Radio>
+    <Radio :label='3' v-model='radio' border>备选项3</Radio>
   </div>
 </template>
 
@@ -17,9 +19,11 @@ export default defineComponent({
   },
   setup() {
     const appName = ref('app');
+    const radio = ref(2);
 
     return {
       appName,
+      radio,
     };
   },
 });

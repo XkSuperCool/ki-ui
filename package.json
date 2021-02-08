@@ -10,7 +10,6 @@
   "dependencies": {
     "async-validator": "^3.5.1",
     "core-js": "^3.6.5",
-    "dayjs": "^1.10.4",
     "font-awesome": "^4.7.0",
     "vue": "^3.0.0"
   },
