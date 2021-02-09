@@ -21,9 +21,12 @@ export default defineComponent({
   props: {
     modelValue: [String, Number, Boolean],
   },
-  emits: ['update:modelValue'],
+  emits: ['update:modelValue', 'change'],
   setup(props, { emit }) {
-    const handleChange = (val: ModelValue) => emit('update:modelValue', val);
+    const handleChange = (val: ModelValue) => {
+      emit('update:modelValue', val);
+      emit('change', val);
+    };
     provide<RadioGroupProvide>(RADIO_GROUP_PROVIDE, {
       model: toRef(props, 'modelValue'),
       handleChange,

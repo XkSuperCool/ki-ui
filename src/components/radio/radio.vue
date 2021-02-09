@@ -24,6 +24,8 @@ import {
 } from 'vue';
 import { RADIO_GROUP_PROVIDE } from './radio-group.vue';
 import type { RadioGroupProvide, ModelValue } from './radio-group.vue';
+import { VALIDATE_FUNCTION } from '../form/form-item.vue';
+import type { EventValidateObject } from '../form/form-item.vue';
 
 export default defineComponent({
   name: 'Radio',
@@ -38,6 +40,7 @@ export default defineComponent({
     const radioRef = ref<null | HTMLInputElement >(null);
 
     const groupInstance = inject<RadioGroupProvide | undefined>(RADIO_GROUP_PROVIDE, undefined);
+    const validateObj = inject<EventValidateObject | null>(VALIDATE_FUNCTION, null);
 
     const model = computed({
       get: () => {
@@ -61,7 +64,17 @@ export default defineComponent({
     /**
      * input change
      */
-    const handleChange = () => emit('change', props.label);
+    const handleChange = () => {
+      if (validateObj) {
+        if (validateObj.change) {
+          validateObj.change();
+        }
+        if (validateObj.blur) {
+          validateObj.blur();
+        }
+      }
+      emit('change', props.label);
+    };
 
     return {
       model,
