@@ -1,6 +1,7 @@
 .ki-radio {
   margin-right: 20px;
   cursor: pointer;
+  display: inline-block;
 
   &.disabled {
     cursor: not-allowed;
@@ -43,6 +44,10 @@
 
     &.active {
       border-color: var(--primary-shallow-color);
+    }
+
+    &.disabled {
+      border-color: var(--disabled-color) !important;
     }
   }
 

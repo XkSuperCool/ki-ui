@@ -11,7 +11,7 @@ import Form from './form';
 import Carousel from './carousel/index';
 import Upload from './upload/index.vue';
 import Calendar from './calendar/index.vue';
-import Radio from './radio/index.vue';
+import Radio from './radio/index';
 
 export {
   Alert,

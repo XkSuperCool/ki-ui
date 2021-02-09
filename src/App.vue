@@ -1,8 +1,11 @@
 <template>
   <div class='app'>
-    <Radio :label='1' v-model='radio' border>备选项1</Radio>
-    <Radio :label='2' v-model='radio' disabled border>备选项2</Radio>
-    <Radio :label='3' v-model='radio' border>备选项3</Radio>
+    <span>{{ radio }}</span>
+    <RadioGroup v-model='radio'>
+      <Radio :label='1' border>备选项1</Radio>
+      <Radio :label='2' disabled border>备选项2</Radio>
+      <Radio :label='3' border>备选项3</Radio>
+    </RadioGroup>
   </div>
 </template>
 
@@ -16,6 +19,7 @@ export default defineComponent({
   name: 'App',
   components: {
     Radio,
+    RadioGroup: Radio.Group,
   },
   setup() {
     const appName = ref('app');

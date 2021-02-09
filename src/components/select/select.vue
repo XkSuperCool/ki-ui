@@ -20,7 +20,7 @@
       </div>
       <div
         class='ki-select-container'
-        :class='{disabled: disabled, focus: focus, error: !validateStatus}'
+        :class='{disabled: disabled, focus: focus, error: validateStatus !== undefined && !validateStatus}'
       >
         <input
           disabled
@@ -55,6 +55,7 @@ import {
   watch,
   toRef,
 } from 'vue';
+import type { Ref } from 'vue';
 import Icon from '../icon';
 import Tag from '../tag/index.vue';
 import { Option } from './option.vue';
@@ -100,8 +101,8 @@ export default defineComponent({
     const optionsRef = ref<HTMLDivElement>();
     const exceedMaxHeight = ref(false); // 是否超出了 options 的最大高度
 
-    const validate = inject<EventValidateObject>(VALIDATE_FUNCTION);
-    const validateStatus = inject<boolean>(VALIDATE_STATUS);
+    const validate = inject<EventValidateObject | null>(VALIDATE_FUNCTION, null);
+    const validateStatus = inject<Ref<boolean> | undefined>(VALIDATE_STATUS, undefined);
 
     // 选中的 options 数组定于
     const selectOption = reactive<Option[]>([]);

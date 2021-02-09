@@ -6,7 +6,7 @@
         :disabled='disabled'
         :value='modelValue'
         :placeholder='placeholder'
-        :class='{disabled: disabled, error: !validateStatus}'
+        :class='{disabled: disabled, error: validateStatus !== undefined && !validateStatus}'
         @input='handleInput'
         @focus='handleFocus'
         @blur='handleBlur'
@@ -24,7 +24,7 @@
         <input
           :type='inputType'
           :value='modelValue'
-          :class='{disabled: disabled, paddingLeft: isPaddingLeft, "input-prepend": isShowPrependSlot, error: !validateStatus}'
+          :class='{disabled: disabled, paddingLeft: isPaddingLeft, "input-prepend": isShowPrependSlot, error: validateStatus !== undefined && !validateStatus}'
           :placeholder='placeholder'
           :disabled='disabled'
           :min='minLength'
@@ -60,6 +60,7 @@ import {
   PropType,
   inject,
 } from 'vue';
+import type { Ref } from 'vue';
 import { ComponentSize } from '@/types/common';
 import Icon from '../icon';
 import { VALIDATE_FUNCTION, VALIDATE_STATUS } from '../form/form-item.vue';
@@ -106,10 +107,10 @@ export default defineComponent({
     const isPaddingLeft = computed(() => props.prefixIcon || slots['prefix-icon']);
     const isShowPrependSlot = ref(slots.prepend !== undefined);
     const isShowAppendSlot = ref(slots.append !== undefined);
-    const validateStatus = inject(VALIDATE_STATUS);
+    const validateStatus = inject<Ref<boolean> | undefined>(VALIDATE_STATUS, undefined);
 
     // inject
-    const validateObj = inject<EventValidateObject>(VALIDATE_FUNCTION);
+    const validateObj = inject<EventValidateObject | null>(VALIDATE_FUNCTION, null);
 
     onUpdated(() => {
       /**

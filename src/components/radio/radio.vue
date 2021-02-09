@@ -19,7 +19,11 @@
 </template>
 
 <script lang='ts'>
-import { defineComponent, computed, ref } from 'vue';
+import {
+  defineComponent, computed, ref, inject,
+} from 'vue';
+import { RADIO_GROUP_PROVIDE } from './radio-group.vue';
+import type { RadioGroupProvide, ModelValue } from './radio-group.vue';
 
 export default defineComponent({
   name: 'Radio',
@@ -32,10 +36,22 @@ export default defineComponent({
   emits: ['update:modelValue', 'change'],
   setup(props, { emit }) {
     const radioRef = ref<null | HTMLInputElement >(null);
+
+    const groupInstance = inject<RadioGroupProvide | undefined>(RADIO_GROUP_PROVIDE, undefined);
+
     const model = computed({
-      get: () => props.modelValue,
+      get: () => {
+        if (groupInstance) {
+          return groupInstance.model.value;
+        }
+        return props.modelValue;
+      },
       set: (val) => {
-        emit('update:modelValue', val);
+        if (groupInstance) {
+          groupInstance.handleChange(val as ModelValue);
+        } else {
+          emit('update:modelValue', val);
+        }
         if (radioRef.value) {
           radioRef.value.checked = model.value === props.label;
         }

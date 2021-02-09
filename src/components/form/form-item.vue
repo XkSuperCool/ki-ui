@@ -90,9 +90,9 @@ export default defineComponent({
     };
 
     // 校验函数
-    const validate = (role: FormRuleItem[]): Promise<boolean> => new Promise((resolve) => {
+    const validate = (roles: FormRuleItem[]): Promise<boolean> => new Promise((resolve) => {
       const validator = new Schema({
-        [props.prop as string]: role,
+        [props.prop as string]: roles,
       });
       validator.validate({ [props.prop as string]: form?.model[props.prop as string] }, { firstFields: true }).then(() => {
         validateStatus.value = true;
