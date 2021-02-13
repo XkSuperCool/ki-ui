@@ -33,7 +33,7 @@ export default defineComponent({
       type: 'button',
     }, [
       props.icon && h(Icon, { type: props.icon }),
-      slots.default && !props.circular ? slots.default() : '',
+      h('span', { class: 'ki-btn-text' }, slots.default && !props.circular ? slots.default() : '',)
     ]);
   },
 });

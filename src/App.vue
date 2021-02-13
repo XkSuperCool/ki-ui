@@ -1,46 +1,20 @@
 <template>
   <div class='app'>
-    <span>{{ radio }}</span>
-    <RadioGroup v-model='radio'>
-      <Radio :label='1' border>备选项1</Radio>
-      <Radio :label='2' disabled border>备选项2</Radio>
-      <Radio :label='3' border>备选项3</Radio>
-    </RadioGroup>
+    <Examples />
   </div>
 </template>
 
 <script lang='ts'>
-import { defineComponent, ref } from 'vue';
-import {
-  Radio,
-} from '@/components';
+import { defineComponent } from 'vue';
+import Examples from '@/examples/index.vue';
 
 export default defineComponent({
   name: 'App',
   components: {
-    Radio,
-    RadioGroup: Radio.Group,
-  },
-  setup() {
-    const appName = ref('app');
-    const radio = ref(2);
-
-    return {
-      appName,
-      radio,
-    };
+    Examples,
   },
 });
 </script>
 
 <style lang='less'>
-  .app {
-    padding: 20px;
-    box-sizing: border-box;
-  }
-
-  .item {
-    color: #000;
-    background-color: #a8a6a6;
-  }
 </style>
