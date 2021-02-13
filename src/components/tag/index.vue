@@ -1,5 +1,5 @@
 <template>
-  <div class='ki-tag' :class='[type, size]' v-if='isClose' :style='{backgroundColor: color}'>
+  <div class='ki-tag' :class='[type, size]' v-if='isClose' :style='{backgroundColor: color, borderColor: color, color: color && fontColor}'>
     <slot></slot>
     <div class='ki-tag-close' v-if='closable' @click.stop='handleClose'>×</div>
   </div>
@@ -28,6 +28,10 @@ export default defineComponent({
     },
     closable: Boolean,
     color: String,
+    fontColor: {
+      type: String,
+      default: '#fff',
+    },
   },
   emits: ['on-close'],
   setup(props, { emit }) {

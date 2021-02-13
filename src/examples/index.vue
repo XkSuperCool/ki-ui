@@ -14,8 +14,8 @@
         {{item.title}}
       </li>
     </ul>
-    <div class='content'>
-      <component :is='componentName' v-if='componentName' :key='componentName' />
+    <div class='content' ref='contentRef'>
+      <component :is='componentName' :key='componentName' v-if='componentName' />
       <div v-else>
         Ki-UI 文档 ...
       </div>
@@ -27,15 +27,20 @@
 import { defineComponent, ref, onMounted } from 'vue';
 import ButtonExample from './button.vue';
 import IconExample from './icon.vue';
+import RadioExample from './radio.vue';
+import TagExample from './tag.vue';
 
 export default defineComponent({
   name: 'Examples',
   components: {
     ButtonExample,
     IconExample,
+    RadioExample,
+    TagExample,
   },
   setup() {
     const componentName = ref('');
+    const contentRef = ref<null | HTMLDivElement>(null);
     const components = [
       {
         name: 'IconExample',
@@ -45,16 +50,31 @@ export default defineComponent({
         name: 'ButtonExample',
         title: 'Button 按钮',
       },
+      {
+        name: 'TagExample',
+        title: 'Tag 标签',
+      },
+      {
+        name: 'RadioExample',
+        title: 'Radio 单选框',
+      },
     ];
     const handleClick = (name: string) => {
       componentName.value = name;
       window.location.hash = `/${name}`;
+      if (contentRef.value) {
+        contentRef.value.scrollTo({
+          top: 0,
+          behavior: 'smooth',
+        });
+      }
     };
     onMounted(() => {
       // eslint-disable-next-line prefer-destructuring
       componentName.value = window.location.hash.split('/')[1];
     });
     return {
+      contentRef,
       components,
       componentName,
       handleClick,
@@ -93,7 +113,7 @@ export default defineComponent({
     &::-webkit-scrollbar-thumb {
       border-radius: 10px;
       border: 5px solid transparent;
-      box-shadow: 8px 0 0 var(--border-color) inset;
+      box-shadow: 8px 0 0 transparent inset;
       background-color: transparent;
     }
 
@@ -122,6 +142,12 @@ export default defineComponent({
       border-right: 1px solid var(--border-color);
       .scroll();
 
+      &:hover {
+        &::-webkit-scrollbar-thumb {
+          box-shadow: 8px 0 0 var(--border-color) inset;
+        }
+      }
+
       li {
         line-height: 50px;
         padding-left: 20px;
@@ -141,11 +167,13 @@ export default defineComponent({
     .content {
       flex: 1;
       height: calc(100vh - 80px - 25px);
-      overflow: hidden;
+      overflow: auto;
       .scroll();
 
       &:hover {
-        overflow: auto;
+        &::-webkit-scrollbar-thumb {
+          box-shadow: 8px 0 0 var(--border-color) inset;
+        }
       }
     }
   }
