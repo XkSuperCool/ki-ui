@@ -2,7 +2,7 @@
   <div class='container'>
     <div class='header'>
       <p class='title'>{{title}}</p>
-      <p class='sub-title'>{{subTitle}}</p>
+      <p class='sub-title' v-html='subTitle'></p>
     </div>
     <div class='content'>
       <div class='example'>

@@ -1,4 +1,5 @@
 import { defineComponent, h } from 'vue';
+import './style.less';
 
 export default defineComponent({
   name: 'Icon',
@@ -10,7 +11,7 @@ export default defineComponent({
   },
   setup(props) {
     return () => h('span', {
-      class: ['fa', `fa-${props.type}`],
+      class: ['ki-icon', 'fa', `fa-${props.type}`],
     });
   },
 });

@@ -26,15 +26,21 @@
 <script lang='ts'>
 import { defineComponent, ref, onMounted } from 'vue';
 import ButtonExample from './button.vue';
+import IconExample from './icon.vue';
 
 export default defineComponent({
   name: 'Examples',
   components: {
     ButtonExample,
+    IconExample,
   },
   setup() {
     const componentName = ref('');
     const components = [
+      {
+        name: 'IconExample',
+        title: 'Icon 图标',
+      },
       {
         name: 'ButtonExample',
         title: 'Button 按钮',

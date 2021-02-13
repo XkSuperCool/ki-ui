@@ -98,7 +98,7 @@ export default defineComponent({
         description: '按钮类型',
         type: 'string',
         option: 'primary | success | error | warning',
-        default: '--',
+        default: '——',
       },
       {
         attribute: 'size',
@@ -111,8 +111,8 @@ export default defineComponent({
         attribute: 'icon',
         description: '按钮图标',
         type: 'string',
-        option: '-',
-        default: '-',
+        option: '——',
+        default: '——',
       },
       {
         attribute: 'round',
