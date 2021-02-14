@@ -39,7 +39,7 @@ export default defineComponent({
 
 <style scoped lang='less'>
   .container {
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 
     .header {
       margin-bottom: 20px;

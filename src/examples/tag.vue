@@ -39,6 +39,7 @@
      <ki-tag color='pink' font-color='#000'>标签一</ki-tag>
    </Container>
    <Attributes :attributes='attributes' />
+   <Attributes :attributes='events' target='event' />
  </div>
 </template>
 
@@ -56,6 +57,13 @@ export default defineComponent({
     Attributes,
   },
   setup() {
+    const events = [
+      {
+        name: 'on-close',
+        description: '移除 Tag 时触发',
+        type: '() => void',
+      },
+    ];
     const attributes = [
       {
         attribute: 'type',
@@ -87,7 +95,7 @@ export default defineComponent({
       },
       {
         attribute: 'font-color',
-        description: '标签文字颜色，只有在 color 设置了后才能生效',
+        description: '标签文字颜色，只有在设置了 color 属性后才能生效',
         type: 'string',
         option: '——',
         default: '——',
@@ -95,6 +103,7 @@ export default defineComponent({
     ];
     return {
       attributes,
+      events,
     };
   },
 });

@@ -43,6 +43,8 @@
       </template>
     </Container>
     <Attributes :attributes='attribute'/>
+    <Attributes :attributes='events' target='event'/>
+    <Attributes :attributes='events' target='event' title='RadioGroup Attributes Event'/>
   </div>
 </template>
 
@@ -65,6 +67,13 @@ export default defineComponent({
     const radio1 = ref('2');
     const radio3 = ref('3');
     const radio4 = ref('1');
+    const events = [
+      {
+        name: 'change',
+        description: '绑定值变化时触发',
+        type: '(value: string | number | boolean) => void',
+      },
+    ];
     const attribute = [
       {
         attribute: 'v-model',
@@ -100,6 +109,7 @@ export default defineComponent({
       radio1,
       radio3,
       radio4,
+      events,
       attribute,
     };
   },
