@@ -86,7 +86,7 @@ export default defineComponent({
       default: '请选择',
     },
   },
-  emits: ['update:modelValue'],
+  emits: ['update:modelValue', 'change', 'clear'],
   setup(props, { emit }) {
     // 断言警告
     if (props.multiple) {
@@ -157,11 +157,14 @@ export default defineComponent({
         } else {
           selectOption.push(option);
         }
-        emit('update:modelValue', selectOption.map((item: Option) => item.value));
+        const data = selectOption.map((item: Option) => item.value);
+        emit('update:modelValue', data);
+        emit('change', data);
         computedSelectHeight();
       } else {
         selectOption.splice(0, 1, option);
         emit('update:modelValue', selectOption[0].value);
+        emit('change', selectOption[0].value);
         chanceFocus();
       }
       if (validate?.change) {
@@ -184,6 +187,7 @@ export default defineComponent({
     const handleClear = (isValidate = true) => {
       selectOption.splice(0, selectOption.length);
       emit('update:modelValue', props.multiple ? [] : '');
+      emit('clear');
       chanceFocus();
       if (props.multiple) {
         computedSelectHeight();

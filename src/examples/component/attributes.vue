@@ -70,7 +70,7 @@ export default defineComponent({
 
 <style scoped lang='less'>
   .attribute {
-    margin-bottom: 30px;
+    margin-bottom: 50px;
 
     .title {
       color: var(--color);
