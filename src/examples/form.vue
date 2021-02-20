@@ -22,14 +22,14 @@
       title='表单校验'
       sub-title='用于提交前对数据进行校验操作'
     >
-      <ki-form :model='username2' style='width: 400px;' label-width='70px' :rules='rules' ref='formRef'>
+      <ki-form :model='username2' style='width: 400px;' label-width='90px' :rules='rules' ref='formRef'>
         <ki-form-item label='用户名' prop='name'>
           <ki-input v-model='username2.name' />
         </ki-form-item>
         <ki-form-item label='密码' prop='password'>
           <ki-input v-model='username2.password' type='password' show-password />
         </ki-form-item>
-        <ki-form-item label='密码' prop='repeatPassword'>
+        <ki-form-item label='重复密码' prop='repeatPassword'>
           <ki-input v-model='username2.repeatPassword' type='password' show-password />
         </ki-form-item>
         <ki-form-item label='爱好' prop='hobby'>
