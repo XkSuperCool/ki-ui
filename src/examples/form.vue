@@ -104,7 +104,7 @@ export default defineComponent({
 
     const handleCreate = () => {
       if (formRef.value) {
-        formRef.value.$.validate().then((status) => {
+        formRef.value.$.validate().then((status: boolean) => {
           if (status) {
             Message.success('校验成功');
           } else {
