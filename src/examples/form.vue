@@ -120,7 +120,7 @@ export default defineComponent({
       }
     };
 
-    const validatorFunction = (rule, value, callback) => {
+    const validatorFunction = (rule: any, value: any, callback: any) => {
       if (value === '') {
         callback(new Error('请再次输入密码'));
       } else if (value !== username2.password) {
