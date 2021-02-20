@@ -56,12 +56,12 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const form = inject<FormRef>(FORM_REF);
+    const form = inject<FormRef | undefined>(FORM_REF, undefined);
     const isRequired = ref(false);
     const validateStatus = ref(true);
     const validateMessage = ref('');
     // 保存初始化 value，用于重置表单
-    const initialValue = form?.model[props.prop as string];
+    const initialValue = form?.model && form?.model[props.prop as string];
 
     // 获取校验规则
     const getRole = (): FormRuleItem[] => {
