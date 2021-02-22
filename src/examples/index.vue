@@ -31,6 +31,7 @@ import RadioExample from './radio.vue';
 import TagExample from './tag.vue';
 import SelectExample from './select.vue';
 import FormExample from './form.vue';
+import UploadExample from './upload.vue';
 
 export default defineComponent({
   name: 'Examples',
@@ -41,6 +42,7 @@ export default defineComponent({
     TagExample,
     SelectExample,
     FormExample,
+    UploadExample,
   },
   setup() {
     const componentName = ref('');
@@ -65,6 +67,10 @@ export default defineComponent({
       {
         name: 'SelectExample',
         title: 'Select 选择器',
+      },
+      {
+        name: 'UploadExample',
+        title: 'Upload 文件上传',
       },
       {
         name: 'FormExample',

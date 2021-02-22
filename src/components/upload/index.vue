@@ -96,7 +96,7 @@ export default defineComponent({
     onSuccess: Function as PropType<(response: unknown, file: FileRaw, fileList: FileRaw[]) => void>,
     onProgress: Function as PropType<(event: UploadProgressEvent, file: FileRaw, fileList: FileRaw[]) => void>,
     onError: Function as PropType<(response: unknown, file: FileRaw, fileList: FileRaw[]) => void>,
-    onExceed: Function as PropType<(files: File[], fileList: FileRaw[]) => boolean>,
+    onExceed: Function as PropType<(files: File[], fileList: FileRaw[]) => void>,
     beforeUpload: Function as PropType<(file: FileRaw) => boolean | Promise<never>>,
     beforeRemove: Function as PropType<(file: FileRaw, fileList: FileRaw[]) => boolean>,
   },

@@ -61,6 +61,9 @@
         </ki-form-item>
       </ki-form>
     </Container>
+    <Attribute :attributes='attributes' />
+    <Attribute :attributes='events' target='event' title='Form Events' />
+    <Attribute :attributes='itemAttributes' />
   </div>
 </template>
 
@@ -70,6 +73,7 @@ import {
   Form, Input, Button, Message, Select,
 } from '@/components';
 import Container from './component/container.vue';
+import Attribute from './component/attributes.vue';
 
 export default defineComponent({
   name: 'FormExample',
@@ -81,6 +85,7 @@ export default defineComponent({
     KiSelect: Select,
     KiOption: Select.Option,
     Container,
+    Attribute,
   },
   setup() {
     const username1 = reactive({
@@ -148,12 +153,104 @@ export default defineComponent({
       ],
     };
 
+    const attributes = [
+      {
+        attribute: 'model',
+        description: '表单数据对象',
+        type: 'object',
+        option: '——',
+        default: '——',
+      },
+      {
+        attribute: 'rules',
+        description: '校验规则对象',
+        type: 'object',
+        option: '——',
+        default: '——',
+      },
+      {
+        attribute: 'showMessage',
+        description: '是否显示错误信息',
+        type: 'boolean',
+        option: 'true | false',
+        default: 'true',
+      },
+      {
+        attribute: 'labelWidth',
+        description: 'label 的宽度',
+        type: 'string',
+        option: '——',
+        default: 'auto',
+      },
+    ];
+
+    const events = [
+      {
+        name: 'validate',
+        description: '触发表单校验，可以通过参数回调或返回的 Promise .then 获取校验结果',
+        type: '(callback: (val: boolean) => void) => Promise<boolean>',
+      },
+      {
+        name: 'reset',
+        description: '重置表单',
+        type: '() => void',
+      },
+    ];
+
+    const itemAttributes = [
+      {
+        attribute: 'label',
+        description: '标签文本',
+        type: 'string',
+        option: '——',
+        default: '——',
+      },
+      {
+        attribute: 'prop',
+        description: '表单域 model 字段，在使用 validate、reset 方法的情况下，该属性是必填的',
+        type: 'string',
+        option: '传入 Form 组件的 model 中的字段',
+        default: '——',
+      },
+      {
+        attribute: 'showMessage',
+        description: '是否显示错误信息',
+        type: 'boolean',
+        option: 'true | false',
+        default: '——',
+      },
+      {
+        attribute: 'required',
+        description: '是否必填，简单的非空校验，需要配合 prop 属性',
+        type: 'boolean',
+        option: 'true | false',
+        default: '——',
+      },
+      {
+        attribute: 'requiredErrorMsg',
+        description: '指定 required 属性后，校验失败提示 msg',
+        type: 'string',
+        option: '——',
+        default: '{prop} field is required',
+      },
+      {
+        attribute: 'requiredTrigger',
+        description: '指定 required 属性后，校验触发方式',
+        type: 'string',
+        option: 'change | blur',
+        default: 'blur',
+      },
+    ];
+
     return {
       username1,
       username2,
       username3,
       rules,
       formRef,
+      attributes,
+      events,
+      itemAttributes,
       handleCreate,
       handleReset,
     };
