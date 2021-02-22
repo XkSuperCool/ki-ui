@@ -30,6 +30,7 @@ import IconExample from './icon.vue';
 import RadioExample from './radio.vue';
 import TagExample from './tag.vue';
 import SelectExample from './select.vue';
+import InputExample from './input.vue';
 
 export default defineComponent({
   name: 'Examples',
@@ -39,6 +40,7 @@ export default defineComponent({
     RadioExample,
     TagExample,
     SelectExample,
+    InputExample,
   },
   setup() {
     const componentName = ref('');
@@ -63,6 +65,10 @@ export default defineComponent({
       {
         name: 'SelectExample',
         title: 'Select 选择器',
+      },
+      {
+        name: 'InputExample',
+        title: 'Input 输入框',
       },
     ];
     const handleClick = (name: string) => {
