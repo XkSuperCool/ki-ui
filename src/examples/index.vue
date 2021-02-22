@@ -31,6 +31,8 @@ import RadioExample from './radio.vue';
 import TagExample from './tag.vue';
 import SelectExample from './select.vue';
 import InputExample from './input.vue';
+import FormExample from './form.vue';
+import UploadExample from './upload.vue';
 
 export default defineComponent({
   name: 'Examples',
@@ -41,6 +43,8 @@ export default defineComponent({
     TagExample,
     SelectExample,
     InputExample,
+    FormExample,
+    UploadExample,
   },
   setup() {
     const componentName = ref('');
@@ -69,6 +73,14 @@ export default defineComponent({
       {
         name: 'InputExample',
         title: 'Input 输入框',
+      },
+      {
+        name: 'UploadExample',
+        title: 'Upload 文件上传',
+      },
+      {
+        name: 'FormExample',
+        title: 'Form 表单',
       },
     ];
     const handleClick = (name: string) => {

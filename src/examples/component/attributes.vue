@@ -32,7 +32,7 @@
       </thead>
       <tbody>
         <tr v-for='(item, idx) in attributes' :key='idx'>
-          <td v-for='key in Object.keys(item)' :key='key'>
+          <td v-for='key in Object.keys(item)' :key='key' style='maxWidth: 150px'>
             {{item[key]}}
           </td>
         </tr>
