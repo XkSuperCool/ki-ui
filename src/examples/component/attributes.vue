@@ -22,7 +22,7 @@
             <th>回调函数</th>
           </template>
           <template v-if='target === "slot"'>
-            <th>slot name</th>
+            <th>slot 名称</th>
             <th>说明</th>
           </template>
         </template>
