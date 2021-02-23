@@ -5,18 +5,19 @@ import { getCurrentInstance, ComponentInternalInstance } from 'vue';
  * @param name
  * @param parent
  */
-export default function useFindParent(name: string, parent?: ComponentInternalInstance | null): ComponentInternalInstance | null {
+export default function findParentByName(name: string, parent?: ComponentInternalInstance | null): ComponentInternalInstance | null {
   const instance = parent ?? getCurrentInstance();
   if (instance !== null) {
-    const parent = instance.parent;
+    let parent = instance.parent;
     if (parent === null) {
       return null;
     }
-
-    if (parent.type.name === name) {
-      return parent;
+    while (parent) {
+      if (parent.type.name === name) {
+        return parent;
+      }
+      parent = parent.parent;
     }
-    return useFindParent(name, parent);
   }
   return null;
 };
