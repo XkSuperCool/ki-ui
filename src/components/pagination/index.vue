@@ -1,14 +1,14 @@
 <template>
   <div class='ki-pagination' :class='{mini: mini}' v-if='!(hideOnSinglePage && paginationCount === 1)'>
     <div class='total' v-if='isTotal'>共 {{total}} 条</div>
-    <Select v-if='pageSizes.length && !mini' v-model='privatePageSize'>
-      <Option
+    <ki-select v-if='pageSizes.length && !mini' v-model='privatePageSize' height='100%'>
+      <ki-option
         v-for='(size, index) in pageSizes'
         :key='size + index'
         :value='size'
         :label='size + "条/页"'
       />
-    </Select>
+    </ki-select>
     <ul class='ki-pagination-container' :class='{background: background}'>
       <li class='ki-pagination-item prev' @click='handlePrevPage'>
         <icon type='angle-left'/>
@@ -86,8 +86,8 @@ export default defineComponent({
   name: 'Pagination',
   components: {
     Icon,
-    Select,
-    Option: Select.Option,
+    KiSelect: Select,
+    KiOption: Select.Option,
   },
   props: {
     background: Boolean,

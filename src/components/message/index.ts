@@ -34,7 +34,7 @@ for (const theme of Object.keys(themeOptions)) {
     let _option: MessageOption = {
       content: '',
       theme: theme as StatusType,
-      delay: 1500,
+      delay: 3000,
       showIcon: true,
     };
     if (typeof option === 'string') {

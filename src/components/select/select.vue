@@ -27,7 +27,7 @@
           class='ki-select-input'
           :value='multiple ? "" : selectOption[0]?.label'
           :placeholder='selectOption.length ? "" : placeholder'
-          :style='{height: selectTagEleHeight + "px"}'
+          :style='{height: multiple ? selectTagEleHeight + "px" : height}'
         />
       </div>
       <icon type='times-circle-o' class='icon close' v-if='isShowClearIcon' @click.stop='handleClear' />
@@ -78,6 +78,10 @@ export default defineComponent({
       type: [String, Number, Array],
     },
     width: String,
+    height: {
+      type: String,
+      default: '40px',
+    },
     disabled: Boolean,
     clearable: Boolean,
     multiple: Boolean,

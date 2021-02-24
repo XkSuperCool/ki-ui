@@ -33,6 +33,8 @@ import SelectExample from './select.vue';
 import InputExample from './input.vue';
 import FormExample from './form.vue';
 import UploadExample from './upload.vue';
+import MessageExample from './message.vue';
+import PaginationExample from './page.vue';
 
 export default defineComponent({
   name: 'Examples',
@@ -45,6 +47,8 @@ export default defineComponent({
     InputExample,
     FormExample,
     UploadExample,
+    MessageExample,
+    PaginationExample,
   },
   setup() {
     const componentName = ref('');
@@ -81,6 +85,14 @@ export default defineComponent({
       {
         name: 'FormExample',
         title: 'Form 表单',
+      },
+      {
+        name: 'MessageExample',
+        title: 'Message 消息提示',
+      },
+      {
+        name: 'PaginationExample',
+        title: 'Pagination 分页器',
       },
     ];
     const handleClick = (name: string) => {

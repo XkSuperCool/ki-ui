@@ -18,7 +18,7 @@ export interface MessageOption {
 }
 
 export interface MessageCtx {
-  add: (option: MessageOption) => string,
+  add: (option: MessageOption) => () => void,
   remove: (name: string) => void,
 }
 
@@ -54,7 +54,9 @@ export default defineComponent({
         }, _option.delay);
       }
 
-      return name;
+      return () => {
+        remove(name);
+      };
     };
 
     const remove = (name: string) => {
