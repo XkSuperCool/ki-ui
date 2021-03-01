@@ -5,7 +5,7 @@
     >
       <ki-carousel>
         <ki-carousel-item v-for='item in imgs' :key='item.url'>
-          <img :src='item.url' alt='.' height='' />
+          <img :src='item.url' alt='.' style='width: 100%' />
         </ki-carousel-item>
       </ki-carousel>
     </Container>
@@ -14,7 +14,7 @@
     >
       <ki-carousel autoplay>
         <ki-carousel-item v-for='item in imgs' :key='item.url'>
-          <img :src='item.url' alt='.' height='' />
+          <img :src='item.url' alt='.' style='width: 100%' />
         </ki-carousel-item>
       </ki-carousel>
     </Container>
@@ -24,7 +24,7 @@
     >
       <ki-carousel autoplay arrow='always'>
         <ki-carousel-item v-for='item in imgs' :key='item.url'>
-          <img :src='item.url' alt='.' height='' />
+          <img :src='item.url' alt='.' style='width: 100%' />
         </ki-carousel-item>
       </ki-carousel>
     </Container>
@@ -34,7 +34,7 @@
     >
       <ki-carousel autoplay direction='vertical'>
         <ki-carousel-item v-for='item in imgs' :key='item.url'>
-          <img :src='item.url' alt='.' height='' />
+          <img :src='item.url' alt='.' style='width: 100%' />
         </ki-carousel-item>
       </ki-carousel>
     </Container>

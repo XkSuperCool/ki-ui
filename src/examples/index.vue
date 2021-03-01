@@ -5,15 +5,21 @@
     </div>
   </div>
   <div class='container'>
-    <ul class='menu'>
-      <li
-        v-for='item in components'
-        :key='item.name'
-        :class='{active: item.name === componentName}'
-        @click='handleClick(item.name)'>
-        {{item.title}}
-      </li>
-    </ul>
+    <div v-if='isShowMenu' class='left-menu'>
+      <ul class='menu'>
+        <li
+          v-for='item in components'
+          :key='item.name'
+          :class='{active: item.name === componentName}'
+          @click='handleClick(item.name)'>
+          {{item.title}}
+        </li>
+      </ul>
+      <div class='close' @click='isShowMenu = false'>
+        关闭菜单
+      </div>
+    </div>
+    <div class='show' v-if='!isShowMenu' @click='isShowMenu = true'>显示菜单</div>
     <div class='content' ref='contentRef'>
       <component :is='componentName' :key='componentName' v-if='componentName' />
       <div v-else>
@@ -39,6 +45,7 @@ import ModalExample from './modal.vue';
 import AlertExample from './alert.vue';
 import CarouselExample from './carousel.vue';
 import CalendarExample from './calendar.vue';
+import TreeExample from './tree.vue';
 
 export default defineComponent({
   name: 'Examples',
@@ -57,10 +64,12 @@ export default defineComponent({
     AlertExample,
     CarouselExample,
     CalendarExample,
+    TreeExample,
   },
   setup() {
     const componentName = ref('');
     const contentRef = ref<null | HTMLDivElement>(null);
+    const isShowMenu = ref(true);
     const components = [
       {
         name: 'IconExample',
@@ -118,6 +127,10 @@ export default defineComponent({
         name: 'CalendarExample',
         title: 'Calendar 日历',
       },
+      {
+        name: 'TreeExample',
+        title: 'Tree 树形控件',
+      },
     ];
     const handleClick = (name: string) => {
       componentName.value = name;
@@ -136,6 +149,7 @@ export default defineComponent({
     return {
       contentRef,
       components,
+      isShowMenu,
       componentName,
       handleClick,
     };
@@ -191,13 +205,20 @@ export default defineComponent({
     min-height: calc(100vh - 80px - 25px);
     margin: 0 auto;
     display: flex;
+    position: relative;
+
+    > .left-menu {
+      width: 20%;
+      height: calc(100vh - 80px - 21px);
+      position: relative;
+      margin-right: 20px;
+    }
 
     .menu {
-      width: 20%;
-      height: calc(100vh - 80px - 25px);
+      height: 100%;
       overflow: auto;
-      margin: 0 20px 0 0;
       padding: 0;
+      margin: 0;
       list-style: none;
       border-right: 1px solid var(--border-color);
       .scroll();
@@ -236,5 +257,35 @@ export default defineComponent({
         }
       }
     }
+  }
+
+  .toggle {
+    color: var(--color);
+    font-size: 14px;
+    position: absolute;
+    bottom: 0;
+    line-height: 40px !important;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--primary-color);
+    }
+  }
+
+  .close {
+    .toggle();
+    width: 100%;
+    background: #fff;
+    left: 0;
+    padding: 0 10px 0 0;
+    border-top: 1px solid var(--border-color);
+    border-right: 1px solid var(--border-color);
+    text-align: right;
+    box-sizing: border-box;
+  }
+
+  .show {
+    .toggle();
+    left: -80px;
   }
 </style>

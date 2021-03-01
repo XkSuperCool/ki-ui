@@ -12,6 +12,7 @@ import Carousel from './carousel/index';
 import Upload from './upload/index.vue';
 import Calendar from './calendar/index.vue';
 import Radio from './radio/index';
+import Tree from './tree/index.vue';
 
 export {
   Alert,
@@ -28,4 +29,5 @@ export {
   Upload,
   Calendar,
   Radio,
+  Tree,
 };
