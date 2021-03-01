@@ -33,14 +33,14 @@ import {
   watch,
   toRef,
 } from 'vue';
-import type { ComponentInternalInstance, PropType, Ref } from 'vue';
+import type { PropType, Ref } from 'vue';
 import Button from '../button';
 import type { CarouselInstance } from './carousel-item.vue';
 
 export const CAROUSEL_INSTANCE = Symbol.for('carousel_instance');
 export interface Carousel {
   addItem: (instance: CarouselInstance) => void;
-  items: ComponentInternalInstance[];
+  items: CarouselInstance[];
   initialIndex: Ref<number>;
   direction: 'horizontal' | 'vertical';
 }
@@ -91,7 +91,7 @@ export default defineComponent({
             activeIndex.value += 1;
           }
           items.forEach((item) => {
-            item.ctx.toggleCarouse(activeIndex.value, 'left');
+            item.toggleCarouse(activeIndex.value, 'left');
           });
           flag = true;
         }, 200);
@@ -108,7 +108,7 @@ export default defineComponent({
             activeIndex.value -= 1;
           }
           items.forEach((item) => {
-            item.ctx.toggleCarouse(activeIndex.value, 'right');
+            item.toggleCarouse(activeIndex.value, 'right');
           });
           flag = true;
         }, 200);

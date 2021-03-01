@@ -14,20 +14,18 @@ import {
   reactive,
   nextTick,
 } from 'vue';
-import type { ComponentInternalInstance } from 'vue';
 import { CAROUSEL_INSTANCE } from './carousel.vue';
 import type { Carousel } from './carousel.vue';
 
-export type CarouselInstance = ComponentInternalInstance & {
-  ctx: {
-    toggleCarouse: (idx: number, direction: 'left' | 'right') => void;
-  };
+export interface CarouselInstance {
+  uid: number;
+  toggleCarouse: (idx: number, direction: 'left' | 'right') => void;
 }
 
 export default defineComponent({
   name: 'CarouselItem',
   setup() {
-    const instance = getCurrentInstance() as CarouselInstance;
+    const instance = getCurrentInstance();
     const style = reactive<Partial<CSSStyleDeclaration>>({});
     const domClass = reactive<string[]>([]);
     const index = ref(0);
@@ -69,7 +67,10 @@ export default defineComponent({
     // 初始化
     const initialization = () => {
       if (carouseInstance && instance) {
-        carouseInstance.addItem(instance);
+        carouseInstance.addItem({
+          toggleCarouse,
+          uid: instance.uid,
+        });
       }
       // 获取当前 item 所在的 index
       nextTick(() => {
