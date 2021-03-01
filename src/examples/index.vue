@@ -222,6 +222,8 @@ export default defineComponent({
       list-style: none;
       border-right: 1px solid var(--border-color);
       .scroll();
+      padding-bottom: 40px;
+      box-sizing: border-box;
 
       &:hover {
         &::-webkit-scrollbar-thumb {

@@ -1,0 +1,28 @@
+.ki-tree-node {
+  color: var(--color);
+  font-size: 14px;
+
+  .ki-node-container {
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    box-sizing: border-box;
+    cursor: pointer;
+
+    .ki-node-expansion {
+      .fa {
+        color: #c0c4cc;
+      }
+    }
+
+    .ki-node-content {
+      height: 26px;
+      line-height: 26px;
+      margin-left: 10px;
+    }
+
+    &:hover {
+      background-color: #f5f7fa;
+    }
+  }
+}
