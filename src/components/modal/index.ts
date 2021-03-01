@@ -6,7 +6,7 @@ import './style.less';
 export default defineComponent({
   name: 'Modal',
   props: {
-    visible: {
+    modelValue: {
       type: Boolean,
       required: true,
     },
@@ -48,15 +48,15 @@ export default defineComponent({
     },
     closeOnPressEscape: Boolean,
   },
-  emits: ['update:visible', 'open', 'close', 'on-cancel', 'on-ok'],
+  emits: ['update:modelValue', 'open', 'close', 'on-cancel', 'on-ok'],
   setup(props, { emit, slots }) {
     const handleClose = () => {
       if (props.beforeClose && typeof props.beforeClose === 'function') {
         props.beforeClose(() => {
-          emit('update:visible', false);
+          emit('update:modelValue', false);
         });
       } else {
-        emit('update:visible', false);
+        emit('update:modelValue', false);
       }
     };
 
@@ -68,7 +68,7 @@ export default defineComponent({
     };
 
     watch(props, (value) => {
-      if (value.visible) {
+      if (value.modelValue) {
         emit('open');
       } else {
         emit('close');
@@ -97,7 +97,7 @@ export default defineComponent({
      * @param event
      */
     const handleKeydown = (event: KeyboardEvent) => {
-      if (props.visible) {
+      if (props.modelValue) {
         if (event.key === 'Escape') {
           handleClose();
         }
@@ -113,7 +113,7 @@ export default defineComponent({
 
     return () => h(Transition, {name: 'fade'}, {
       default() {
-        return props.visible ? h(Teleport, {
+        return props.modelValue ? h(Teleport, {
           to: 'body',
           disabled: !props.teleportBody,
         }, h('div', {

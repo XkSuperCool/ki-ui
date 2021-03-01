@@ -35,6 +35,10 @@ import FormExample from './form.vue';
 import UploadExample from './upload.vue';
 import MessageExample from './message.vue';
 import PaginationExample from './page.vue';
+import ModalExample from './modal.vue';
+import AlertExample from './alert.vue';
+import CarouselExample from './carousel.vue';
+import CalendarExample from './calendar.vue';
 
 export default defineComponent({
   name: 'Examples',
@@ -49,6 +53,10 @@ export default defineComponent({
     UploadExample,
     MessageExample,
     PaginationExample,
+    ModalExample,
+    AlertExample,
+    CarouselExample,
+    CalendarExample,
   },
   setup() {
     const componentName = ref('');
@@ -93,6 +101,22 @@ export default defineComponent({
       {
         name: 'PaginationExample',
         title: 'Pagination 分页器',
+      },
+      {
+        name: 'ModalExample',
+        title: 'Modal 弹出框',
+      },
+      {
+        name: 'AlertExample',
+        title: 'Alert 警告',
+      },
+      {
+        name: 'CarouselExample',
+        title: 'Carousel 走马灯',
+      },
+      {
+        name: 'CalendarExample',
+        title: 'Calendar 日历',
       },
     ];
     const handleClick = (name: string) => {
