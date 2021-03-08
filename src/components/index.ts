@@ -13,6 +13,7 @@ import Upload from './upload/index.vue';
 import Calendar from './calendar/index.vue';
 import Radio from './radio/index';
 import Tree from './tree/index.vue';
+import CheckBox from './checkbox';
 
 export {
   Alert,
@@ -30,4 +31,5 @@ export {
   Calendar,
   Radio,
   Tree,
+  CheckBox,
 };

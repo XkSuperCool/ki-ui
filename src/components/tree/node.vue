@@ -1,21 +1,30 @@
 <template>
   <ul class='ki-tree-nodes'>
-    <li class='ki-tree-node'>
+    <li class='ki-tree-node' @click.stop='handleExpansion'>
       <div class='ki-node-container'>
         <div class='ki-node-expansion'>
-          <div class='ki-node-expansion-icon' @click='handleExpansion' v-if='data.children && !!data.children.length'>
-            <ki-icon type='caret-right' />
+          <div class='ki-node-expansion-icon' v-if='data.children && !!data.children.length'>
+            <ki-icon type='caret-right' :class='{active: data.expand}' />
           </div>
         </div>
-        <div class='ki-node-checked'>
-          <input type='checkbox' :checked='data.checked' @input='handleChecked(data)' />
-          <span v-if='data.halfChecked'>-</span>
+        <div class='ki-node-checked' v-if='showCheckbox'>
+          <ki-check-box
+            :model-value='data.checked'
+            :indeterminate='data.halfChecked'
+            @input='() => handleChecked(data)'
+          />
         </div>
         <div class='ki-node-content'>{{data.label}}</div>
       </div>
-      <template v-if='data.expand'>
-        <div style='padding-left: 20px;' v-for='item in data.children' :key='item.key'>
-          <tree-node :data='item'></tree-node>
+      <template v-if='data.mount'>
+        <div
+          v-show='data.expand'
+          v-for='item in data.children'
+          :key='item.key'
+          class='ki-tree-child'
+          :class='{"ki-tree-child-checkbox": showCheckbox}'
+        >
+          <tree-node :data='item' :show-checkbox='showCheckbox'></tree-node>
         </div>
       </template>
     </li>
@@ -26,6 +35,7 @@
 import { defineComponent, watch } from 'vue';
 import type { PropType } from 'vue';
 import Icon from '../icon';
+import CheckBox from '../checkbox';
 import type { TreeNodeData } from './index.vue';
 
 export default defineComponent({
@@ -35,15 +45,21 @@ export default defineComponent({
       type: Object as PropType<TreeNodeData>,
       required: true,
     },
+    showCheckbox: Boolean,
   },
   components: {
     KiIcon: Icon,
+    KiCheckBox: CheckBox,
   },
   setup(props) {
     /**
      * 处理展开逻辑
      * */
     const handleExpansion = () => {
+      if (!props.data.mount) {
+        // eslint-disable-next-line no-param-reassign,vue/no-mutating-props
+        props.data.mount = true; // 已挂载，已经挂载上了，就不用在重复 v-if 渲染，后面使用 display 控制
+      }
       // eslint-disable-next-line no-param-reassign,vue/no-mutating-props
       props.data.expand = !props.data.expand;
     };
@@ -56,7 +72,7 @@ export default defineComponent({
       data.checked = checked ?? !data.checked;
       if (data.children && data.children.length) {
         for (let i = 0, len = data.children.length; i < len; i += 1) {
-          // 同步子级状态与父级相同
+          // 同步子级状态与父级相同，父级选中 子级也要选中
           handleChecked(data.children[i], data.checked);
         }
       }
@@ -72,11 +88,11 @@ export default defineComponent({
         // 获取选中的子级
         const checkedChildrenLength = children.filter((child: TreeNodeData) => child.checked).length;
         // eslint-disable-next-line no-param-reassign,vue/no-mutating-props
-        props.data.checked = checkedChildrenLength === childrenLength;
+        props.data.checked = checkedChildrenLength === childrenLength; // 父级选中状态
         // eslint-disable-next-line no-param-reassign,vue/no-mutating-props
-        props.data.halfChecked = checkedChildrenLength > 0 && checkedChildrenLength !== childrenLength;
+        props.data.halfChecked = checkedChildrenLength > 0 && checkedChildrenLength !== childrenLength; // 父级半选中状态
       }
-    }, { deep: true });
+    }, { deep: true, immediate: true });
 
     return {
       handleExpansion,

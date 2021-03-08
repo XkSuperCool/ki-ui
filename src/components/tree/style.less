@@ -28,15 +28,19 @@
 
       .fa {
         color: #c0c4cc;
+        transition: transform 0.2s;
+
+        &.active {
+          transform: rotate(90deg);
+        }
       }
     }
 
     .ki-node-checked {
       margin-left: 8px;
 
-      input {
-        display: block;
-        border-color: red;
+      :deep .ki-checkbox-inner {
+        margin-right: 0;
       }
     }
 
@@ -44,10 +48,19 @@
       height: 26px;
       line-height: 26px;
       margin-left: 8px;
+      user-select: none;
     }
 
     &:hover {
       background-color: #f5f7fa;
+    }
+  }
+
+  .ki-tree-child {
+    padding-left: 20px;
+
+    &.ki-tree-child-checkbox {
+      padding-left: 22px;
     }
   }
 }

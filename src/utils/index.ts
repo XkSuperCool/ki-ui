@@ -60,8 +60,9 @@ export function typeOf(obj: unknown): TypeMap[keyof TypeMap] {
  * 深拷贝
  * @param obj 需要深拷贝的数据
  * @param keys 保留指定 key 的属性，其他的过滤掉，不指定该字段全部返回。
+ * @param hook
  */
-export function deepClone(obj: any, keys?: string[]): any {
+export function deepClone(obj: any, keys?: string[], hook?: (obj: any) => any): any {
   const type = typeOf(obj);
   let result;
   if (type === 'object') {
@@ -74,15 +75,18 @@ export function deepClone(obj: any, keys?: string[]): any {
 
   if (type === 'array') {
     for (let i = 0, len = obj.length; i < len; i += 1) {
-      (result as any[]).push(deepClone(obj[i], keys));
+      (result as any[]).push(deepClone(obj[i], keys, hook));
     }
   }
   if (type === 'object') {
     for (let key in obj) {
       if (obj.hasOwnProperty(key)) {
         if ((keys && keys.includes(key)) || !keys) {
-          (result as {[key: string]: any})[key] = deepClone(obj[key], keys);
+          (result as {[key: string]: any})[key] = deepClone(obj[key], keys, hook);
         }
+      }
+      if (hook && typeOf(hook) === 'function') {
+        result = { ...result, ...hook(obj) };
       }
     }
   }

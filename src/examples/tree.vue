@@ -1,16 +1,35 @@
 <template>
   <div class='ki-tree'>
-    <ki-tree :data='treeData' />
+<!--    <Container-->
+<!--      title='基本使用'-->
+<!--      sub-title='基础的树形结构展示。'-->
+<!--    >-->
+<!--      <ki-tree-->
+<!--        :data='treeData'-->
+<!--      />-->
+<!--    </Container>-->
+    <Container
+      title='可选择'
+      sub-title='适用于需要选择层级时使用。'
+    >
+      <ki-tree
+        :data='treeData'
+        show-checkbox
+        :default-checked-keys='[2, 5]'
+      />
+    </Container>
   </div>
 </template>
 
 <script lang='ts'>
 import { defineComponent } from 'vue';
 import { Tree } from '@/components';
+import { Container } from './component';
 
 export default defineComponent({
   name: 'TreeExample',
   components: {
+    Container,
     KiTree: Tree,
   },
   setup() {

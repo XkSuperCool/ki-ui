@@ -46,6 +46,7 @@ import AlertExample from './alert.vue';
 import CarouselExample from './carousel.vue';
 import CalendarExample from './calendar.vue';
 import TreeExample from './tree.vue';
+import CheckboxExample from './checkbox.vue';
 
 export default defineComponent({
   name: 'Examples',
@@ -65,6 +66,7 @@ export default defineComponent({
     CarouselExample,
     CalendarExample,
     TreeExample,
+    CheckboxExample,
   },
   setup() {
     const componentName = ref('');
@@ -86,6 +88,10 @@ export default defineComponent({
       {
         name: 'RadioExample',
         title: 'Radio 单选框',
+      },
+      {
+        name: 'CheckboxExample',
+        title: 'Checkbox 多选框',
       },
       {
         name: 'SelectExample',

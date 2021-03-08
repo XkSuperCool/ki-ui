@@ -4,6 +4,7 @@
       v-for='item in treeData'
       :key='item.key'
       :data='item'
+      :show-checkbox='showCheckbox'
     />
   </div>
 </template>
@@ -16,15 +17,18 @@ import Node from './node.vue';
 
 export interface TreeData {
   label: string;
-  key: string;
+  key: string | number;
   children?: TreeData[];
 }
 
-export interface TreeNodeData extends TreeData {
+interface NodeData {
   checked?: boolean;
   expand?: boolean;
   halfChecked?: boolean;
+  mount?: boolean;
 }
+
+export type TreeNodeData = TreeData & NodeData;
 
 export default defineComponent({
   name: 'Tree',
@@ -36,9 +40,25 @@ export default defineComponent({
       type: Array as PropType<TreeData[]>,
       default: () => [],
     },
+    showCheckbox: Boolean,
+    defaultExpandedKeys: {
+      type: Array as PropType<(string | number)[]>,
+      default: () => [],
+    },
+    defaultCheckedKeys: {
+      type: Array as PropType<(string | number)[]>,
+      default: () => [],
+    },
   },
   setup(props) {
-    const treeData = reactive<TreeNodeData[]>(deepClone(props.data, ['label', 'key', 'children']));
+    const cloneHook = (obj: any) => {
+      const tmpObj: NodeData = {};
+      if (props.defaultCheckedKeys.includes(obj.key)) {
+        tmpObj.checked = true;
+      }
+      return tmpObj;
+    };
+    const treeData = reactive<TreeNodeData[]>(deepClone(props.data, ['label', 'key', 'children'], cloneHook));
     return {
       treeData,
     };
