@@ -78,6 +78,21 @@ export default defineComponent({
       }
     };
 
+    // 半选中，递归判断
+    const isHalfChecked = (children: TreeNodeData[]): boolean => {
+      for (let i = 0, len = children.length; i < len; i += 1) {
+        if (children[i].checked) {
+          return true;
+        }
+      }
+      for (let i = 0, len = children.length; i < len; i += 1) {
+        if (children[i].children) {
+          return isHalfChecked(children[i].children as TreeNodeData[]);
+        }
+      }
+      return false;
+    };
+
     /**
      * 监听 children 的变化，然后再判断 children 下面的每一项的选中状态，
      * 最后给当前 data 的选中状态赋值。
@@ -90,7 +105,7 @@ export default defineComponent({
         // eslint-disable-next-line no-param-reassign,vue/no-mutating-props
         props.data.checked = checkedChildrenLength === childrenLength; // 父级选中状态
         // eslint-disable-next-line no-param-reassign,vue/no-mutating-props
-        props.data.halfChecked = checkedChildrenLength > 0 && checkedChildrenLength !== childrenLength; // 父级半选中状态
+        props.data.halfChecked = isHalfChecked(children); // 父级半选中状态
       }
     }, { deep: true, immediate: true });
 

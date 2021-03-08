@@ -51,10 +51,30 @@ export default defineComponent({
     },
   },
   setup(props) {
+    // 子级选中递归函数
+    function childrenChecked(children: TreeNodeData[]) {
+      children.forEach((item: TreeNodeData) => {
+        // eslint-disable-next-line no-param-reassign
+        item.checked = true;
+        if (item.children && item.children.length) {
+          childrenChecked([...item.children]);
+        }
+      });
+      return children;
+    }
+
     const cloneHook = (obj: any) => {
-      const tmpObj: NodeData = {};
+      const tmpObj: Omit<TreeNodeData, 'key'| 'label'> = {};
       if (props.defaultCheckedKeys.includes(obj.key)) {
         tmpObj.checked = true;
+
+        if (obj.children) {
+          tmpObj.children = childrenChecked([...obj.children]);
+        }
+      }
+      if (props.defaultExpandedKeys.includes(obj.key)) {
+        tmpObj.expand = true;
+        tmpObj.mount = true;
       }
       return tmpObj;
     };

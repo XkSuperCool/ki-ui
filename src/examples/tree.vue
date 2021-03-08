@@ -1,13 +1,13 @@
 <template>
   <div class='ki-tree'>
-<!--    <Container-->
-<!--      title='基本使用'-->
-<!--      sub-title='基础的树形结构展示。'-->
-<!--    >-->
-<!--      <ki-tree-->
-<!--        :data='treeData'-->
-<!--      />-->
-<!--    </Container>-->
+    <Container
+      title='基本使用'
+      sub-title='基础的树形结构展示。'
+    >
+      <ki-tree
+        :data='treeData'
+      />
+    </Container>
     <Container
       title='可选择'
       sub-title='适用于需要选择层级时使用。'
@@ -15,7 +15,17 @@
       <ki-tree
         :data='treeData'
         show-checkbox
-        :default-checked-keys='[2, 5]'
+      />
+    </Container>
+    <Container
+      title='默认选中和默认展开'
+      sub-title='可将 Tree 的某些节点设置为默认展开或默认选中。'
+    >
+      <ki-tree
+        :data='treeData'
+        show-checkbox
+        :default-expanded-keys='["1", "1-2", "1-1", "2"]'
+        :default-checked-keys='["1-1-1", "2-1"]'
       />
     </Container>
   </div>
@@ -38,31 +48,43 @@ export default defineComponent({
         {
           checked: true,
           label: '一级 1',
-          key: 1,
+          key: '1',
           children: [{
             label: '二级 1-1',
-            key: 2,
-            children: [{
-              label: '三级 1-1-1',
-              key: 3,
-            }],
+            key: '1-1',
+            children: [
+              {
+                label: '三级 1-1-1',
+                key: '1-1-1',
+                children: [
+                  {
+                    label: '四级 1-1-1-1',
+                    key: '1-1-1-1',
+                  },
+                ],
+              },
+              {
+                label: '三级 1-1-2',
+                key: '1-1-2',
+              },
+            ],
           }],
         },
         {
-          label: '一级 1',
-          key: 4,
+          label: '一级 2',
+          key: '2',
           children: [
             {
-              label: '二级 1-1',
-              key: 5,
+              label: '二级 2-1',
+              key: '2-1',
               children: [{
-                label: '三级 1-1-1',
-                key: 6,
+                label: '三级 2-1-1',
+                key: '2-1-1',
               }],
             },
             {
-              label: '二级 1-2',
-              key: 10,
+              label: '二级 2-2',
+              key: '2-2',
             },
           ],
         },
