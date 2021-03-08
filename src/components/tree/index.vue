@@ -5,7 +5,11 @@
       :key='item.key'
       :data='item'
       :show-checkbox='showCheckbox'
-    />
+    >
+      <template #default='data'>
+        <slot :data='{...data.data}'></slot>
+      </template>
+    </node>
   </div>
 </template>
 
@@ -18,6 +22,7 @@ import Node from './node.vue';
 export interface TreeData {
   label: string;
   key: string | number;
+  disabled?: boolean;
   children?: TreeData[];
 }
 
@@ -78,7 +83,7 @@ export default defineComponent({
       }
       return tmpObj;
     };
-    const treeData = reactive<TreeNodeData[]>(deepClone(props.data, ['label', 'key', 'children'], cloneHook));
+    const treeData = reactive<TreeNodeData[]>(deepClone(props.data, ['label', 'key', 'children', 'disabled'], cloneHook));
     return {
       treeData,
     };

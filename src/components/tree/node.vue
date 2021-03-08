@@ -12,9 +12,13 @@
             :model-value='data.checked'
             :indeterminate='data.halfChecked'
             @input='() => handleChecked(data)'
+            :disabled='data.disabled'
           />
         </div>
         <div class='ki-node-content'>{{data.label}}</div>
+        <div class='ki-tree-slots' @click.stop>
+          <slot :data='{key: data.key, label: data.label, disabled: data.disabled}'></slot>
+        </div>
       </div>
       <template v-if='data.mount'>
         <div
@@ -24,7 +28,9 @@
           class='ki-tree-child'
           :class='{"ki-tree-child-checkbox": showCheckbox}'
         >
-          <tree-node :data='item' :show-checkbox='showCheckbox'></tree-node>
+          <tree-node :data='item' :show-checkbox='showCheckbox'>
+            <slot :data='{key: item.key, label: item.label, disabled: item.disabled}'></slot>
+          </tree-node>
         </div>
       </template>
     </li>

@@ -78,4 +78,18 @@
     font-size: 14px;
     user-select: none;
   }
+
+  &.disabled {
+    cursor: not-allowed;
+
+    .ki-checkbox-input,
+    .ki-checkbox-input:hover {
+      border-color: var(--disabled-color) !important;
+    }
+
+    .ki-checkbox-input,
+    .ki-checkbox-input.active {
+      background-color: var(--disabled-color) !important;
+    }
+  }
 }

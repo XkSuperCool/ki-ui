@@ -1,5 +1,5 @@
 <template>
-  <label class='ki-checkbox'>
+  <label class='ki-checkbox' :class='{disabled: disabled}'>
     <span class='ki-checkbox-inner'>
       <span class='ki-checkbox-input' :class='{active: model, indeterminate: indeterminate}'></span>
       <input
