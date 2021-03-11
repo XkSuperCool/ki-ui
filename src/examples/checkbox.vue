@@ -42,18 +42,23 @@
         <ki-check-box label='3'>Rap</ki-check-box>
       </ki-check-box-group>
     </Container>
+    <Attributes :attributes='attributes' title='Checkbox Attributes' />
+    <Attributes :attributes='checkboxEvents' target='event' title='Checkbox Events' />
+    <Attributes :attributes='groupAttributes' title='CheckboxGroup Attributes' />
+    <Attributes :attributes='checkboxGroupEvents' target='event' title='CheckboxGroup Events' />
   </div>
 </template>
 
 <script lang='ts'>
 import { defineComponent, ref } from 'vue';
 import { CheckBox } from '@/components';
-import { Container } from './component';
+import { Container, Attributes } from './component';
 
 export default defineComponent({
   name: 'CheckboxExample',
   components: {
     Container,
+    Attributes,
     KiCheckBox: CheckBox,
     KiCheckBoxGroup: CheckBox.Group,
   },
@@ -85,6 +90,59 @@ export default defineComponent({
       hobby1,
       handleAllChecked,
       handleHobbyChange,
+      attributes: [
+        {
+          attribute: 'v-model',
+          description: 'checkbox 绑定值',
+          type: 'string | number | boolean',
+          option: '——',
+          default: '——',
+        },
+        {
+          attribute: 'label',
+          description: '选中状态的值，在 group 下该值会被添加到 group 绑定的数组中',
+          type: 'string | number',
+          option: '——',
+          default: '——',
+        },
+        {
+          attribute: 'disabled',
+          description: '是否禁用',
+          type: 'boolean',
+          option: 'true | false',
+          default: 'false',
+        },
+        {
+          attribute: 'indeterminate',
+          description: '设置 indeterminate 状态，只负责样式控制',
+          type: 'boolean',
+          option: 'true | false',
+          default: 'false',
+        },
+      ],
+      checkboxEvents: [
+        {
+          name: 'change',
+          description: '发生变化时调用',
+          type: '(value: boolean) => void',
+        },
+      ],
+      groupAttributes: [
+        {
+          attribute: 'v-model',
+          description: 'checkbox-group 绑定值',
+          type: '(string | number)[]',
+          option: '——',
+          default: '——',
+        },
+      ],
+      checkboxGroupEvents: [
+        {
+          name: 'change',
+          description: '发生变化时调用',
+          type: '(value: (string | number)[]) => void',
+        },
+      ],
     };
   },
 });
