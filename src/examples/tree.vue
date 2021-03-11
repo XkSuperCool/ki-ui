@@ -19,7 +19,7 @@
     </Container>
     <Container
       title='默认选中和默认展开'
-      sub-title='可将 Tree 的某些节点设置为禁用状态。'
+      sub-title='可将 Tree 的某些节点设置为默认展开或默认选中。'
     >
       <ki-tree
         :data='treeData'
@@ -30,7 +30,7 @@
     </Container>
     <Container
       title='禁用状态'
-      sub-title='可将 Tree 的某些节点设置为默认展开或默认选中。'
+      sub-title='可将 Tree 的某些节点设置为禁用状态。'
     >
       <ki-tree
         :data='treeData2'
