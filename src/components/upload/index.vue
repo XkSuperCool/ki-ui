@@ -14,7 +14,7 @@
       v-if='showFileList'
       :list-type='listType'
       :upload-raw-file-list='uploadRawFileList'
-      @on-remove='handleRemoveFile'
+      :on-remove='handleRemoveFile'
     />
   </div>
 </template>
@@ -276,9 +276,10 @@ export default defineComponent({
         if (bool) {
           uploadRawFileList.splice(index, 1);
         }
-      } else {
-        uploadRawFileList.splice(index, 1);
+        return bool;
       }
+      uploadRawFileList.splice(index, 1);
+      return true;
     };
 
     onMounted(() => {
