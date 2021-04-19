@@ -36,7 +36,7 @@
 </template>
 
 <script lang='ts'>
-import { defineComponent, Transition } from 'vue';
+import { defineComponent, Transition, onUnmounted } from 'vue';
 import type { PropType } from 'vue';
 import Icon from '../icon';
 import { FileRaw } from './index.vue';
@@ -52,22 +52,41 @@ export default defineComponent({
       type: String as PropType<'text' | 'picture'>,
       default: 'text',
     },
+    onRemove: Function as PropType<(file: FileRaw) => boolean>,
   },
   components: {
     Icon,
     Transition,
   },
   emits: ['on-remove'],
-  setup(_, { emit }) {
+  setup(props) {
+    const objectURLMap: {[key: string]: string} = {};
     const getFileImagesURL = (file: FileRaw) => {
       if (file.url) {
         return file.url;
       }
-      return URL.createObjectURL(file.raw);
+      const objectURL = URL.createObjectURL(file.raw);
+      if (file.uid) {
+        objectURLMap[file.uid.toString()] = objectURL;
+      }
+      return objectURL;
     };
     const handleRemoveFile = (fileRaw: FileRaw) => {
-      emit('on-remove', fileRaw);
+      if (props.onRemove) {
+        if (props.onRemove(fileRaw)) {
+          if (fileRaw.uid) {
+            // 释放内存
+            URL.revokeObjectURL(objectURLMap[fileRaw.uid.toString()]);
+          }
+        }
+      }
     };
+    onUnmounted(() => {
+      // 释放内存
+      Object.values(objectURLMap).forEach((objectURL) => {
+        URL.revokeObjectURL(objectURL);
+      });
+    });
     return {
       getFileImagesURL,
       handleRemoveFile,
