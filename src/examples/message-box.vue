@@ -11,7 +11,7 @@
 
 <script lang='ts'>
 import { defineComponent } from 'vue';
-import { MessageBox } from '@/components';
+import { MessageBox, Message } from '@/components';
 import { Container } from './component';
 
 export default defineComponent({
@@ -21,15 +21,21 @@ export default defineComponent({
   },
   setup() {
     const handleOpen = () => {
-      MessageBox.alert('这里是内容区域..', {});
+      MessageBox.alert('这里是内容区域..', {
+        confirmType: 'success',
+        confirmButtonText: '知道了',
+      }).then(() => {
+        Message.success('ok');
+      });
     };
 
     const handleOpen2 = () => {
       MessageBox.confirm('此操作将永久删除该文件, 是否继续?', '提示信息', {
         confirmType: 'warning',
-        callback(action) {
-          console.log(action);
-        },
+      }).then(() => {
+        Message.success('ok');
+      }).catch(() => {
+        Message.warning('cancel');
       });
     };
 

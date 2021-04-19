@@ -7,7 +7,11 @@
         <div class='close' @click='hiddenMessageBox()'>×</div>
       </div>
       <div class='ki-message-box-content'>
-        <div v-if='instance.type === "confirm" && instance.confirmType' class='ki-message-box-icon' :class='instance.confirmType'>
+        <div
+          class='ki-message-box-icon'
+          :class='instance.confirmType'
+          v-if='(instance.type === "confirm" || instance.type === "alert") && instance.confirmType'
+        >
           <ki-icon :type='iconMap[instance.confirmType]' />
         </div>
         {{instance.message}}
@@ -16,10 +20,10 @@
         <ki-button
           size='small'
           style='margin-right: 10px;'
-          @click='handle("catch")'
+          @click='handle("cancel")'
           v-if='instance.showCancelButton'
         >
-          取消
+          {{instance.cancelButtonText}}
         </ki-button>
         <ki-button
           type='primary'
@@ -27,7 +31,7 @@
           @click='handle("confirm")'
           v-if='instance.showConfirmButton'
         >
-          确定
+          {{instance.confirmButtonText}}
         </ki-button>
       </div>
     </div>
@@ -50,12 +54,14 @@ export interface MessageBoxOptions {
   closeOnClickModal?: boolean;
   showCancelButton?: boolean;
   showConfirmButton?: boolean;
-  callback?: (action: 'confirm' | 'catch') => void;
+  cancelButtonText?: string;
+  confirmButtonText?: string;
+  callback?: (action: 'confirm' | 'cancel') => void;
   beforeClose?: (done: () => void) => void;
 }
 
 export interface ShowMessageFun {
-  (options: MessageBoxOptions): void;
+  (options: MessageBoxOptions): Promise<undefined>;
 }
 
 export interface MessageBoxInstance {
@@ -82,14 +88,34 @@ export default defineComponent({
     const defaultOptions: Omit<MessageBoxOptions, 'title' | 'message' | 'type'> = {
       closeOnClickModal: true,
       showConfirmButton: true,
+      cancelButtonText: '取消',
+      confirmButtonText: '确定',
     };
-    const handleShowMessageBox: ShowMessageFun = (options: MessageBoxOptions) => {
+    let handleResolve: (value?: PromiseLike<undefined> | undefined) => void;
+    let handleReject: (reason?: unknown) => void;
+    const handleShowMessageBox: ShowMessageFun = (options: MessageBoxOptions) => new Promise((resolve, reject) => {
+      // 缓存 resolve、reject
+      handleResolve = resolve;
+      handleReject = reject;
       isHidden.value = false;
       instance.value = {
         showCancelButton: options.type !== 'alert',
         ...defaultOptions,
         ...options,
       };
+    });
+
+    const handle = (action: 'confirm' | 'cancel') => {
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      hiddenMessageBox();
+      if (instance.value.callback) {
+        instance.value.callback(action);
+      }
+      if (action === 'confirm') {
+        handleResolve();
+      } else {
+        handleReject();
+      }
     };
 
     // 隐藏 messageBox
@@ -100,13 +126,6 @@ export default defineComponent({
         });
       } else {
         isHidden.value = true;
-      }
-    };
-
-    const handle = (action: 'confirm' | 'catch') => {
-      hiddenMessageBox();
-      if (instance.value.callback) {
-        instance.value.callback(action);
       }
     };
 
