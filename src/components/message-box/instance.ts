@@ -18,13 +18,11 @@ MessageBox.Instance = (): InstanceReturnType => {
     },
 
     common(type, message, title, options) {
-      return new Promise((resolve, reject) => {
-        this.default({
-          ...options,
-          message,
-          title,
-          type: type,
-        }).then(resolve).catch(reject);
+      return this.default({
+        ...options,
+        message,
+        title,
+        type: type,
       });
     },
   };
