@@ -49,6 +49,7 @@ import CarouselExample from './carousel.vue';
 import CalendarExample from './calendar.vue';
 import TreeExample from './tree.vue';
 import CheckboxExample from './checkbox.vue';
+import MessageBoxExample from './message-box.vue';
 
 export default defineComponent({
   name: 'Examples',
@@ -69,6 +70,7 @@ export default defineComponent({
     CalendarExample,
     TreeExample,
     CheckboxExample,
+    MessageBoxExample,
   },
   setup() {
     const componentName = ref('');
@@ -138,6 +140,10 @@ export default defineComponent({
       {
         name: 'TreeExample',
         title: 'Tree 树形控件',
+      },
+      {
+        name: 'MessageBoxExample',
+        title: 'MessageBox 弹框',
       },
     ];
     const handleClick = (name: string) => {

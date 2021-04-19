@@ -14,6 +14,7 @@ import Calendar from './calendar/index.vue';
 import Radio from './radio/index';
 import Tree from './tree/index.vue';
 import CheckBox from './checkbox';
+import MessageBox from './message-box';
 
 export {
   Alert,
@@ -32,4 +33,5 @@ export {
   Radio,
   Tree,
   CheckBox,
+  MessageBox,
 };
