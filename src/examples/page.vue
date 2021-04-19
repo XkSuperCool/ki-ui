@@ -27,7 +27,7 @@
     >
       <p class='tip'>显示总数：</p>
       <ki-pagination :current-page='1' :page-size='10' :total='100' background is-total />
-      <p class='tip'>调整分页总数：</p>
+      <p class='tip'>调整每页条数：</p>
       <ki-pagination :current-page='1' :page-size='10' :total='100' background :pageSizes='[10, 20, 30, 40]' />
       <p class='tip'>电梯：</p>
       <ki-pagination :current-page='1' :page-size='10' :total='100' background elevator />
@@ -35,7 +35,7 @@
       <ki-pagination :current-page='1' :page-size='10' :total='100' background :pageSizes='[10, 20, 30, 40]' is-total elevator />
     </Container>
     <Container
-      title='只有一页下隐藏'
+      title='只有一页时隐藏'
       sub-title='当只有一页时，通过设置 hide-on-single-page 属性来隐藏分页。'
     >
       <ki-button @click='hide = !hide' style='margin-bottom: 20px;' size='small'>显示/隐藏</ki-button>

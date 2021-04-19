@@ -72,9 +72,9 @@ export default defineComponent({
     });
 
     // 方法挂载到当前组件的实例上
-    const instance = getCurrentInstance();
-    (instance as MessageInstance).ctx.add = add;
-    (instance as MessageInstance).ctx.remove = remove;
+    const instance = getCurrentInstance() as MessageInstance;
+    instance.ctx.add = add;
+    instance.ctx.remove = remove;
 
     return () => h('div', {
       class: ['ki-message'],

@@ -1,7 +1,9 @@
 <template>
   <div class='header'>
     <div class='content'>
-      KI-UI <span>/ Vue 3.x</span>
+      <div class='title'>
+        KI-UI <span>/ Vue 3.x</span>
+      </div>
     </div>
   </div>
   <div class='container'>
@@ -170,10 +172,14 @@ export default defineComponent({
       line-height: 80px;
       font-size: 20px;
       font-weight: bold;
-      width: 1200px;
       height: 80px;
-      margin: 0 auto 20px auto;
+      margin-bottom: 20px;
       border-bottom: 1px solid var(--border-color);
+
+      .title {
+        width: 1200px;
+        margin: auto;
+      }
 
       span {
         color: var(--color-minor);

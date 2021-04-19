@@ -1,13 +1,9 @@
-import { createApp } from 'vue';
-import type { ComponentPublicInstance } from 'vue';
 import Message from './message';
+import useMount from '@/hooks/useMount';
 import type { MessageCtx, MessageOption } from './message';
 
 Message.Instance = () => {
-  const container = document.createElement('div');
-  const instance = createApp(Message).mount(container) as ComponentPublicInstance & MessageCtx;
-  const message = instance.$el;
-  document.body.appendChild(message);
+  const instance = useMount<MessageCtx>(Message);
 
   return {
     add(option: MessageOption) {
