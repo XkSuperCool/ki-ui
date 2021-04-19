@@ -8,37 +8,23 @@ function getInstance(): InstanceReturnType {
 }
 
 function messageBox(options: MessageBoxOptions): ReturnType<ShowMessageFun> {
-  return new Promise((resolve, reject) => {
-    getInstance().default(options).then(resolve).catch(reject);
-  });
+  return getInstance().default(options);
 }
 
-function showMessageBox(type: MessageBoxType, args: any[]): ReturnType<ShowMessageFun> {
-  return new Promise((resolve, reject) => {
-    if (typeof args[1] === 'string') {
-      getInstance().common(type, args[0], args[1], args[2]).then(resolve).catch(reject);
-    } else {
-      getInstance().common(type, args[0], '提示', args[1]).then(resolve).catch(reject);
-    }
-  });
+const showMessageBox = (type: MessageBoxType) => (message: string, title: string | Options, options?: Options): ReturnType<ShowMessageFun> => {
+  if (typeof title === 'string') {
+    return getInstance().common(type, message, title, options ?? {});
+  } else {
+    return getInstance().common(type, message, '提示', title);
+  }
 }
 
-function alert(message: string, options: Options): ReturnType<ShowMessageFun>;
-function alert(message: string, title: string, options: Options): ReturnType<ShowMessageFun>;
-function alert(...args: any[]): ReturnType<ShowMessageFun>  {
-  return new Promise((resolve, reject) => {
-    showMessageBox('alert', args).then(resolve).catch(reject);
-  });
-}
-messageBox.alert = alert;
+messageBox.alert = (message: string, title: string | Options, options?: Options) => {
+  return showMessageBox('alert')(message, title, options);
+};
 
-function confirm(message: string, options: Options): ReturnType<ShowMessageFun>;
-function confirm(message: string, title: string, options: Options): ReturnType<ShowMessageFun>;
-function confirm(...args: any[]): ReturnType<ShowMessageFun> {
-  return new Promise((resolve, reject) => {
-    showMessageBox('confirm', args).then(resolve).catch(reject);
-  });
-}
-messageBox.confirm = confirm;
+messageBox.confirm = (message: string, title: string | Options, options?: Options) => {
+  return showMessageBox('confirm')(message, title, options);
+};
 
 export default messageBox;

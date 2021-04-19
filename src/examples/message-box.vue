@@ -22,7 +22,6 @@ export default defineComponent({
   setup() {
     const handleOpen = () => {
       MessageBox.alert('这里是内容区域..', {
-        confirmType: 'success',
         confirmButtonText: '知道了',
       }).then(() => {
         Message.success('ok');
