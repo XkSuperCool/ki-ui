@@ -2,7 +2,7 @@ import MessageBox from './instance';
 import type { InstanceReturnType, Options } from './instance';
 import type { MessageBoxOptions, MessageBoxType, ShowMessageFun } from './message-box.vue';
 
-let _instance: any;
+let _instance: InstanceReturnType;
 function getInstance(): InstanceReturnType {
   return _instance ? _instance : _instance = MessageBox.Instance();
 }
