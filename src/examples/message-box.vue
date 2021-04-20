@@ -18,6 +18,12 @@
    >
      <a @click='handleOpen4'>点击打开 Message Box</a>
    </Container>
+   <Container
+     title='HTML 片段'
+     sub-title='message 属性支持传入 HTML 片段。'
+   >
+     <a @click='handleOpen5'>点击打开 Message Box</a>
+   </Container>
  </div>
 </template>
 
@@ -75,11 +81,22 @@ export default defineComponent({
       });
     };
 
+    const handleOpen5 = () => {
+      $alert('<i>这是一个 <span style="color: orange;">HTML</span> 片段</i>', 'HTML 片段', {
+        dangerouslyUseHTMLString: true,
+      }).then(() => {
+        Message.success('ok');
+      }).catch(() => {
+        Message.warning('cancel');
+      });
+    };
+
     return {
       handleOpen,
       handleOpen2,
       handleOpen3,
       handleOpen4,
+      handleOpen5,
     };
   },
 });

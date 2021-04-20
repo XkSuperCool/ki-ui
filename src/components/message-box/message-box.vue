@@ -14,7 +14,8 @@
         >
           <ki-icon :type='iconMap[options.iconType]' />
         </div>
-        {{options.message}}
+        <template v-if='!options.dangerouslyUseHTMLString'>{{options.message}}</template>
+        <div v-else v-html='options.message'></div>
         <div v-if='options.type === "prompt"' class='ki-message-box-prompt'>
           <ki-input
             v-model='promptValue.value'
@@ -78,6 +79,7 @@ export interface MessageBoxOptions {
   cancelButtonText?: string; // cancel 按钮文字
   confirmButtonText?: string; // confirm 按钮文字
   closeOnHashChange?: boolean; // 是否在 hashchange 时关闭 MessageBox
+  dangerouslyUseHTMLString?: boolean; // message 是否支持 HTML 片段
   callback?: (action: 'confirm' | 'cancel', value: string) => void; // 点击按钮的回调
   beforeClose?: (done: () => void) => void; // 关闭 MessageBox 前的回调
 }
