@@ -30,6 +30,12 @@
    >
      <a @click='handleOpen6'>点击打开 Message Box</a>
    </Container>
+   <Container
+     title='关闭前的回调'
+     sub-title='指定 beforeClose 后可以手动关闭 message box，它接受一个 callback 调用后即可关闭, 如果点击的是确认按钮还会有一个 loading 效果'
+   >
+     <a @click='handleOpen7'>点击打开 Message Box</a>
+   </Container>
  </div>
 </template>
 
@@ -112,6 +118,23 @@ export default defineComponent({
       });
     };
 
+    const handleOpen7 = () => {
+      $confirm('此操作将永久删除该文件, 是否继续?', '提示信息', {
+        iconType: 'warning',
+        beforeClose(done, action) {
+          if (action === 'confirm') {
+            setTimeout(done, 2000);
+          } else {
+            done();
+          }
+        },
+      }).then(() => {
+        Message.success('文件删除成功！');
+      }).catch(() => {
+        Message.warning('取消删除文件！');
+      });
+    };
+
     return {
       handleOpen,
       handleOpen2,
@@ -119,6 +142,7 @@ export default defineComponent({
       handleOpen4,
       handleOpen5,
       handleOpen6,
+      handleOpen7,
     };
   },
 });

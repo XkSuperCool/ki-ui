@@ -47,6 +47,7 @@
             @click='handle("confirm")'
             v-if='options.showConfirmButton'
           >
+            <ki-icon v-if='buttonIsLoading' type='spinner' class='ki-message-box-spinner' />
             {{options.confirmButtonText}}
           </ki-button>
         </div>
@@ -74,6 +75,7 @@ export interface MessageBoxOptions {
   center?: boolean; // 是否居中布局
   iconType?: StatusType; // icon type
   mask?: boolean; // 是否显示遮罩层
+  lockScroll?: boolean; // 是否在 MessageBox 出现时将 body 滚动锁定
   inputPattern?: RegExp; // prompt 输入框的校验正则
   inputErrorMessage?: string; // 失败的提示信息
   inputPlaceholder?: string; // 输入框的 placeholder
@@ -88,7 +90,7 @@ export interface MessageBoxOptions {
   dangerouslyUseHTMLString?: boolean; // message 是否支持 HTML 片段
   distinguishCancelAndClose?: boolean; // 是否区分取消触发和关闭触发
   callback?: (action: MessageBoxAction, value: string) => void; // 点击按钮的回调
-  beforeClose?: (done: () => void) => void; // 关闭 MessageBox 前的回调
+  beforeClose?: (done: () => void, action: MessageBoxAction) => void; // 关闭 MessageBox 前的回调
 }
 
 export interface ShowMessageFun {
@@ -128,11 +130,13 @@ export default defineComponent({
       value: '',
       validateStatus: true,
     });
+    const buttonIsLoading = ref(false); // button 是否显示加载中 loading
     const messageBoxOptions = ref<Partial<MessageBoxOptions>>({});
     // 默认配置
     const defaultOptions: Omit<MessageBoxOptions, 'title' | 'message' | 'type'> = {
       mask: true,
       inputType: 'text',
+      lockScroll: true,
       closeOnClickModal: true,
       showConfirmButton: true,
       cancelButtonText: '取消',
@@ -145,10 +149,10 @@ export default defineComponent({
       // 重置 promptValue
       promptValue.value = options.inputValue ?? '';
       promptValue.validateStatus = true;
+      buttonIsLoading.value = false;
       // 缓存 resolve、reject
       handleResolve = resolve;
       handleReject = reject;
-      isHidden.value = false;
       const isAlert = options.type !== 'alert';
       messageBoxOptions.value = {
         showCancelButton: isAlert,
@@ -156,6 +160,10 @@ export default defineComponent({
         ...defaultOptions,
         ...options,
       };
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      handleLockScroll(true);
+      // 显示 message box
+      isHidden.value = false;
     });
 
     // 格式校验
@@ -169,33 +177,44 @@ export default defineComponent({
       return false;
     };
 
-    // 处理按钮点击
-    const handle = (action: MessageBoxAction) => {
-      console.log(action);
-      if (messageBoxOptions.value.callback) {
-        messageBoxOptions.value.callback(action, promptValue.value);
+    // body 滚动锁定
+    const handleLockScroll = (lock: boolean) => {
+      if (messageBoxOptions.value.lockScroll) {
+        // body 滚动锁定
+        document.body.style.overflow = lock ? 'hidden' : 'auto';
       }
-      if (action === 'confirm') {
-        if (messageBoxOptions.value.type === 'prompt' && !validateValue()) {
-          return;
-        }
-        handleResolve(promptValue.value);
-      } else if (!messageBoxOptions.value.callback) {
-        // 只有在没有传递 callback 时才调用 reject
-        handleReject(action);
-      }
-      // eslint-disable-next-line @typescript-eslint/no-use-before-define
-      hiddenMessageBox();
     };
 
     // 隐藏 messageBox
     const hiddenMessageBox = () => {
+      isHidden.value = true;
+      handleLockScroll(false);
+    };
+
+    // 处理按钮点击
+    const handle = (action: MessageBoxAction) => {
+      // 阻止重复点击
+      if (buttonIsLoading.value) return;
+      function callback() {
+        if (messageBoxOptions.value.callback) {
+          messageBoxOptions.value.callback(action, promptValue.value);
+        }
+        if (action === 'confirm') {
+          if (messageBoxOptions.value.type === 'prompt' && !validateValue()) {
+            return;
+          }
+          handleResolve(promptValue.value);
+        } else if (!messageBoxOptions.value.callback) {
+          // 只有在没有传递 callback 时才调用 reject
+          handleReject(action);
+        }
+        hiddenMessageBox();
+      }
       if (messageBoxOptions.value.beforeClose) {
-        messageBoxOptions.value.beforeClose(() => {
-          isHidden.value = true;
-        });
+        if (action === 'confirm') buttonIsLoading.value = true;
+        messageBoxOptions.value.beforeClose(callback, action);
       } else {
-        isHidden.value = true;
+        callback();
       }
     };
 
@@ -218,6 +237,7 @@ export default defineComponent({
       iconMap,
       promptValue,
       options: messageBoxOptions,
+      buttonIsLoading,
       handle,
       validateValue,
       hiddenMessageBox,
