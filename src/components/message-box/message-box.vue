@@ -1,51 +1,57 @@
 <template>
-  <div class='ki-message-box' :class='{isHidden: isHidden}'>
-    <div class='mask' @click='options.closeOnClickModal && handle("cancel")' v-if='options.mask'></div>
-    <div class='ki-message-box-wrapper' :class='{center: options.center}'>
-      <div class='ki-message-box-header'>
-        <div>{{options.title}}</div>
-        <div class='close' @click='handle(options.distinguishCancelAndClose ? "close" : "cancel")'>×</div>
+  <div class='ki-message-box'>
+    <transition name='fade'>
+      <div v-show='!isHidden' class='ki-message-box-inner'>
+        <div class='mask' @click='options.closeOnClickModal && handle("cancel")' v-if='options.mask'></div>
       </div>
-      <div class='ki-message-box-content'>
-        <div
-          class='ki-message-box-icon'
-          :class='options.iconType'
-          v-if='(options.type === "confirm" || options.type === "alert") && options.iconType'
-        >
-          <ki-icon :type='iconMap[options.iconType]' />
+    </transition>
+    <transition name='fall'>
+      <div class='ki-message-box-wrapper' :class='{center: options.center}' v-show='!isHidden'>
+        <div class='ki-message-box-header'>
+          <div>{{options.title}}</div>
+          <div class='close' @click='handle(options.distinguishCancelAndClose ? "close" : "cancel")'>×</div>
         </div>
-        <template v-if='!options.dangerouslyUseHTMLString'>{{options.message}}</template>
-        <div v-else v-html='options.message'></div>
-        <div v-if='options.type === "prompt"' class='ki-message-box-prompt'>
-          <ki-input
-            v-model='promptValue.value'
-            @input='validateValue'
-            :class='{borderColor: !promptValue.validateStatus}'
-            :placeholder='options.inputPlaceholder'
-            :type='options.inputType'
-          />
-          <p v-if='!promptValue.validateStatus'>{{options.inputErrorMessage}}</p>
+        <div class='ki-message-box-content'>
+          <div
+            class='ki-message-box-icon'
+            :class='options.iconType'
+            v-if='(options.type === "confirm" || options.type === "alert") && options.iconType'
+          >
+            <ki-icon :type='iconMap[options.iconType]' />
+          </div>
+          <template v-if='!options.dangerouslyUseHTMLString'>{{options.message}}</template>
+          <div v-else v-html='options.message'></div>
+          <div v-if='options.type === "prompt"' class='ki-message-box-prompt'>
+            <ki-input
+              v-model='promptValue.value'
+              @input='validateValue'
+              :class='{borderColor: !promptValue.validateStatus}'
+              :placeholder='options.inputPlaceholder'
+              :type='options.inputType'
+            />
+            <p v-if='!promptValue.validateStatus'>{{options.inputErrorMessage}}</p>
+          </div>
+        </div>
+        <div class='ki-message-box-operation'>
+          <ki-button
+            size='small'
+            style='margin-right: 10px;'
+            @click='handle("cancel")'
+            v-if='options.showCancelButton'
+          >
+            {{options.cancelButtonText}}
+          </ki-button>
+          <ki-button
+            type='primary'
+            size='small'
+            @click='handle("confirm")'
+            v-if='options.showConfirmButton'
+          >
+            {{options.confirmButtonText}}
+          </ki-button>
         </div>
       </div>
-      <div class='ki-message-box-operation'>
-        <ki-button
-          size='small'
-          style='margin-right: 10px;'
-          @click='handle("cancel")'
-          v-if='options.showCancelButton'
-        >
-          {{options.cancelButtonText}}
-        </ki-button>
-        <ki-button
-          type='primary'
-          size='small'
-          @click='handle("confirm")'
-          v-if='options.showConfirmButton'
-        >
-          {{options.confirmButtonText}}
-        </ki-button>
-      </div>
-    </div>
+    </transition>
   </div>
 </template>
 
@@ -165,6 +171,7 @@ export default defineComponent({
 
     // 处理按钮点击
     const handle = (action: MessageBoxAction) => {
+      console.log(action);
       if (messageBoxOptions.value.callback) {
         messageBoxOptions.value.callback(action, promptValue.value);
       }
@@ -174,7 +181,7 @@ export default defineComponent({
         }
         handleResolve(promptValue.value);
       } else if (!messageBoxOptions.value.callback) {
-        // 只有才没有传递 callback 时才调用 reject
+        // 只有在没有传递 callback 时才调用 reject
         handleReject(action);
       }
       // eslint-disable-next-line @typescript-eslint/no-use-before-define

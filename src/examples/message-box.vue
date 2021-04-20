@@ -50,6 +50,8 @@ export default defineComponent({
         confirmButtonText: '知道了',
       }).then(() => {
         Message.success('ok');
+      }).catch(() => {
+        Message.warning('cancel');
       });
     };
 
