@@ -118,6 +118,10 @@ export default defineComponent({
         title: 'Message 消息提示',
       },
       {
+        name: 'MessageBoxExample',
+        title: 'MessageBox 弹框',
+      },
+      {
         name: 'PaginationExample',
         title: 'Pagination 分页器',
       },
@@ -140,10 +144,6 @@ export default defineComponent({
       {
         name: 'TreeExample',
         title: 'Tree 树形控件',
-      },
-      {
-        name: 'MessageBoxExample',
-        title: 'MessageBox 弹框',
       },
     ];
     const handleClick = (name: string) => {

@@ -1,37 +1,47 @@
 <template>
   <div class='ki-message-box' :class='{isHidden: isHidden}'>
-    <div class='mask' @click='instance.closeOnClickModal && hiddenMessageBox()'></div>
-    <div class='ki-message-box-wrapper'>
+    <div class='mask' @click='options.closeOnClickModal && handle("cancel")' v-if='options.mask'></div>
+    <div class='ki-message-box-wrapper' :class='{center: options.center}'>
       <div class='ki-message-box-header'>
-        <div>{{instance.title}}</div>
-        <div class='close' @click='hiddenMessageBox()'>×</div>
+        <div>{{options.title}}</div>
+        <div class='close' @click='handle("cancel")'>×</div>
       </div>
       <div class='ki-message-box-content'>
         <div
           class='ki-message-box-icon'
-          :class='instance.confirmType'
-          v-if='(instance.type === "confirm" || instance.type === "alert") && instance.confirmType'
+          :class='options.iconType'
+          v-if='(options.type === "confirm" || options.type === "alert") && options.iconType'
         >
-          <ki-icon :type='iconMap[instance.confirmType]' />
+          <ki-icon :type='iconMap[options.iconType]' />
         </div>
-        {{instance.message}}
+        {{options.message}}
+        <div v-if='options.type === "prompt"' class='ki-message-box-prompt'>
+          <ki-input
+            v-model='promptValue.value'
+            @input='validateValue'
+            :class='{borderColor: !promptValue.validateStatus}'
+            :placeholder='options.inputPlaceholder'
+            :type='options.inputType'
+          />
+          <p v-if='!promptValue.validateStatus'>{{options.inputErrorMessage}}</p>
+        </div>
       </div>
       <div class='ki-message-box-operation'>
         <ki-button
           size='small'
           style='margin-right: 10px;'
           @click='handle("cancel")'
-          v-if='instance.showCancelButton'
+          v-if='options.showCancelButton'
         >
-          {{instance.cancelButtonText}}
+          {{options.cancelButtonText}}
         </ki-button>
         <ki-button
           type='primary'
           size='small'
           @click='handle("confirm")'
-          v-if='instance.showConfirmButton'
+          v-if='options.showConfirmButton'
         >
-          {{instance.confirmButtonText}}
+          {{options.confirmButtonText}}
         </ki-button>
       </div>
     </div>
@@ -39,29 +49,41 @@
 </template>
 
 <script lang='ts'>
-import { defineComponent, ref } from 'vue';
+import {
+  defineComponent, ref, onMounted, onBeforeUnmount,
+  reactive,
+} from 'vue';
 import type { StatusType } from '@/types/common';
 import Button from '../button';
 import Icon from '../icon';
+import Input from '../input/index.vue';
 
-export type MessageBoxType = 'alert' | 'confirm';
+export type MessageBoxType = 'alert' | 'confirm' | 'prompt';
 
 export interface MessageBoxOptions {
-  type: MessageBoxType;
-  title: string;
-  message: string;
-  confirmType?: StatusType;
-  closeOnClickModal?: boolean;
-  showCancelButton?: boolean;
-  showConfirmButton?: boolean;
-  cancelButtonText?: string;
-  confirmButtonText?: string;
-  callback?: (action: 'confirm' | 'cancel') => void;
-  beforeClose?: (done: () => void) => void;
+  type: MessageBoxType; // 展示的 MessageBox 类型
+  title: string; // 标题
+  message: string; // 提示信息
+  center?: boolean; // 是否居中布局
+  iconType?: StatusType; // icon type
+  mask?: boolean; // 是否显示遮罩层
+  inputPattern?: RegExp; // prompt 输入框的校验正则
+  inputErrorMessage?: string; // 失败的提示信息
+  inputPlaceholder?: string; // 输入框的 placeholder
+  inputType?: string; // 输入框的类型
+  inputValue?: string; // 输入框的初始值
+  closeOnClickModal?: boolean; // 点击遮罩层是否可以关闭 MessageBox
+  showCancelButton?: boolean; // 是否显示 cancel 按钮
+  showConfirmButton?: boolean; // 是否显示 confirm 按钮
+  cancelButtonText?: string; // cancel 按钮文字
+  confirmButtonText?: string; // confirm 按钮文字
+  closeOnHashChange?: boolean; // 是否在 hashchange 时关闭 MessageBox
+  callback?: (action: 'confirm' | 'cancel', value: string) => void; // 点击按钮的回调
+  beforeClose?: (done: () => void) => void; // 关闭 MessageBox 前的回调
 }
 
 export interface ShowMessageFun {
-  (options: MessageBoxOptions): Promise<undefined>;
+  (options: MessageBoxOptions): Promise<string>;
 }
 
 export interface MessageBoxInstance {
@@ -72,6 +94,7 @@ export default defineComponent({
   components: {
     KiButton: Button,
     KiIcon: Icon,
+    KiInput: Input,
   },
   setup() {
     const isHidden = ref(false);
@@ -83,45 +106,73 @@ export default defineComponent({
       info: 'info-circle',
     };
 
-    const instance = ref<Partial<MessageBoxOptions>>({});
+    // prompt 的 input 值
+    const promptValue = reactive({
+      value: '',
+      validateStatus: true,
+    });
+    const messageBoxOptions = ref<Partial<MessageBoxOptions>>({});
     // 默认配置
     const defaultOptions: Omit<MessageBoxOptions, 'title' | 'message' | 'type'> = {
+      mask: true,
+      inputType: 'text',
       closeOnClickModal: true,
       showConfirmButton: true,
       cancelButtonText: '取消',
       confirmButtonText: '确定',
+      inputErrorMessage: '输入的数据不合法！',
     };
-    let handleResolve: (value?: PromiseLike<undefined> | undefined) => void;
+    let handleResolve: (value?: string | undefined) => void;
     let handleReject: (reason?: unknown) => void;
     const handleShowMessageBox: ShowMessageFun = (options: MessageBoxOptions) => new Promise((resolve, reject) => {
+      // 重置 promptValue
+      promptValue.value = options.inputValue ?? '';
+      promptValue.validateStatus = true;
       // 缓存 resolve、reject
       handleResolve = resolve;
       handleReject = reject;
       isHidden.value = false;
-      instance.value = {
-        showCancelButton: options.type !== 'alert',
+      const isAlert = options.type !== 'alert';
+      messageBoxOptions.value = {
+        showCancelButton: isAlert,
+        closeOnHashChange: isAlert,
         ...defaultOptions,
         ...options,
       };
     });
 
+    // 格式校验
+    const validateValue = () => {
+      if (messageBoxOptions.value.inputPattern) {
+        const status = messageBoxOptions.value.inputPattern.test(promptValue.value);
+        promptValue.validateStatus = status;
+        return status;
+      }
+      promptValue.validateStatus = false;
+      return false;
+    };
+
+    // 处理按钮点击
     const handle = (action: 'confirm' | 'cancel') => {
-      // eslint-disable-next-line @typescript-eslint/no-use-before-define
-      hiddenMessageBox();
-      if (instance.value.callback) {
-        instance.value.callback(action);
+      if (messageBoxOptions.value.callback) {
+        messageBoxOptions.value.callback(action, promptValue.value);
       }
       if (action === 'confirm') {
-        handleResolve();
+        if (messageBoxOptions.value.type === 'prompt' && !validateValue()) {
+          return;
+        }
+        handleResolve(promptValue.value);
       } else {
         handleReject();
       }
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      hiddenMessageBox();
     };
 
     // 隐藏 messageBox
     const hiddenMessageBox = () => {
-      if (instance.value.beforeClose) {
-        instance.value.beforeClose(() => {
+      if (messageBoxOptions.value.beforeClose) {
+        messageBoxOptions.value.beforeClose(() => {
           isHidden.value = true;
         });
       } else {
@@ -129,11 +180,27 @@ export default defineComponent({
       }
     };
 
+    // 监听 hashchange 关闭 message box
+    const handleOnHashChangeClose = () => {
+      if (messageBoxOptions.value.closeOnHashChange) {
+        hiddenMessageBox();
+      }
+    };
+
+    onMounted(() => {
+      window.addEventListener('hashchange', handleOnHashChangeClose);
+    });
+    onBeforeUnmount(() => {
+      window.removeEventListener('hashchange', handleOnHashChangeClose);
+    });
+
     return {
       isHidden,
-      instance,
       iconMap,
+      promptValue,
+      options: messageBoxOptions,
       handle,
+      validateValue,
       hiddenMessageBox,
       handleShowMessageBox,
     };

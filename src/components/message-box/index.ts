@@ -27,4 +27,8 @@ messageBox.confirm = (message: string, title: string | Options, options?: Option
   return showMessageBox('confirm')(message, title, options);
 };
 
+messageBox.prompt = (message: string, title: string | Options, options?: Options) => {
+  return showMessageBox('prompt')(message, title, options);
+};
+
 export default messageBox;
