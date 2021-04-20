@@ -24,6 +24,12 @@
    >
      <a @click='handleOpen5'>点击打开 Message Box</a>
    </Container>
+   <Container
+     title='区分取消与关闭'
+     sub-title='有些场景下，点击取消按钮与点击关闭按钮有着不同的含义。'
+   >
+     <a @click='handleOpen6'>点击打开 Message Box</a>
+   </Container>
  </div>
 </template>
 
@@ -91,12 +97,26 @@ export default defineComponent({
       });
     };
 
+    const handleOpen6 = () => {
+      $confirm('检测到未保存的内容，是否在离开页面前保存修改？', '确认信息', {
+        iconType: 'warning',
+        distinguishCancelAndClose: true,
+      }).then(() => {
+        Message.success({
+          content: '保存修改',
+        });
+      }).catch((action) => {
+        Message.info(action === 'cancel' ? '放弃保存并离开页面' : '停留在当前页面');
+      });
+    };
+
     return {
       handleOpen,
       handleOpen2,
       handleOpen3,
       handleOpen4,
       handleOpen5,
+      handleOpen6,
     };
   },
 });

@@ -4,7 +4,7 @@
     <div class='ki-message-box-wrapper' :class='{center: options.center}'>
       <div class='ki-message-box-header'>
         <div>{{options.title}}</div>
-        <div class='close' @click='handle("cancel")'>×</div>
+        <div class='close' @click='handle(options.distinguishCancelAndClose ? "close" : "cancel")'>×</div>
       </div>
       <div class='ki-message-box-content'>
         <div
@@ -80,7 +80,8 @@ export interface MessageBoxOptions {
   confirmButtonText?: string; // confirm 按钮文字
   closeOnHashChange?: boolean; // 是否在 hashchange 时关闭 MessageBox
   dangerouslyUseHTMLString?: boolean; // message 是否支持 HTML 片段
-  callback?: (action: 'confirm' | 'cancel', value: string) => void; // 点击按钮的回调
+  distinguishCancelAndClose?: boolean; // 是否区分取消触发和关闭触发
+  callback?: (action: MessageBoxAction, value: string) => void; // 点击按钮的回调
   beforeClose?: (done: () => void) => void; // 关闭 MessageBox 前的回调
 }
 
@@ -91,6 +92,14 @@ export interface ShowMessageFun {
 export interface MessageBoxInstance {
   handleShowMessageBox: ShowMessageFun;
 }
+
+/**
+ * 点击按钮的不同 Action
+ * confirm : 确定按钮
+ * cancel  : 取消按钮
+ * close   : messageBox 右上角的 x ，只有在 distinguishCancelAndClose=ture; 的情况下再回出现 close，不然是 cancel
+ */
+export type MessageBoxAction = 'confirm' | 'cancel' | 'close';
 
 export default defineComponent({
   components: {
@@ -125,7 +134,7 @@ export default defineComponent({
       inputErrorMessage: '输入的数据不合法！',
     };
     let handleResolve: (value?: string | undefined) => void;
-    let handleReject: (reason?: unknown) => void;
+    let handleReject: (reason?: MessageBoxAction) => void;
     const handleShowMessageBox: ShowMessageFun = (options: MessageBoxOptions) => new Promise((resolve, reject) => {
       // 重置 promptValue
       promptValue.value = options.inputValue ?? '';
@@ -155,7 +164,7 @@ export default defineComponent({
     };
 
     // 处理按钮点击
-    const handle = (action: 'confirm' | 'cancel') => {
+    const handle = (action: MessageBoxAction) => {
       if (messageBoxOptions.value.callback) {
         messageBoxOptions.value.callback(action, promptValue.value);
       }
@@ -164,8 +173,9 @@ export default defineComponent({
           return;
         }
         handleResolve(promptValue.value);
-      } else {
-        handleReject();
+      } else if (!messageBoxOptions.value.callback) {
+        // 只有才没有传递 callback 时才调用 reject
+        handleReject(action);
       }
       // eslint-disable-next-line @typescript-eslint/no-use-before-define
       hiddenMessageBox();
