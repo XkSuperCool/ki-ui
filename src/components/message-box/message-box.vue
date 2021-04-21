@@ -116,7 +116,7 @@ export default defineComponent({
     KiInput: Input,
   },
   setup() {
-    const isHidden = ref(false);
+    const isHidden = ref(true);
     // 状态对应的 icon
     const iconMap = {
       success: 'check-circle',
@@ -143,7 +143,7 @@ export default defineComponent({
       confirmButtonText: '确定',
       inputErrorMessage: '输入的数据不合法！',
     };
-    let handleResolve: (value?: string | undefined) => void;
+    let handleResolve: (value: string) => void;
     let handleReject: (reason?: MessageBoxAction) => void;
     const handleShowMessageBox: ShowMessageFun = (options: MessageBoxOptions) => new Promise((resolve, reject) => {
       // 重置 promptValue
