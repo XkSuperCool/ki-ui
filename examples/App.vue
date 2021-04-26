@@ -1,6 +1,6 @@
 <template>
   <div class='app'>
-    <Header />
+    <Header :data='config.header' />
     <div class='main'>
       <div class='container'>
         <Menu :list='config.router' />
@@ -56,7 +56,7 @@
   }
 
   .main {
-    height: 100vh;
+    height: 98.34vh;
     overflow: auto;
     .scroll();
 

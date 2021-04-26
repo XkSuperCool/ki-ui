@@ -121,3 +121,14 @@
   </script>
 ```
 :::
+
+### Attributes
+
+| 参数 | 说明 | 类型 | 可选值 | 默认值 |
+| --- | ---  | --- | ---   | ---   |
+| type | 按钮类型 | string	| primary / success / error / warning | — |
+| size | 按钮尺寸 | string | small / medium / large | medium |
+| icon | 按钮图标 | string | 参考 [Font Awesome](http://www.fontawesome.com.cn/) | — |
+| round | 是否圆角 | boolean | true / false | false |
+| circular | 圆形按钮 | boolean | true / false | false |
+| disabled | 是否禁用 | boolean | true / false | false |

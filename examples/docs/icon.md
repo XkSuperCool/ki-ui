@@ -1,4 +1,6 @@
 ## Icon
+常用的 icon 图标。
+### 基础用法
 基于 [Font Awesome](http://www.fontawesome.com.cn/faicons/) 提供了一套常用的图标集合。
 
 :::demo 基于 Font Awesome 封装, type 属性传递 icon 名称即可。

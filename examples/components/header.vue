@@ -1,11 +1,28 @@
 <template>
   <div class='header-container'>
-    Ki-UI / Vue3
+    <div class='left'>
+      <div class='title'>
+        {{data.title}}
+      </div>
+    </div>
   </div>
 </template>
   
-<script>
+<script lang='ts'>
+import { defineComponent } from 'vue';
+import type { PropType } from 'vue';
+import type { Header } from '../config';
 
+export default defineComponent({
+  props: {
+    data: {
+      type: Object as PropType<Header>,
+    },
+  },
+  setup() {
+    return [];
+  },
+});
 </script>
 
 <style lang='less'>

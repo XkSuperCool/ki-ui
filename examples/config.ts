@@ -7,12 +7,14 @@ export interface Router {
   component: () => Component
 }
 
+export interface Header {
+  title: string;
+  logo: string;
+  github: string;
+}
+
 export interface Config {
-  header: {
-    title: string;
-    logo: string;
-    github: string;
-  };
+  header: Header;
   router: {
     groupName: string;
     components: Router[],
@@ -27,7 +29,7 @@ const config: Config = {
   },
   router: [
     {
-      groupName: '基本',
+      groupName: 'Basic',
       components: [
         {
           title: 'Icon 图标',

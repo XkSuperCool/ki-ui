@@ -17,11 +17,13 @@
 
 <script lang='ts'>
 import { defineComponent } from 'vue';
+import type { PropType } from 'vue';
 import { useRoute } from 'vue-router';
+import type { Router } from '../config';
 
 export default defineComponent({
   props: {
-    list: Array,
+    list: Array as PropType<Router[]>,
   },
   setup() {
     const route = useRoute();
