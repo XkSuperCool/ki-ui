@@ -27,27 +27,13 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/i,
+        test: /\.[t|j]s$/i,
         use: [
           {
             loader: 'babel-loader',
           },
         ],
         exclude: /node_modules/,
-      },
-      {
-        test: /\.ts$/i,
-        use: [
-          {
-            loader: 'babel-loader',
-          },
-          {
-            loader: 'ts-loader',
-            options: {
-              appendTsSuffixTo: [/\.vue$/],
-            },
-          },
-        ],
       },
       {
         test: /\.vue$/i,
