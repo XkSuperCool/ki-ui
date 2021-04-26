@@ -1,0 +1,59 @@
+{
+  "name": "ki-ui",
+  "version": "1.0.0",
+  "description": "vue3 components",
+  "main": "lib/ki-ui.js",
+  "scripts": {
+    "build": "webpack --config ./build/webpack.component.js --progress",
+    "build:doc": "webpack --config ./build/webpack.doc.js --progress",
+    "start": "webpack serve --config ./build/webpack.development.config.js --progress"
+  },
+  "keywords": [
+    "vue3",
+    "ui",
+    "component"
+  ],
+  "author": "ki",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.13.16",
+    "@babel/preset-env": "^7.13.15",
+    "@babel/preset-typescript": "^7.13.0",
+    "@types/node": "^14.14.41",
+    "@types/webpack-env": "^1.16.0",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
+    "@vue/compiler-sfc": "^3.0.11",
+    "babel-loader": "^8.2.2",
+    "clean-webpack-plugin": "^4.0.0-alpha.0",
+    "css-loader": "^5.2.4",
+    "css-minimizer-webpack-plugin": "^2.0.0",
+    "eslint": "^7.24.0",
+    "eslint-loader": "^4.0.2",
+    "eslint-plugin-vue": "^7.9.0",
+    "html-webpack-plugin": "^5.3.1",
+    "less": "^4.1.1",
+    "less-loader": "^8.1.1",
+    "markdown-it": "^12.0.6",
+    "markdown-it-container": "^3.0.0",
+    "mini-css-extract-plugin": "^1.5.0",
+    "postcss": "^8.2.12",
+    "postcss-loader": "^5.2.0",
+    "postcss-preset-env": "^6.7.0",
+    "style-loader": "^2.0.0",
+    "typescript": "^4.2.4",
+    "vue-loader": "^16.2.0",
+    "webpack": "^5.35.0",
+    "webpack-cli": "^4.6.0",
+    "webpack-merge": "^5.7.3"
+  },
+  "dependencies": {
+    "core-js": "^3.11.0",
+    "font-awesome": "^4.7.0",
+    "highlight.js": "^10.7.2",
+    "regenerator-runtime": "^0.13.7",
+    "vue": "^3.0.11",
+    "vue-router": "^4.0.6",
+    "webpack-dev-server": "^3.11.2"
+  }
+}

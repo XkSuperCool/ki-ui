@@ -1,0 +1,47 @@
+:root {
+    /* 主文本颜色 */
+    --color: #606266;
+
+    /* 次文本色 */
+    --color-minor: #909399;
+
+    /* 禁用颜色 */
+    --disabled-background-color: #f5f7fa;
+    --disabled-color: #c0c4cc;
+
+    /* placeholder */
+    --placeholder-color: #b8b7b7;
+
+    /* 边框颜色 */
+    --border-color: #d9d9d9;
+
+    /* 主要颜色 */
+    --primary-color: #1890ff;
+    --primary-shallow-color: #40a9ff;
+
+    /* 成功颜色 */
+    --success-color: #67c23a;
+    --success-shallow-color: #85ce61;
+
+    /* 信息颜色 */
+    --info-color: #909399;
+    --info-shallow-color: #a6a9ad;
+
+    /* 警告颜色 */
+    --warning-color: #e6a23c;
+    --warning-shallow-color: #ebb563;
+
+    /* 错误颜色 */
+    --error-color: #f56c6c;
+    --error-shallow-color: #f78989;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}

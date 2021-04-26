@@ -1,0 +1,8 @@
+**/*.js
+**/*.ts
+**/*.md
+
+!packages/**/*.js
+!packages/**/*.ts
+!examples/**/*.js
+!examples/**/*.ts
