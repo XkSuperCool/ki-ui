@@ -4,8 +4,9 @@ declare module "*.md" {
 }
 
 declare module '*.vue' {
-  import type { defineComponent } from 'vue';
+  import type { DefineComponent } from 'vue';
 
-  const component: ReturnType<typeof defineComponent>;
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  const component: DefineComponent<{}, {}, any>;
   export default component;
 }

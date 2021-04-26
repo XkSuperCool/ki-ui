@@ -35,13 +35,36 @@ const config: Config = {
           title: 'Icon 图标',
           name: 'icon',
           path: '/icon',
-          component: (): Component => import('./docs/icon.md'),
+          component: () => import('./docs/icon.md'),
         },
         {
           title: 'Button 按钮',
           name: 'button',
           path: '/button',
-          component: (): Component => import('./docs/button.md'),
+          component: () => import('./docs/button.md'),
+        },
+        {
+          title: 'Tag 标签',
+          name: 'tag',
+          path: '/tag',
+          component: () => import('./docs/tag.md'),
+        },
+      ],
+    },
+    {
+      groupName: 'Form',
+      components: [
+        {
+          title: 'Radio 单选框',
+          name: 'radio',
+          path: '/radio',
+          component: () => import('./docs/radio.md'),
+        },
+        {
+          title: 'Form 表单',
+          name: 'form',
+          path: '/form',
+          component: () => import('./docs/form.md'),
         },
       ],
     },

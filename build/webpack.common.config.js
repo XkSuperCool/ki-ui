@@ -21,6 +21,9 @@ module.exports = {
     filename: '[name].js',
     path: path.resolve(__dirname, '../dist'),
   },
+  stats: {
+    errorDetails: true,
+  },
   module: {
     rules: [
       {
@@ -28,9 +31,6 @@ module.exports = {
         use: [
           {
             loader: 'babel-loader',
-          },
-          {
-            loader: 'eslint-loader',
           },
         ],
         exclude: /node_modules/,
@@ -103,6 +103,7 @@ module.exports = {
     alias: {
       '@': path.resolve(__dirname, '../src'),
       'types': path.resolve(__dirname, '../types'),
+      'packages': path.resolve(__dirname, '../packages'),
     },
   },
   plugins: [

@@ -49,6 +49,7 @@
     "webpack-merge": "^5.7.3"
   },
   "dependencies": {
+    "async-validator": "^3.5.1",
     "core-js": "^3.11.0",
     "font-awesome": "^4.7.0",
     "highlight.js": "^10.7.2",

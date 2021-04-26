@@ -1,0 +1,99 @@
+.ki-radio {
+  margin-right: 20px;
+  cursor: pointer;
+  display: inline-block;
+
+  &.disabled {
+    cursor: not-allowed;
+
+    .ki-radio-label-text {
+      color: var(--disabled-color) !important;
+    }
+
+    .ki-radio-input {
+      border-color: var(--disabled-color) !important;
+      background-color: var(--disabled-background-color);
+
+      &:hover {
+        border-color: var(--disabled-color) !important;
+      }
+
+      &.active {
+        border-width: 1px !important;
+        border-color: var(--disabled-color) !important;
+
+        &::after {
+          content: '';
+          width: 4px;
+          height: 4px;
+          position: absolute;
+          border-radius: 50%;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+          background-color: var(--disabled-color);
+        }
+      }
+    }
+  }
+
+  &.border {
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    padding: 5px 15px;
+
+    &.active {
+      border-color: var(--primary-shallow-color);
+    }
+
+    &.disabled {
+      border-color: var(--disabled-color) !important;
+    }
+  }
+
+  .ki-radio-inner {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+
+    .ki-radio-input {
+      width: 14px;
+      height: 14px;
+      display: inline-block;
+      border-radius: 50%;
+      border: 1px solid var(--border-color);
+      box-sizing: border-box;
+      transition: border-right-width .08s, border-left-width .08s, border-top-width .08s, border-bottom-width .08s;
+      position: relative;
+
+      &:hover {
+        border-color: var(--primary-shallow-color);
+      }
+
+      &.active {
+        border-width: 5.5px;
+        border-color: var(--primary-shallow-color);
+      }
+    }
+
+    input {
+      opacity: 0;
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      z-index: -1;
+    }
+  }
+
+  .ki-radio-label-text {
+    font-size: 14px;
+    margin-left: 8px;
+    font-weight: 500;
+
+    &.active {
+      color: var(--primary-shallow-color);
+    }
+  }
+}

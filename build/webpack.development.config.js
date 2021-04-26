@@ -9,7 +9,7 @@ module.exports = merge(require('./webpack.common.config'), {
   devServer: {
     hot: true,
     hotOnly: true,
-    port: 4000,
+    port: 3000,
     open: true,
     compress: true,
     historyApiFallback: true,
