@@ -3,7 +3,6 @@ import config from '../config';
 import type { Router } from '../config';
 
 const routes = config.router.reduce<Omit<Router, 'title'>[]>((routes, item) => {
-  console.log(item);
   return [...routes, ...item.components.map(({ name, component, path }) => ({
     name,
     path,

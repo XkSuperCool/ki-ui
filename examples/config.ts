@@ -73,10 +73,33 @@ const config: Config = {
           component: () => import('./docs/input.md'),
         },
         {
+          title: 'Select 选择器',
+          name: 'select',
+          path: '/select',
+          component: () => import('./docs/select.md'),
+        },
+        {
+          title: 'Upload 上传',
+          name: 'upload',
+          path: '/upload',
+          component: () => import('./docs/upload.md'),
+        },
+        {
           title: 'Form 表单',
           name: 'form',
           path: '/form',
           component: () => import('./docs/form.md'),
+        },
+      ],
+    },
+    {
+      groupName: 'Navigation',
+      components: [
+        {
+          title: 'Message 消息提示',
+          name: 'message',
+          path: '/message',
+          component: () => import('./docs/message.md'),
         },
       ],
     },

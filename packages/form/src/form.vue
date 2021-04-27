@@ -10,7 +10,6 @@ import {
   PropType,
   provide,
   reactive,
-  getCurrentInstance,
   toRef,
 } from 'vue';
 import type { ComponentInternalInstance, Ref } from 'vue';
@@ -104,10 +103,8 @@ export default defineComponent({
       changeFields,
     });
 
-    const instance = getCurrentInstance();
-    // 挂载实例方法
     // 校验
-    (instance as FormInstance).validate = async (callback: (status: boolean) => void) => {
+    const validate = async (callback: (status: boolean) => void) => {
       let validateStatus = true;
       // eslint-disable-next-line no-restricted-syntax
       for (const { validates } of Object.values(fields)) {
@@ -133,12 +130,17 @@ export default defineComponent({
     };
 
     // 重置
-    (instance as FormInstance).reset = () => {
+    const reset = () => {
       Object.keys(props.model).forEach((key: string) => {
         if (fields[key]) {
           fields[key].reset();
         }
       });
+    };
+
+    return {
+      validate,
+      reset,
     };
   },
 });

@@ -1,0 +1,185 @@
+.ki-select {
+  position: relative;
+
+  .content {
+    height: 100%;
+    position: relative;
+
+    .icon {
+      color: var(--border-color);
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      transition: transform .3s;
+      z-index: 2021;
+    }
+
+    .icon.close {
+      cursor: pointer;
+    }
+
+    &.focus .icon {
+      transform: translateY(-50%) rotate(-180deg);
+    }
+
+    .icon.close {
+      transform: translateY(-50%);
+    }
+  }
+
+  .ki-options {
+    min-width: 100%;
+    margin-top: 15px;
+    padding: 6px 0;
+    position: absolute;
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
+    box-sizing: border-box;
+    z-index: 2022;
+    background-color: #fff;
+
+    &:before {
+      content: '';
+      position: absolute;
+      border: 8px solid transparent;
+      border-bottom-color: var(--border-color);
+      top: -16px;
+      left: 20px;
+    }
+
+    &:after {
+      content: '';
+      position: absolute;
+      border: 7px solid transparent;
+      border-bottom-color: #fff;
+      top: -14px;
+      left: 20.8px;
+    }
+  }
+
+  .ki-options-content {
+    max-height: 300px;
+    overflow-y: hidden;
+
+    &.max-height:hover {
+      overflow-y: auto !important;
+
+      /* 设置滚动条的样式 */
+      &::-webkit-scrollbar {
+        width: 10px;
+        background: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        border: 3px solid transparent;
+        box-shadow: 8px 0 0 var(--border-color) inset;
+        background-color: transparent;
+      }
+
+      &::-webkit-scrollbar-track {
+        background-color: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb:window-inactive {
+        background: transparent;
+      }
+
+      .ki-option-group::after,
+      ::v-deep .ki-option .arrow {
+        margin-right: 0 !important;
+      }
+    }
+  }
+
+  .ki-option-group:last-child {
+    padding: 0;
+
+    &::after {
+      padding: 0;
+      border: none;
+    }
+  }
+}
+
+.ki-select-container {
+  height: 100%;
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  outline: none;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  box-sizing: border-box;
+
+  &.focus {
+    border-color: var(--primary-shallow-color) !important;
+  }
+
+  &:hover {
+    border-color: #c0c4cc;
+  }
+
+  .ki-select-input {
+    width: 100%;
+    height: 100%;
+    font-size: 14px;
+    outline: none;
+    background-color: initial;
+    padding-left: 10px;
+    box-sizing: border-box;
+    border: none;
+    border-radius: 4px;
+
+    &::placeholder {
+      color: var(--placeholder-color);
+    }
+  }
+
+  &.error {
+    border-color: var(--error-color);
+
+    &.focus {
+      border-color: var(--error-color) !important;
+    }
+  }
+}
+
+.ki-select-container.disabled .ki-select-input {
+  background-color: var(--disabled-background-color);
+  cursor: not-allowed;
+}
+
+.ki-select-tag {
+  font-size: 14px;
+  padding: 0 20px 0 10px;
+  box-sizing: border-box;
+  position: absolute;
+  min-height: 40px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  z-index: 2021;
+
+  input {
+    width: 50px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+  }
+
+  span {
+    line-height: 2;
+  }
+
+  .ki-tag {
+    margin: 3px 3px 0 0;
+  }
+
+  .ki-tag:last-of-type {
+    margin-right: 0;
+  }
+}

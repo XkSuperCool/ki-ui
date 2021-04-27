@@ -1,0 +1,205 @@
+.ki-upload {
+  &.disabled * {
+    cursor: not-allowed !important;
+  }
+
+  .ki-input-file {
+    display: none;
+  }
+
+  .ki-upload-tip {
+    color: var(--color);
+    font-size: 12px;
+    margin-top: 7px;
+  }
+
+  :deep .ki-upload-list {
+    list-style: none;
+    margin: 7px 0 0 0;
+    padding: 0;
+
+    .ki-upload-list-item {
+      color: var(--color);
+      font-size: 14px;
+      padding: 2px 5px 4px 5px;
+      border-radius: 3px;
+      margin-top: 10px;
+      position: relative;
+      overflow: hidden;
+
+      .progress {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+
+        span {
+          font-size: 12px;
+          position: absolute;
+          right: 3px;
+          top: 5px;
+        }
+      }
+
+      .progress-bar {
+        content: '';
+        height: 2px;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        border-radius: 3px;
+        transition: width .3s;
+        background-color: var(--success-shallow-color);
+      }
+
+      .text-icons {
+        float: right;
+        margin-top: 1.5px;
+        color: var(--success-color);
+
+        .check-icon {
+          color: var(--success-color);
+        }
+      }
+
+      .check-icon {
+        display: block;
+      }
+
+      .close-icon {
+        display: none;
+        cursor: pointer;
+      }
+
+      &:hover {
+        color: var(--primary-color);
+        background-color: #eeeded;
+
+        .check-icon {
+          display: none;
+        }
+
+        .close-icon {
+          display: block;
+        }
+      }
+    }
+
+    .ki-upload-list-item.picture {
+      padding: 10px;
+      box-sizing: border-box;
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      border-radius: 6px;
+
+      .content {
+        width: 0;
+        flex: 1;
+        height: 100%;
+        position: relative;
+      }
+
+      img {
+        width: 70px;
+        height: 70px;
+        object-fit: cover;
+        margin-right: 10px;
+      }
+
+      &:hover {
+        background-color: initial;
+      }
+
+      .progress-picture {
+        position: absolute;
+        width: 100%;
+
+        span {
+          font-size: 12px;
+          position: absolute;
+          right: 0;
+          bottom: -25px;
+        }
+      }
+
+      .progress-bar {
+        bottom: -10px;
+
+        span {
+          right: 0;
+          top: 3px;
+        }
+      }
+
+      .picture-icons {
+        position: absolute;
+        right: -17px;
+        top: -5px;
+        background-color: var(--success-color);
+        width: 46px;
+        height: 26px;
+        transform: rotate(45deg);
+
+        .icon {
+          color: #fff;
+          font-size: 12px;
+          position: absolute;
+          left: 16px;
+          bottom: 2px;
+          transform: rotate(-45deg);
+        }
+      }
+    }
+  }
+
+  .ki-drag-upload {
+    height: 180px;
+    border-radius: 5px;
+    border: 1px dashed var(--border-color);
+    text-align: center;
+    box-sizing: border-box;
+    position: relative;
+
+    &:hover {
+      border-color: var(--primary-shallow-color);
+    }
+
+    &.disabled:hover {
+      border-color: var(--border-color);
+    }
+
+    &.dragover {
+      border-width: 2px;
+      border-color: var(--primary-shallow-color);
+      background-color: rgba(46, 169, 255, .1);
+    }
+
+    .position {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    :deep .upload-icon {
+      color: #ccc;
+      font-size: 60px;
+      .position();
+      top: 30px;
+    }
+
+    :deep .upload-text {
+      color: var(--color);
+      font-size: 14px;
+      width: 100%;
+      .position();
+      top: 60%;
+
+      span {
+        color: var(--primary-shallow-color);
+        cursor: pointer;
+      }
+    }
+  }
+}
