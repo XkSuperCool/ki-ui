@@ -92,10 +92,10 @@
 ```
 :::
 
-### Attributes
+### Radio Attributes
 | 参数 | 说明 | 类型 | 可选值 | 默认值 |
 | --- | ---  | --- | ---   | ---   |
-| v-model |	绑定值 | string / number | — | — |
+| v-model |	radio 绑定值 | string / number | — | — |
 | label |	Radio 的 value | string / number | — | — |
 | disabled | 是否禁用 | boolean | true / false | false |
 | border | 是否带有边框 | boolean | true / false | false |
@@ -104,6 +104,11 @@
 | 事件名称 | 说明 | 回调函数 |
 | --- | ---  | --- |
 | change | 绑定值变化时触发 | (value: string / number) => void |
+
+### RadioGroup Attributes
+| 参数 | 说明 | 类型 | 可选值 | 默认值 |
+| --- | ---  | --- | ---   | ---   |
+| v-model |	radioGroup 绑定值 | string / number | — | — |
 
 ### Radio Group Events
 | 事件名称 | 说明 | 回调函数 |

@@ -24,8 +24,8 @@ import {
 } from 'vue';
 import { RADIO_GROUP_PROVIDE } from './radio-group.vue';
 import type { RadioGroupProvide, ModelValue } from './radio-group.vue';
-import { VALIDATE_FUNCTION } from '../../form/src/form-item.vue';
-import type { EventValidateObject } from '../../form/src/form-item.vue';
+import { VALIDATE_FUNCTION } from 'packages/form/src/form-item.vue';
+import type { EventValidateObject } from 'packages/form/src/form-item.vue';
 
 export default defineComponent({
   name: 'ki-radio',

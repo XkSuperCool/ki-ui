@@ -12,7 +12,7 @@ module.exports = function(source) {
 
   let start = 0; // 记录开始匹配的位置
   let output = []; // 储存最终输出的内容
-    // 每一个代码块的唯一 id，md 文件中每一个代码块都会生成一个 vue 组件，这个 id 就是组件 tag 中的一部分
+  // 每一个代码块的唯一 id，md 文件中每一个代码块都会生成一个 vue 组件，这个 id 就是组件 tag 中的一部分
   let id = 0;
   // 每一个代码块都会生成一个 key: value 值，通过 componentsStr 将所有代码块连接起来，最后放在 components
   let componentsStr = '';

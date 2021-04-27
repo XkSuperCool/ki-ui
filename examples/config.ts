@@ -61,6 +61,18 @@ const config: Config = {
           component: () => import('./docs/radio.md'),
         },
         {
+          title: 'Checkbox 多选框',
+          name: 'checkbox',
+          path: '/checkbox',
+          component: () => import('./docs/checkbox.md'),
+        },
+        {
+          title: 'Input 输入框',
+          name: 'input',
+          path: '/input',
+          component: () => import('./docs/input.md'),
+        },
+        {
           title: 'Form 表单',
           name: 'form',
           path: '/form',

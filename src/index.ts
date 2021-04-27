@@ -2,8 +2,10 @@ import type { App } from 'vue';
 import Button from '../packages/button';
 import Icon from '../packages/icon';
 import Tag from '../packages/tag';
+import Input from '../packages/input';
 import { Form, FormItem } from '../packages/form';
 import { RadioGroup, Radio } from '../packages/radio';
+import { Checkbox, CheckboxGroup } from '../packages/checkbox';
 import '../assets/styles/global-style.css';
 
 const components = {
@@ -14,6 +16,9 @@ const components = {
   FormItem,
   RadioGroup,
   Radio,
+  Input,
+  Checkbox,
+  CheckboxGroup,
 };
 
 const install = function(app: App): App {
@@ -34,4 +39,7 @@ export {
   FormItem,
   RadioGroup,
   Radio,
+  Input,
+  Checkbox,
+  CheckboxGroup,
 }

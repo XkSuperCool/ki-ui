@@ -6,8 +6,8 @@ function stripTemplate(content) {
   if (!content) {
     return content;
   }
-  // 找到 </template> 开始的下标
-  const templateEndIndex = content.indexOf('</template>')
+  // 找到 </template> 所在的下标（从后往前，如果是 indexOf，在使用 slot 时会出现问题）
+  const templateEndIndex = content.lastIndexOf('</template>')
   // 获取 template 标签中的内容，10 就是 <template> 的长度
   const html = content.slice(10,templateEndIndex)
   return html;
