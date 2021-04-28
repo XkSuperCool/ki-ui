@@ -56,7 +56,7 @@
   }
 
   .main {
-    height: 98.34vh;
+    height: 97vh;
     overflow: auto;
     .scroll();
 

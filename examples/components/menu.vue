@@ -35,8 +35,32 @@ export default defineComponent({
 </script>
 
 <style lang='less'>
+   .scroll {
+    /* 设置滚动条的样式 */
+    &::-webkit-scrollbar {
+      width: 15px;
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      border: 5px solid transparent;
+      box-shadow: 10px 0 0 #ccc inset;
+      background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb:window-inactive {
+      background: transparent;
+    }
+  }
+
   .menu {
     width: 260px;
+    overflow: auto;
     margin-top: 80px;
     background-color: #fff;
     position: fixed;
@@ -44,6 +68,7 @@ export default defineComponent({
     bottom: 0;
     border-right: 1px solid #f0f0f0;
     box-sizing: border-box;
+    .scroll();
 
     .list {
       list-style: none;

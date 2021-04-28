@@ -1,10 +1,13 @@
 import type { Component } from 'vue';
 
 export interface Router {
-  title: string;
-  name: string;
-  path: string;
-  component: () => Component
+  groupName: string;
+  components: {
+    title: string;
+    name: string;
+    path: string;
+    component: () => Component
+  }[],
 }
 
 export interface Header {
@@ -15,10 +18,7 @@ export interface Header {
 
 export interface Config {
   header: Header;
-  router: {
-    groupName: string;
-    components: Router[],
-  }[];
+  router: Router[];
 }
 
 const config: Config = {
@@ -93,13 +93,65 @@ const config: Config = {
       ],
     },
     {
-      groupName: 'Navigation',
+      groupName: 'Data',
       components: [
+        {
+          title: 'Pagination 分页',
+          name: 'pagination',
+          path: '/pagination',
+          component: () => import('./docs/pagination.md'),
+        },
+        {
+          title: 'Tree 树形控件',
+          name: 'tree',
+          path: '/tree',
+          component: () => import('./docs/tree.md'),
+        },
+      ],
+    },
+    {
+      groupName: 'Notice',
+      components: [
+        {
+          title: 'Alert 警告',
+          name: 'alert',
+          path: '/alert',
+          component: () => import('./docs/alert.md'),
+        },
         {
           title: 'Message 消息提示',
           name: 'message',
           path: '/message',
           component: () => import('./docs/message.md'),
+        },
+        {
+          title: 'MessageBox 弹框',
+          name: 'messageBox',
+          path: '/messageBox',
+          component: () => import('./docs/message-box.md'),
+        },
+      ],
+    },
+    {
+      groupName: 'Others',
+      components: [
+        {
+          title: 'Modal 对话框',
+          name: 'modal',
+          path: '/modal',
+          component: () => import('./docs/modal.md'),
+        },
+        {
+          title: 'Carousel 走马灯',
+          name: 'carousel',
+          path: '/carousel',
+          component: () => import('./docs/carousel.md'),
+        },
+        {
+          title: 'Calendar 日历',
+          name: 'calendar',
+          path: '/calendar',
+          component: () => import('./docs/calendar.md'),
         },
       ],
     },

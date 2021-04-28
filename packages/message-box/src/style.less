@@ -1,0 +1,142 @@
+.ki-message-box {
+  .ki-message-box-inner {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1010;
+  }
+
+  .mask {
+    height: 100%;
+    opacity: .5;
+    background-color: #000;
+  }
+
+  .ki-message-box-wrapper {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 420px;
+    background-color: #fff;
+    padding: 12px 15px;
+    box-sizing: border-box;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 3px 5px rgba(0, 0, 0, .2);
+    z-index: 1011;
+
+    &.center {
+      align-items: center;
+    }
+  }
+
+  .ki-message-box-header {
+    color: var(--color);
+    font-size: 18px;
+
+    .close {
+      position: absolute;
+      right: 15px;
+      top: 8px;
+      color: var(--color-minor);
+      font-size: 23px;
+      cursor: pointer;
+
+      &:hover {
+        color: var(--primary-shallow-color);
+      }
+    }
+  }
+
+  .ki-message-box-content {
+    color: var(--color-minor);
+    font-size: 14px;
+    margin: 20px 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    .ki-message-box-icon {
+      margin-right: 10px;
+      font-size: 20px;
+
+      &.success {
+        color: var(--success-shallow-color);
+      }
+
+      &.warning {
+        color: var(--warning-shallow-color);
+      }
+
+      &.error {
+        color: var(--error-shallow-color);
+      }
+
+      &.info {
+       color: var(--info-shallow-color);
+      }
+
+      .ki-icon {
+        color: inherit;
+      }
+    }
+  }
+
+  .ki-message-box-operation {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .ki-message-box-prompt {
+    width: 100%;
+    margin-top: 10px;
+
+    p {
+      color: var(--error-color);
+      font-size: 12px;
+    }
+
+    .borderColor input,
+    .borderColor input:focus,
+    .borderColor textarea,
+    .borderColor textarea:focus {
+      border-color: var(--error-color) !important;
+    }
+  }
+
+  .ki-message-box-spinner {
+    animation: rotate 1s linear infinite;
+  }
+
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+.fall-enter-active {
+  animation: fall-in 0.3s;
+}
+.fall-leave-active {
+  animation: fall-in 0.3s reverse;
+}
+@keyframes fall-in {
+  0% {
+    transform: translate(-50%, -100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+}
