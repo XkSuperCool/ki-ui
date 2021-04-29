@@ -14,7 +14,7 @@ const md = new MarkdownIt({
   validate: function (params) {
     return params.trim().match(/^demo\s*(.*)$/);
   },
-  render: function (tokens, idx) {
+  render: function(tokens, idx) {
     const info = tokens[idx].info.trim().match(/^demo\s*(.*)$/);
     // description 是在 :::demo 后面的文字描述
     const description = info && info.length > 1 ? info[1] : '';

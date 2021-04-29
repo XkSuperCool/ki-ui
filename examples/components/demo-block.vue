@@ -18,7 +18,6 @@
 
 <script lang='ts'>
 import { ref, defineComponent } from 'vue';
-import 'highlight.js/styles/atom-one-light.css';
 
 export default defineComponent({
   setup(_, { slots }) {
@@ -56,12 +55,9 @@ export default defineComponent({
 
       pre {
         margin: 0;
-      }
-
-      code {
-        color: '#1f2f3d';
-        font-size: 12px;
-        font-family: Menlo, Monaco, Consolas, Courier, monospace, "微软雅黑";
+        padding: 0;
+        border: none;
+        border-radius: 0;
       }
     }
 

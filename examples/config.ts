@@ -1,13 +1,15 @@
 import type { Component } from 'vue';
 
-export interface Router {
+export interface RoutersItem {
   groupName: string;
-  components: {
-    title: string;
-    name: string;
-    path: string;
-    component: () => Component
-  }[],
+  components: Router[],
+}
+
+export interface Router {
+  title: string;
+  name: string;
+  path: string;
+  component: () => Component
 }
 
 export interface Header {
@@ -18,7 +20,7 @@ export interface Header {
 
 export interface Config {
   header: Header;
-  router: Router[];
+  routers: RoutersItem[];
 }
 
 const config: Config = {
@@ -27,7 +29,18 @@ const config: Config = {
     logo: '',
     github: '',
   },
-  router: [
+  routers: [
+    {
+      groupName: 'Guide',
+      components: [
+        {
+          title: '安装',
+          name: 'install',
+          path: '/install',
+          component: () => import('./docs/guide/install.md'),
+        },
+      ],
+    },
     {
       groupName: 'Basic',
       components: [

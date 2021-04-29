@@ -2,7 +2,7 @@
   <div class='header-container'>
     <div class='left'>
       <div class='title'>
-        {{data.title}}
+        {{data?.title}}
       </div>
     </div>
   </div>

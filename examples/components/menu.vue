@@ -19,11 +19,11 @@
 import { defineComponent } from 'vue';
 import type { PropType } from 'vue';
 import { useRoute } from 'vue-router';
-import type { Router } from '../config';
+import type { RoutersItem } from '../config';
 
 export default defineComponent({
   props: {
-    list: Array as PropType<Router[]>,
+    list: Array as PropType<RoutersItem[]>,
   },
   setup() {
     const route = useRoute();
@@ -60,7 +60,7 @@ export default defineComponent({
 
   .menu {
     width: 260px;
-    overflow: auto;
+    overflow: hidden;
     margin-top: 80px;
     background-color: #fff;
     position: fixed;
@@ -69,6 +69,10 @@ export default defineComponent({
     border-right: 1px solid #f0f0f0;
     box-sizing: border-box;
     .scroll();
+
+    &:hover {
+      overflow: auto;
+    }
 
     .list {
       list-style: none;

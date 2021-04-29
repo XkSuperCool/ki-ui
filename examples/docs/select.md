@@ -19,7 +19,7 @@
     export default {
       data() {
         return {
-          select: [],
+          select: '',
         };
       },
     };
@@ -45,7 +45,7 @@
     export default {
       data() {
         return {
-          select: [],
+          select: '',
         };
       },
     };
@@ -71,7 +71,7 @@ Select 上指定 disabled 可以将其禁用
     export default {
       data() {
         return {
-          select: [],
+          select: '',
         };
       },
     };
@@ -97,7 +97,7 @@ Select 上指定 disabled 可以将其禁用
     export default {
       data() {
         return {
-          select: [],
+          select: '',
         };
       },
     };

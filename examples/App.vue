@@ -3,7 +3,7 @@
     <Header :data='config.header' />
     <div class='main'>
       <div class='container'>
-        <Menu :list='config.router' />
+        <Menu :list='config.routers' />
         <div class='content'>
           <router-view></router-view>
         </div>
