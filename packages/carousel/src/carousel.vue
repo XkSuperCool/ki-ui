@@ -1,22 +1,31 @@
 <template>
-  <div class='ki-carousel' ref='carouselRef'>
-    <div :style='{height: height}'>
-      <slot></slot>
-      <Transition name='fade'>
-        <div v-if='isShowControllerButton' class='controller-btn' :class='{vertical: direction === "vertical" }'>
-          <Button @click='prevCarouse' size='small' class='ki-c-prev-btn' circular icon='angle-left' />
-          <Button @click='nextCarouse' size='small' class='ki-c-next-btn' circular icon='angle-right' />
-        </div>
-      </Transition>
+  <div
+    ref='root'
+    class='ki-carousel-root'
+    @mouseenter='handleMouseenter'
+    @mouseleave='handleMouseleace'
+  >
+    <div
+      v-if='arrow !== "never" && direction !== "vertical"'
+      :class='{hiddenArrow: hiddenArrow && arrow === "hover"}'
+    >
+      <div @click='prev' class='arrow left-arrow'>
+        <ki-icon type='angle-left' />
+      </div>
+      <div @click='next' class='arrow right-arrow'>
+        <ki-icon type='angle-right' />
+      </div>
     </div>
-    <ul class='control-point' :class='{vertical: direction === "vertical" }'>
+    <div class='ki-carousel' :style='{height: height}'>
+      <slot></slot>
+    </div>
+    <ul class='control-point' :class='{vertical: direction === "vertical"}'>
       <li
         v-for='(item, index) in items'
         :key='item.uid'
         :class='{active: activeIndex === index}'
-        @click='handleClickControlPoint(index)'
-      >
-      </li>
+        @mouseenter='handleToggleCarousel(index)'
+      />
     </ul>
   </div>
 </template>
@@ -24,181 +33,279 @@
 <script lang='ts'>
 import {
   defineComponent,
-  reactive,
-  provide,
   ref,
+  provide,
   onMounted,
-  onBeforeUnmount,
-  Transition,
   watch,
   toRef,
 } from 'vue';
-import type { PropType, Ref } from 'vue';
-import Button from 'packages/button';
-import type { CarouselInstance } from './carousel-item.vue';
+import type { Ref, PropType } from 'vue';
+import type { CarouselItem } from './carousel-item.vue';
+import { throttle } from '@/utils';
+import Icon from 'packages/icon';
 
-export const CAROUSEL_INSTANCE = Symbol.for('carousel_instance');
-export interface Carousel {
-  addItem: (instance: CarouselInstance) => void;
-  items: CarouselInstance[];
-  initialIndex: Ref<number>;
-  direction: 'horizontal' | 'vertical';
+type Direction = 'horizontal' | 'vertical';
+export const InjectCarouselKey = Symbol.for('Carousel');
+export interface InjectCarouselValue {
+  items: Ref<CarouselItem[]>,
+  addItem: (item: CarouselItem) => void;
+  offsetWidth: Ref<number>;
+  offsetHeight: Ref<number>;
+  direction: Ref<Direction>,
 }
 
 export default defineComponent({
   name: 'ki-carousel',
   props: {
+    height: String,
     autoplay: Boolean,
-    height: {
-      type: String,
-      default: '300px',
+    interval: {
+      type: Number,
+      default: 3000,
     },
     arrow: {
       type: String as PropType<'hover' | 'always' | 'never'>,
       default: 'hover',
-    },
-    interval: {
-      type: Number,
-      default: 3000,
     },
     initialIndex: {
       type: Number,
       default: 0,
     },
     direction: {
-      type: String as PropType<'horizontal' | 'vertical'>,
+      type: String as PropType<Direction>,
       default: 'horizontal',
     },
   },
   components: {
-    Button,
-    Transition,
+    Icon,
   },
   setup(props) {
-    const items = reactive<CarouselInstance[]>([]);
-    const addItem = (instance: CarouselInstance) => items.push(instance);
+    const root = ref<HTMLDivElement | null>(null);
+    const activeIndex = ref(0);
+    const items = ref<CarouselItem[]>([]);
 
-    const activeIndex = ref(props.initialIndex);
-    let flag = true;
-    // 下一个
-    const nextCarouse = () => {
-      if (flag) {
-        flag = false;
-        setTimeout(() => {
-          if (activeIndex.value === (items.length - 1)) {
-            activeIndex.value = 0;
-          } else {
-            activeIndex.value += 1;
-          }
-          items.forEach((item) => {
-            item.toggleCarouse(activeIndex.value, 'left');
-          });
-          flag = true;
-        }, 200);
-      }
+    const setActiveItem = (current: number) => {
+      items.value.forEach((element, index) => {
+        element.translateItem(index, current, activeIndex.value);
+      });
+      activeIndex.value = current;
     };
-    // 上一个
-    const prevCarouse = () => {
-      if (flag) {
-        flag = false;
-        setTimeout(() => {
-          if (activeIndex.value === 0) {
-            activeIndex.value = items.length - 1;
-          } else {
-            activeIndex.value -= 1;
-          }
-          items.forEach((item) => {
-            item.toggleCarouse(activeIndex.value, 'right');
-          });
-          flag = true;
-        }, 200);
-      }
-    };
-    // 将事件组合为一个对象，方便调用
-    const event = { nextCarouse, prevCarouse };
-    // 点击控制点
-    const handleClickControlPoint = (index: number) => {
-      if (activeIndex.value !== index) {
-        const diff = Math.abs(index - activeIndex.value);
-        const eventName = index > activeIndex.value ? 'nextCarouse' : 'prevCarouse';
-        event[eventName]();
-        // eslint-disable-next-line no-plusplus
-        for (let i = 0; i < (diff - 1); i++) {
-          // 延时后续调用，时间比 nextCarouse/prevCarouse 要长一点，使其前面的动画能先完成
-          setTimeout(event[eventName], 350 * (i + 1));
-        }
-      }
-    };
-    // 监听 initialIndex
-    watch(toRef(props, 'initialIndex'), (value: number) => {
-      if (value < items.length) {
-        handleClickControlPoint(value);
-      }
-    });
 
-    provide<Carousel>(CAROUSEL_INSTANCE, {
-      addItem,
-      items,
-      initialIndex: toRef(props, 'initialIndex'),
-      direction: props.direction,
-    });
+    const addItem = (item: CarouselItem) => {
+      items.value.push(item);
+    };
 
-    let autoPlayTimerId: any = 0;
-    const carouselRef = ref<HTMLDivElement | null>(null);
+    const next = throttle(() => {
+      let index = activeIndex.value + 1;
+      if (index >= items.value.length) {
+        index = 0;
+      }
+      setActiveItem(index);
+    }, 300);
+
+    const prev = throttle(() => {
+      let index = activeIndex.value - 1;
+      if (index < 0) {
+        index = items.value.length - 1;
+      }
+      setActiveItem(index);
+    }, 300);
+
+    const handleToggleCarousel = (index: number) => {
+      setActiveItem(index);
+    };
+
+    // 自动轮播
+    let timer: NodeJS.Timeout | null = null;
     const autoplay = () => {
-      if (props.autoplay) {
-        autoPlayTimerId = setTimeout(() => {
-          nextCarouse();
-          autoplay();
-        }, props.interval);
-      }
+      timer = setTimeout(() => {
+        next();
+        autoplay();
+      }, props.interval);
     };
-
-    const isShowControllerButton = ref(props.arrow === 'always'); // 是否显示控制按钮
-    watch(toRef(props, 'arrow'), (value: 'hover' | 'always' | 'never') => {
-      isShowControllerButton.value = value === 'always';
+    watch(() => props.autoplay, (value) => {
+      if (value) {
+        autoplay();
+      } else {
+        clearTimeout(timer!);
+      }
     });
-    const carouselRefMouseenter = () => {
-      clearTimeout(autoPlayTimerId);
-      if (props.arrow === 'hover') {
-        isShowControllerButton.value = true;
+
+    // 轮播宽高
+    const offsetWidth = ref(0);
+    const offsetHeight = ref(0);
+    const getWidthAndHeight = () => {
+      if (root.value) {
+        offsetWidth.value = root.value.offsetWidth;
+        offsetHeight.value = root.value.offsetHeight;
       }
     };
-    const carouselRefMouseLeave = () => {
-      autoplay();
-      if (props.arrow === 'hover') {
-        isShowControllerButton.value = false;
+    watch(() => props.height, () => {
+      getWidthAndHeight();
+    });
+
+    // 控制箭头显隐，移入停止自动轮播，移出开启自动轮播
+    const hiddenArrow = ref(true);
+    const handleMouseenter = () => {
+      hiddenArrow.value = false;
+      if (props.autoplay) {
+        clearTimeout(timer!);
+      }
+    };
+    const handleMouseleace = () => {
+      hiddenArrow.value = true;
+      if (props.autoplay) {
+        autoplay();
       }
     };
 
     onMounted(() => {
-      autoplay();
-      if (carouselRef.value) {
-        carouselRef.value.addEventListener('mouseenter', carouselRefMouseenter);
-        carouselRef.value.addEventListener('mouseleave', carouselRefMouseLeave);
+      getWidthAndHeight();
+      const { initialIndex } = props;
+      const index = initialIndex >= 0 && initialIndex <= items.value.length - 1 ? initialIndex : 0;
+      setActiveItem(index);
+      if (props.autoplay) {
+        autoplay();
       }
     });
 
-    onBeforeUnmount(() => {
-      if (carouselRef.value) {
-        carouselRef.value.removeEventListener('mouseenter', carouselRefMouseenter);
-        carouselRef.value.removeEventListener('mouseleave', carouselRefMouseLeave);
-      }
+    // provide
+    provide<InjectCarouselValue>(InjectCarouselKey, {
+      items,
+      addItem,
+      offsetWidth,
+      offsetHeight,
+      direction: toRef(props, 'direction'),
     });
 
     return {
+      root,
       items,
       activeIndex,
-      carouselRef,
-      isShowControllerButton,
-      nextCarouse,
-      prevCarouse,
-      handleClickControlPoint,
+
+      next,
+      prev,
+      handleToggleCarousel,
+
+      hiddenArrow,
+      handleMouseenter,
+      handleMouseleace,
     };
   },
 });
 </script>
 
-<style scoped lang='less'>
-  @import 'style/carousel.less';
+<style lang='less'>
+  .ki-carousel-root {
+    position: relative;
+
+    .arrow {
+      width: 40px;
+      height: 40px;
+      position: absolute;
+      background-color: rgba(0, 0, 0, .2);
+      z-index: 10;
+      top: 50%;
+      transform: translateY(-50%);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background-color .3s;
+      text-align: center;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, .6);
+      }
+
+      .fa {
+        color: hsla(0,0%,100%,.6);
+        font-size: 32px;
+        line-height: 40px;
+      }
+    }
+
+    .arrow.left-arrow {
+      left: 2%;
+
+      .fa {
+        margin-left: -4px;
+      }
+    }
+
+    .arrow.right-arrow {
+      right: 2%;
+
+      .fa {
+        margin-right: -4px;
+      }
+    }
+
+    .control-point {
+      width: 60%;
+      display: flex;
+      list-style: none;
+      position: absolute;
+      left: 50%;
+      bottom: 20px;
+      transform: translate(-50%, 0);
+      margin: 0;
+      padding: 0;
+      justify-content: center;
+
+      li {
+        width: 10%;
+        height: 2px;
+        margin-right: 10px;
+        padding: 3px 0;
+        cursor: pointer;
+
+        &::after {
+          content: '';
+          display: block;
+          width: 100%;
+          height: 100%;
+          background-color: #fff;
+          opacity: .4;
+        }
+      }
+
+      li.active::after {
+        opacity: 1;
+      }
+
+      li:last-child {
+        margin-right: 0;
+      }
+    }
+
+    .control-point.vertical {
+      width: auto;
+      height: 60%;
+      left: initial;
+      right: 20px;
+      bottom: 50%;
+      transform: translate(0, 50%);
+      flex-direction: column;
+
+      li {
+        width: 2px;
+        height: 10%;
+        padding: 0 3px;
+        margin-right: 0;
+        margin-bottom: 10px;
+      }
+
+      li:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    .hiddenArrow {
+      display: none;
+    }
+  }
+
+  .ki-carousel {
+    overflow: hidden;
+    position: relative;
+  }
 </style>

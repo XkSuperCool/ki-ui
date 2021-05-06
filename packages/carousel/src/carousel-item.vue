@@ -1,110 +1,146 @@
 <template>
-  <div class='ki-carousel-item' ref='carouselItemRef' :style='style' :class='domClass'>
+  <div
+    class='ki-carousel-item'
+    :style='itemStyle'
+    :class='data.itemClass'
+  >
     <slot></slot>
   </div>
 </template>
 
 <script lang='ts'>
 import {
+  computed,
   defineComponent,
   getCurrentInstance,
-  onMounted,
   inject,
+  onMounted,
   ref,
-  reactive,
-  nextTick,
 } from 'vue';
-import type { CSSProperties } from 'vue';
-import { CAROUSEL_INSTANCE } from './carousel.vue';
-import type { Carousel } from './carousel.vue';
+import { InjectCarouselKey } from './carousel.vue';
+import type { InjectCarouselValue } from './carousel.vue';
 
-export interface CarouselInstance {
+export interface TranslateItem {
+  (index: number, actveIndex: number, oldIndex: number): void
+}
+
+export interface CarouselItem {
   uid: number;
-  toggleCarouse: (idx: number, direction: 'left' | 'right') => void;
+  translateItem: TranslateItem;
 }
 
 export default defineComponent({
   name: 'ki-carousel-item',
   setup() {
     const instance = getCurrentInstance();
-    const style = reactive<Partial<CSSProperties>>({});
-    const domClass = reactive<string[]>([]);
-    const index = ref(0);
+    const data = ref<{
+      itemTranslate: number,
+      itemClass: string,
+    }>({
+      itemTranslate: 0,
+      itemClass: '',
+    });
 
-    // inject
-    const carouseInstance = inject<Carousel>(CAROUSEL_INSTANCE);
+    const carouselInstance = inject<InjectCarouselValue>(InjectCarouselKey);
 
-    const setTranslate = (value: number, flag = '+') => {
-      const direction = carouseInstance?.direction === 'horizontal' ? 'X' : 'Y';
-      if (flag === '-') {
-        style.transform = `translate${direction}(-${value}%)`;
-      } else if (flag === '+') {
-        style.transform = `translate${direction}(${value}%)`;
+    // 计算移动距离
+    const computedTranslate = (index: number, actveIndex: number): number => {
+      const {
+        direction, offsetHeight, offsetWidth, items,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      } = carouselInstance!;
+      const offset = direction.value === 'horizontal' ? offsetWidth.value : offsetHeight.value;
+      const { length } = items.value;
+      let value;
+      if (index === actveIndex) {
+        value = 0;
+      } else if (index === 0 && actveIndex === length - 1) {
+        value = offset;
+      } else if (index === length - 1 && actveIndex === 0) {
+        value = -offset;
+      } else if (index < actveIndex) {
+        value = -(actveIndex - index) * offset;
+      } else {
+        value = (index - actveIndex) * offset;
+      }
+      return value;
+    };
+
+    // 移动过渡效果
+    const translateTransation = (index: number, actveIndex: number, oldIndex: number) => {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const { length } = carouselInstance!.items.value;
+      const lastIndex = length - 1;
+      // 是不是最后一个 item 或 第一个 item
+      const isFirstItemOrLastItem = index === lastIndex || index === 0;
+      // 给当前 item 和前一个 item 添加过渡效果
+      const isTransation = (index === actveIndex || (index === oldIndex));
+      // 是否切换的是下一张
+      const isNext = actveIndex > oldIndex || (oldIndex === lastIndex && actveIndex === 0);
+      if (isNext) {
+        if (
+          isTransation || (
+            // 如果是最后一张切换第一张，那么就找到这两个 item 并添加动画过渡效果
+            (oldIndex === lastIndex && actveIndex === 0) && isFirstItemOrLastItem
+          )
+        ) {
+          data.value.itemClass = 'ki-carousel-transation';
+        } else {
+          data.value.itemClass = '';
+        }
+        return;
+      }
+      if (
+        isTransation || (
+          // 如果是第一张切换最后一张，那么就找到这两个 item 并添加动画过渡效果
+          (oldIndex === 0 && actveIndex === lastIndex) && isFirstItemOrLastItem
+        )
+      ) {
+        data.value.itemClass = 'ki-carousel-transation';
+      } else {
+        data.value.itemClass = '';
       }
     };
 
-    const toggleCarouse = (idx: number, direction: 'left' | 'right') => {
-      if (index.value === idx) {
-        // 处理 active carouse
-        setTranslate(0);
-        domClass[0] = 'transition';
-      } else if (index.value === (idx - 1) || (idx === 0 && carouseInstance && (index.value === carouseInstance?.items.length - 1))) {
-        // 处理 active carouse 的上一张，放置到其左侧
-        domClass[0] = 'transition';
-        if (direction === 'right') {
-          domClass.pop();
-        }
-        setTranslate(100, '-');
-      } else if (index.value === (idx + 1) || ((idx + 1) === carouseInstance?.items.length && index.value === 0)) {
-        // 处理 active carouse 的下一张，放置到其右侧
-        domClass.pop();
-        if (direction === 'right') {
-          domClass[0] = 'transition';
-        }
-        setTranslate(100);
-      }
+    const translateItem: TranslateItem = (index, actveIndex, oldIndex) => {
+      data.value.itemTranslate = computedTranslate(index, actveIndex);
+      translateTransation(index, actveIndex, oldIndex);
     };
 
-    // 初始化
-    const initialization = () => {
-      if (carouseInstance && instance) {
-        carouseInstance.addItem({
-          toggleCarouse,
-          uid: instance.uid,
+    const itemStyle = computed(() => {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const direction = carouselInstance!.direction.value === 'horizontal' ? 'X' : 'Y';
+      return {
+        transform: `translate${direction}(${data.value.itemTranslate}px)`,
+      };
+    });
+
+    onMounted(() => {
+      if (carouselInstance) {
+        carouselInstance.addItem({
+          uid: instance?.uid as number,
+          translateItem,
         });
       }
-      // 获取当前 item 所在的 index
-      nextTick(() => {
-        index.value = carouseInstance?.items.findIndex((item) => item.uid === instance?.uid) as number;
-        if (index.value !== -1 && carouseInstance) {
-          /**
-           * 顺序很重要，所以需要下面这样写！
-           */
-          if (
-            (carouseInstance?.initialIndex.value === 0 && index.value === 1) // initialIndex 为 0
-            || index.value === carouseInstance?.initialIndex.value + 1 // initialIndex 不为 0， 且不是最后一张
-            || (index.value === 0 && carouseInstance?.initialIndex.value === carouseInstance?.items.length - 1) // initialIndex 等于最后一张
-          ) {
-            setTranslate(100);
-          } else if (index.value !== carouseInstance?.initialIndex.value) {
-            // 其他
-            setTranslate(100, '-');
-          }
-        }
-      });
-    };
-
-    onMounted(initialization);
+    });
 
     return {
-      style,
-      domClass,
-      toggleCarouse,
+      data,
+      itemStyle,
     };
   },
 });
 </script>
 
-<style scoped lang='less'>
-  @import './style/carousel-item.less';
+<style lang='less'>
+  .ki-carousel-item {
+    width: 100%;
+    height: 100%;
+    background-color: #ccc;
+    position: absolute;
+  }
+
+  .ki-carousel-item.ki-carousel-transation {
+    transition: transform 300ms linear;
+  }
 </style>

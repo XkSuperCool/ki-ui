@@ -6,21 +6,21 @@
 :::demo
 ```html
   <template>
-    <ki-carousel>
+    <ki-carousel height='280px'>
       <ki-carousel-item>
-        <img src='https://picsum.photos/900/300?random=1' style='width: 100%'>
+        <img src='https://picsum.photos/900/300?random=1' style='width: 100%; height: 100%'>
       </ki-carousel-item>
       <ki-carousel-item>
-        <img src='https://picsum.photos/900/300?random=2' style='width: 100%'>
+        <img src='https://picsum.photos/900/300?random=2' style='width: 100%; height: 100%'>
       </ki-carousel-item>
       <ki-carousel-item>
-        <img src='https://picsum.photos/900/300?random=3' style='width: 100%'>
+        <img src='https://picsum.photos/900/300?random=3' style='width: 100%; height: 100%'>
       </ki-carousel-item>
       <ki-carousel-item>
-        <img src='https://picsum.photos/900/300?random=4' style='width: 100%'>
+        <img src='https://picsum.photos/900/300?random=4' style='width: 100%; height: 100%'>
       </ki-carousel-item>
       <ki-carousel-item>
-        <img src='https://picsum.photos/900/300?random=5' style='width: 100%'>
+        <img src='https://picsum.photos/900/300?random=5' style='width: 100%; height: 100%'>
       </ki-carousel-item>
     </ki-carousel>
   </template>
@@ -38,21 +38,21 @@
 :::demo
 ```html
   <template>
-    <ki-carousel autoplay>
+    <ki-carousel autoplay height='280px'>
       <ki-carousel-item>
-        <img src='https://picsum.photos/900/300?random=1' style='width: 100%'>
+        <img src='https://picsum.photos/900/300?random=1' style='width: 100%; height: 100%'>
       </ki-carousel-item>
       <ki-carousel-item>
-        <img src='https://picsum.photos/900/300?random=2' style='width: 100%'>
+        <img src='https://picsum.photos/900/300?random=2' style='width: 100%; height: 100%'>
       </ki-carousel-item>
       <ki-carousel-item>
-        <img src='https://picsum.photos/900/300?random=3' style='width: 100%'>
+        <img src='https://picsum.photos/900/300?random=3' style='width: 100%; height: 100%'>
       </ki-carousel-item>
       <ki-carousel-item>
-        <img src='https://picsum.photos/900/300?random=4' style='width: 100%'>
+        <img src='https://picsum.photos/900/300?random=4' style='width: 100%; height: 100%'>
       </ki-carousel-item>
       <ki-carousel-item>
-        <img src='https://picsum.photos/900/300?random=5' style='width: 100%'>
+        <img src='https://picsum.photos/900/300?random=5' style='width: 100%; height: 100%'>
       </ki-carousel-item>
     </ki-carousel>
   </template>
@@ -70,21 +70,21 @@
 :::demo `arrow` 属性设置控制箭头的显示时机，它的选项有 `hover`、`always`、`never`。
 ```html
   <template>
-    <ki-carousel autoplay arrow='always'>
+    <ki-carousel autoplay arrow='always' height='280px'>
       <ki-carousel-item>
-        <img src='https://picsum.photos/900/300?random=1' style='width: 100%'>
+        <img src='https://picsum.photos/900/300?random=1' style='width: 100%; height: 100%'>
       </ki-carousel-item>
       <ki-carousel-item>
-        <img src='https://picsum.photos/900/300?random=2' style='width: 100%'>
+        <img src='https://picsum.photos/900/300?random=2' style='width: 100%; height: 100%'>
       </ki-carousel-item>
       <ki-carousel-item>
-        <img src='https://picsum.photos/900/300?random=3' style='width: 100%'>
+        <img src='https://picsum.photos/900/300?random=3' style='width: 100%; height: 100%'>
       </ki-carousel-item>
       <ki-carousel-item>
-        <img src='https://picsum.photos/900/300?random=4' style='width: 100%'>
+        <img src='https://picsum.photos/900/300?random=4' style='width: 100%; height: 100%'>
       </ki-carousel-item>
       <ki-carousel-item>
-        <img src='https://picsum.photos/900/300?random=5' style='width: 100%'>
+        <img src='https://picsum.photos/900/300?random=5' style='width: 100%; height: 100%'>
       </ki-carousel-item>
     </ki-carousel>
   </template>
@@ -103,21 +103,21 @@
 :::demo
 ```html
   <template>
-    <ki-carousel autoplay arrow='always' direction='vertical'>
+    <ki-carousel direction='vertical' height='280px'>
       <ki-carousel-item>
-        <img src='https://picsum.photos/900/300?random=1' style='width: 100%'>
+        <img src='https://picsum.photos/900/300?random=1' style='width: 100%; height: 100%'>
       </ki-carousel-item>
       <ki-carousel-item>
-        <img src='https://picsum.photos/900/300?random=2' style='width: 100%'>
+        <img src='https://picsum.photos/900/300?random=2' style='width: 100%; height: 100%'>
       </ki-carousel-item>
       <ki-carousel-item>
-        <img src='https://picsum.photos/900/300?random=3' style='width: 100%'>
+        <img src='https://picsum.photos/900/300?random=3' style='width: 100%; height: 100%'>
       </ki-carousel-item>
       <ki-carousel-item>
-        <img src='https://picsum.photos/900/300?random=4' style='width: 100%'>
+        <img src='https://picsum.photos/900/300?random=4' style='width: 100%; height: 100%'>
       </ki-carousel-item>
       <ki-carousel-item>
-        <img src='https://picsum.photos/900/300?random=5' style='width: 100%'>
+        <img src='https://picsum.photos/900/300?random=5' style='width: 100%; height: 100%'>
       </ki-carousel-item>
     </ki-carousel>
   </template>
@@ -135,6 +135,6 @@
 | autoplay | 是否自动播放 | boolean | true / false | false |
 | height | 走马灯的高度 | string | — | 300px |
 | arrow | 切换箭头的显示时机，hover: 移入显示，always: 一直显示, never: 不显示 | string | hover / always / never | hover |
-| interval | 	动画的切换时间 | number | — | 3000 |
+| interval | 	轮播切换间隔时间（毫秒） | number | — | 3000 |
 | initialIndex | 初始化时走马灯的位置 | number | — | 0 |
 | direction | 走马灯方向| string | horizontal / vertical | horizontal |

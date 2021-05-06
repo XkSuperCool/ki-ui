@@ -1,4 +1,5 @@
 import { getCurrentInstance, ComponentInternalInstance } from 'vue';
+import type { Props } from 'types/common';
 
 /**
  * 获取对应 name 的父级
@@ -22,7 +23,7 @@ export function findParentByName(name: string, parent?: ComponentInternalInstanc
   return null;
 }
 
-interface TypeMap {
+const TypeMap = {
   '[object Boolean]'  : 'boolean',
   '[object Number]'   : 'number',
   '[object String]'   : 'string',
@@ -33,27 +34,15 @@ interface TypeMap {
   '[object Undefined]': 'undefined',
   '[object Null]'     : 'null',
   '[object Object]'   : 'object'
-}
+};
 
 /**
  * 类型判断
  * @param obj
  */
-export function typeOf(obj: unknown): TypeMap[keyof TypeMap] {
-  const map: TypeMap = {
-    '[object Boolean]'  : 'boolean',
-    '[object Number]'   : 'number',
-    '[object String]'   : 'string',
-    '[object Function]' : 'function',
-    '[object Array]'    : 'array',
-    '[object Date]'     : 'date',
-    '[object RegExp]'   : 'regExp',
-    '[object Undefined]': 'undefined',
-    '[object Null]'     : 'null',
-    '[object Object]'   : 'object'
-  };
+export function typeOf(obj: unknown): typeof TypeMap[keyof typeof TypeMap] {
   const type = Object.prototype.toString.call(obj)
-  return map[type as keyof TypeMap];
+  return TypeMap[type as keyof typeof TypeMap];
 }
 
 /**
@@ -92,3 +81,17 @@ export function deepClone(obj: any, keys?: string[], hook?: (obj: any) => any): 
   }
   return result;
 }
+
+// 节流函数
+export function throttle<T extends (...args: any[]) => any>(fn: T, interval: number) {
+  let prev = 0;
+  return function(this: any, ...args: Props<typeof fn>) {
+    const now = Date.now();
+    const context = this;
+    if (now - prev >= interval) {
+      prev = now;
+      fn.apply(context, args);
+    }
+  }
+}
+
