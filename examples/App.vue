@@ -1,6 +1,6 @@
 <template>
   <div class='app'>
-    <Header :data='config.header' />
+    <Header :data='config.header' :component-count='counter()' />
     <div class='main'>
       <div class='container'>
         <Menu :list='config.routers' />
@@ -24,8 +24,16 @@
       Menu,
     },
     setup() {
+      const counter = () => {
+        let value = 0;
+        config.routers.slice(1).forEach((item) => {
+          value += item.components.length;
+        });
+        return value;
+      }
       return {
         config,
+        counter,
       };
     },
   });

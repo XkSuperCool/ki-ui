@@ -162,7 +162,7 @@
 
 ### 自定义宽度
 
-:::demo 通过 `width` 属性可以设置开关的宽度（px），开关的高度会跟着宽度发生变化。
+:::demo 通过 `width` 属性可以设置开关的宽度（px）。
 ```html
   <template>
     <ki-switch

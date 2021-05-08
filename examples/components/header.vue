@@ -5,9 +5,12 @@
         {{data?.title}}
       </div>
     </div>
+    <ul class='right'>
+      <li>组件 ({{componentCount}})</li>
+    </ul>
   </div>
 </template>
-  
+
 <script lang='ts'>
 import { defineComponent } from 'vue';
 import type { PropType } from 'vue';
@@ -18,6 +21,7 @@ export default defineComponent({
     data: {
       type: Object as PropType<Header>,
     },
+    componentCount: Number,
   },
   setup() {
     return [];
@@ -37,8 +41,24 @@ export default defineComponent({
     top: 0;
     right: 0;
     z-index: 10;
-    box-shadow: 0px 3px 6px rgba(217, 217, 217, .4);
-    box-sizing: border-box;
+    box-shadow: 0 3px 6px rgba(217, 217, 217, .4);
     background-color: #fff;
+    justify-content: space-between;
+  }
+
+  .right {
+    list-style: none;
+    margin: 0 10% 0 0;
+    padding: 0;
+
+    li {
+      color: #40a9ff;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    li.active {
+      color: #1890ff;
+    }
   }
 </style>

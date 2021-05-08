@@ -82,7 +82,6 @@ export default defineComponent({
         class: 'ki-switch-core',
         style: {
           width: `${props.width}px`,
-          height: `${props.width / 2}px`,
           backgroundColor: isActive.value ? props.activeColor : props.inactiveColor,
         },
         onClick: handleOnClick,
