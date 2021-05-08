@@ -92,6 +92,12 @@ const config: Config = {
           component: () => import('./docs/select.md'),
         },
         {
+          title: 'Switch 开关',
+          name: 'switch',
+          path: '/switch',
+          component: () => import('./docs/switch.md'),
+        },
+        {
           title: 'Upload 上传',
           name: 'upload',
           path: '/upload',
