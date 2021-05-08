@@ -1,9 +1,9 @@
 import Message from './message';
-import useMount from '@/hooks/useMount';
+import { mountBody } from '@/utils';
 import type { MessageCtx, MessageOption } from './message';
 
 Message.Instance = () => {
-  const instance = useMount<MessageCtx>(Message);
+  const instance = mountBody<MessageCtx>(Message);
 
   return {
     add(option: MessageOption) {

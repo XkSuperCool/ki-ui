@@ -1,4 +1,5 @@
-import { getCurrentInstance, ComponentInternalInstance } from 'vue';
+import {getCurrentInstance, createApp, ComponentPublicInstance, Component} from 'vue';
+import type { ComponentInternalInstance } from 'vue';
 import type { Props } from 'types/common';
 
 /**
@@ -21,6 +22,19 @@ export function findParentByName(name: string, parent?: ComponentInternalInstanc
     }
   }
   return null;
+}
+
+/**
+ * 将组件挂载到 body 上
+ * @param component
+ */
+export function mountBody<T>(component: Component) {
+  const container = document.createElement('div');
+  const instance = createApp(component).mount(container) as ComponentPublicInstance & T;
+  const message = instance.$el;
+  document.body.appendChild(message);
+
+  return instance;
 }
 
 const TypeMap = {

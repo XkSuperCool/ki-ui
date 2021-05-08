@@ -1,6 +1,6 @@
 import MessageBox from './message-box.vue';
 import type { MessageBoxInstance, MessageBoxType, MessageBoxOptions, ShowMessageFun } from './message-box.vue';
-import useMount from '@/hooks/useMount';
+import { mountBody } from '@/utils';
 
 export type Options = Partial<Omit<MessageBoxOptions, 'title' | 'message' | 'type'>>;
 
@@ -10,7 +10,7 @@ export interface InstanceReturnType {
 }
 
 MessageBox.Instance = (): InstanceReturnType => {
-  const instance = useMount<MessageBoxInstance>(MessageBox);
+  const instance = mountBody<MessageBoxInstance>(MessageBox);
 
   return {
     default(options) {
