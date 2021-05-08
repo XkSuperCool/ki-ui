@@ -6,13 +6,14 @@
       </div>
     </div>
     <ul class='right'>
-      <li>组件 ({{componentCount}})</li>
+      <li @click='jumpPage("/")'>组件 ({{componentCount}})</li>
     </ul>
   </div>
 </template>
 
 <script lang='ts'>
 import { defineComponent } from 'vue';
+import { useRouter } from 'vue-router';
 import type { PropType } from 'vue';
 import type { Header } from '../config';
 
@@ -24,7 +25,12 @@ export default defineComponent({
     componentCount: Number,
   },
   setup() {
-    return [];
+    const router = useRouter();
+    return {
+      jumpPage(path: string) {
+        router.push(path);
+      },
+    };
   },
 });
 </script>
@@ -46,15 +52,29 @@ export default defineComponent({
     justify-content: space-between;
   }
 
+  .left {
+    .title {
+      color: #1890ff;
+      font-size: 28px;
+      text-shadow: -1px 3px 3px #c6ddf5;
+      font-family: Menlo, Monaco, Consolas, Courier, monospace;
+      cursor: pointer;
+    }
+  }
+
   .right {
     list-style: none;
     margin: 0 10% 0 0;
     padding: 0;
 
     li {
-      color: #40a9ff;
+      color: #1890ff;
       font-size: 16px;
       cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
 
     li.active {
