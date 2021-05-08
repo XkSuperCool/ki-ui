@@ -75,9 +75,9 @@ export default defineComponent({
     return () => h('div', {
       class: `ki-switch ${isActive.value && 'active'} ${(props.disabled || loading.value)&& 'disabled'}`,
     }, [
-      !!props.activeText && h('span', {
+      !!props.inactiveText && h('span', {
         class: 'ki-switch-text'
-      }, props.activeText),
+      }, props.inactiveText),
       h('div', {
         class: 'ki-switch-core',
         style: {
