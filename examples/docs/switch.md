@@ -31,8 +31,8 @@
   <template>
     <ki-switch
       v-model='value'
-      active-text='按月付费'
-      inactive-text='按年付费'
+      active-text='开启'
+      inactive-text='关闭'
     />
     <br />
     <br />
@@ -40,8 +40,8 @@
       v-model='value1'
       active-color='#13ce66'
       inactive-color='#ff4949'
-      active-text='按月付费'
-      inactive-text='按年付费'
+      active-text='开启'
+      inactive-text='关闭'
     />
   </template>
   
