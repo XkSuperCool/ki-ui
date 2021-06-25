@@ -76,7 +76,7 @@ export default defineComponent({
     border: Boolean,
     stripe: Boolean,
     height: Number,
-    rowClassName: Function as PropType<(row: any, index: number) => string | undefined>,
+    rowClassName: Function as PropType<(row: Record<string, unknown>, index: number) => string | undefined>,
   },
   setup() {
     // 表格 style 生成
