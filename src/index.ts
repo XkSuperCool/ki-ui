@@ -12,6 +12,7 @@ import Calendar from 'packages/calendar';
 import Tree from 'packages/tree';
 import Pagination from 'packages/pagination';
 import Switch from 'packages/switch';
+import Table from 'packages/table';
 import { Form, FormItem } from 'packages/form';
 import { RadioGroup, Radio } from 'packages/radio';
 import { Checkbox, CheckboxGroup } from 'packages/checkbox';
@@ -42,6 +43,7 @@ const components = {
   Tree,
   Pagination,
   Switch,
+  Table,
 };
 
 const install = function(app: App): App {
@@ -82,4 +84,5 @@ export {
   Tree,
   Pagination,
   Switch,
+  Table,
 }

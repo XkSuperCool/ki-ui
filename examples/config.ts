@@ -115,6 +115,12 @@ const config: Config = {
       groupName: 'Data',
       components: [
         {
+          title: 'Table 表格',
+          name: 'table',
+          path: '/table',
+          component: () => import('./docs/table.md'),
+        },
+        {
           title: 'Pagination 分页',
           name: 'pagination',
           path: '/pagination',
