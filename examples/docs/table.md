@@ -45,8 +45,6 @@
             },
             {
               title: '操作',
-              width: 200,
-              align: 'center',
               render(h) {
                 return [
                   h('a', '查看'),
@@ -302,6 +300,17 @@
             {
               key: 'address',
               title: '地址',
+            },
+            {
+              title: '操作',
+              align: 'center',
+              width: 200,
+              render(h) {
+                return [
+                  h('a', '查看'),
+                  h('a', { style: { marginLeft: '10px', color: 'red' } }, '删除')
+                ];
+              },
             },
           ],
         };
