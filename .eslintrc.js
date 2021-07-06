@@ -18,7 +18,8 @@ module.exports = {
         "@typescript-eslint"
     ],
     "rules": {
+        "vue/no-multiple-template-root": 0
     },
-    // 解决 eslint 报错： Parsing error: '>' expected 
+    // 解决 eslint 报错： Parsing error: '>' expected
     "parser": "vue-eslint-parser"
 };
