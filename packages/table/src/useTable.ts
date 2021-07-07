@@ -3,9 +3,9 @@ import type { TableColumn, UseTable } from './typings';
 
 export function useTable(): UseTable {
   const getColumnClass = (column: TableColumn) => {
-    const cssClass = [];
-    column.align && cssClass.push(`is_${column.align}`);
-    return cssClass;
+    return [
+      column.align && `is_${column.align}`,
+    ].filter((item) => !!item) as string[];
   };
 
   return {
