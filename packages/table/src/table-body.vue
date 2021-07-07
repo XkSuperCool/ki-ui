@@ -1,17 +1,21 @@
 <template>
   <table
-      :cellspacing='0'
-      :cellpadding='0'
-      class='ki-table'
-      :class='{border: border, stripe: stripe}'
-      style='table-layout: fixed;'
+    :cellspacing='0'
+    :cellpadding='0'
+    class='ki-table'
+    :class='{border: border, stripe: stripe}'
+    style='table-layout: fixed;'
   >
     <colgroup>
       <col v-for='column in columns' :key='column.key' />
     </colgroup>
     <tbody>
     <tr v-for='(item, index) in data' :key='item.id' :class='[rowClassName && rowClassName(item, index)]'>
-      <td v-for='column in columns' :key='column.key' :class='getColumnClass(column)'>
+      <td
+        v-for='column in columns'
+        :key='column.key'
+        :class='getColumnClass(column)'
+      >
         <template v-if='column.key'>
           {{item[column.key]}}
         </template>
@@ -32,6 +36,7 @@ import { defineComponent } from 'vue';
 import type { PropType } from 'vue';
 import KiRender from '@/components/render';
 import { useTable } from './useTable';
+import type { TableColumn } from 'packages/table/src/typings';
 
 export default defineComponent({
   name: 'KiTableBody',
@@ -43,7 +48,7 @@ export default defineComponent({
     border: Boolean,
     stripe: Boolean,
     columns: {
-      type: Array,
+      type: Array as PropType<TableColumn[]>,
       default: () => [],
     },
     rowClassName: Function as PropType<(row: Record<string, unknown>, index: number) => string | undefined>,
