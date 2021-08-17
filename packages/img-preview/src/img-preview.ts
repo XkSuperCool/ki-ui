@@ -1,6 +1,7 @@
 import {defineComponent, h, PropType, ref, watchEffect, onUnmounted, reactive, getCurrentInstance} from 'vue';
 import Icon from '../../icon';
 import type { Options, Show, ImgPreview } from './img-preview.type.d';
+import { evaluate } from 'mathjs';
 import './style.less';
 
 export default defineComponent({
@@ -60,6 +61,38 @@ export default defineComponent({
     const instance = getCurrentInstance() as ImgPreview;
     instance.ctx.show = show;
 
+    // 切换上一张
+    const handlePrev = () => {
+      const activeIndex = index.value -= 1;
+      index.value = activeIndex === -1 ? (imgs.value.length - 1) : activeIndex;
+    };
+    // 切换下一张
+    const handleNext = () => {
+      const activeIndex = index.value += 1;
+      index.value = activeIndex === imgs.value.length ? 0 : activeIndex;
+    };
+
+    const changeImgNode = () => imgs.value.length >= 2 ? [
+      h(Icon, {
+        title: '上一张',
+        type: 'angle-left',
+        class: 'ki-preview-prev',
+        onClick: handlePrev,
+      }),
+      h(Icon, {
+        title: '下一张',
+        type: 'angle-right',
+        class: 'ki-preview-next',
+        onClick: handleNext,
+      }),
+    ] : '';
+
+    // 还原
+    const handleRestore = () => {
+      style.rotate = 0;
+      style.scale = 1;
+    };
+
     return () => h('div', {
       class: 'ki-img-preview',
     }, [
@@ -71,6 +104,7 @@ export default defineComponent({
           class: 'ki-preview-close',
           onClick: () => isPreview.value = false,
         }),
+        changeImgNode(),
         h('div', {
           class: 'ki-preview-content',
         }, h('img', {
@@ -80,10 +114,31 @@ export default defineComponent({
         h('div', {
           class: 'ki-preview-control',
         }, [
-          h(Icon, { type: 'search-plus', onClick: () => style.scale += options.scale }),
-          h(Icon, { type: 'search-minus', onClick: () => style.scale -= options.scale }),
-          h(Icon, { type: 'rotate-left', onClick: () => style.rotate += -options.rotate }),
-          h(Icon, { type: 'rotate-right', onClick: () => style.rotate += options.rotate }),
+          h(Icon, {
+            title: '放大',
+            type: 'search-plus',
+            onClick: () => style.scale = evaluate(`${style.scale} + ${options.scale}`),
+          }),
+          h(Icon, {
+            title: '缩小',
+            type: 'search-minus',
+            onClick: () => style.scale = evaluate(`${style.scale} - ${options.scale}`),
+          }),
+          h(Icon, {
+            title: '左旋转',
+            type: 'rotate-left',
+            onClick: () => style.rotate += -options.rotate,
+          }),
+          h(Icon, {
+            title: '右旋转',
+            type: 'rotate-right',
+            onClick: () => style.rotate += options.rotate,
+          }),
+          h(Icon, {
+            title: '还原',
+            type: 'refresh',
+            onClick: handleRestore,
+          }),
         ]),
       ]) : '',
     ]);
