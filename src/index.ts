@@ -13,6 +13,7 @@ import Tree from 'packages/tree';
 import Pagination from 'packages/pagination';
 import Switch from 'packages/switch';
 import Table from 'packages/table';
+import ImgPreview from 'packages/img-preview';
 import { Form, FormItem } from 'packages/form';
 import { RadioGroup, Radio } from 'packages/radio';
 import { Checkbox, CheckboxGroup } from 'packages/checkbox';
@@ -44,6 +45,7 @@ const components = {
   Pagination,
   Switch,
   Table,
+  ImgPreview,
 };
 
 const install = function(app: App): App {
@@ -61,6 +63,7 @@ export default {
 };
 
 export {
+  Icon,
   Button,
   Tag,
   Form,
@@ -85,4 +88,5 @@ export {
   Pagination,
   Switch,
   Table,
+  ImgPreview,
 }

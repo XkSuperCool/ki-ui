@@ -47,6 +47,10 @@ export default defineComponent({
       default: true,
     },
     closeOnPressEscape: Boolean,
+    showFooter: {
+      type: Boolean,
+      default: true,
+    },
   },
   emits: ['update:modelValue', 'open', 'close', 'on-cancel', 'on-ok'],
   setup(props, { emit, slots }) {
@@ -140,10 +144,10 @@ export default defineComponent({
           ]),
           h('div', {class: 'ki-modal-content'}, slots.default && slots.default()),
           h('div', {class: 'ki-modal-footer'}, slots.footer ? slots.footer() :
-            [
+            props.showFooter ? [
               h(Button, {style: 'margin-right: 8px;', onClick: handleOnCancel}, {default: () => props.cancelText}),
               h(Button, {type: 'primary', onClick: handleOnOk}, {default: () => props.okText}),
-            ]
+            ] : '',
           ),
         ]))) : null
       },

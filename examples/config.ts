@@ -178,6 +178,12 @@ const config: Config = {
           path: '/calendar',
           component: () => import('./docs/calendar.md'),
         },
+        {
+          title: 'ImgPreview 图片预览',
+          name: 'ImgPreview',
+          path: '/imgPreview',
+          component: () => import('./docs/img-preview.md'),
+        },
       ],
     },
   ],
