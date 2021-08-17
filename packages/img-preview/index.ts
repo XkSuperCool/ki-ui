@@ -1,9 +1,12 @@
 import ImgPreview from './src/img-preview';
+import $ImgPreview from './src/index';
 import { createApp } from 'vue';
-const { component } = createApp({});
+import type { App } from 'vue';
 
-ImgPreview.install = () => {
+const { component } = createApp({});
+ImgPreview.install = (app: App) => {
   component(ImgPreview.name, ImgPreview);
+  app.config.globalProperties.$ImgPreview = $ImgPreview;
 };
 
 export default ImgPreview;

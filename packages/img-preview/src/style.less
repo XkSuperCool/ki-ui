@@ -1,18 +1,22 @@
 .ki-img-preview {
-  width: 100%;
-  position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, .3);
-  z-index: 1024;
-
   .ki-preview-container {
-    width: 90%;
-    height: 100%;
-    margin: 0 auto;
-    position: relative;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, .3);
+    z-index: 1024;
+
+    .ki-preview-close {
+      color: #fff;
+      font-size: 25px;
+      position: absolute;
+      right: 6%;
+      top: 6%;
+      cursor: pointer;
+      z-index: 1024;
+    }
 
     .ki-preview-content {
       width: 100%;
@@ -23,7 +27,7 @@
     }
 
     img {
-      max-width: 100%;
+      max-width: 90%;
       max-height: 100%;
       transition: all .3s;
     }

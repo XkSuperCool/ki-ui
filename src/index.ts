@@ -45,14 +45,13 @@ const components = {
   Pagination,
   Switch,
   Table,
-  ImgPreview,
 };
 
 const install = function(app: App): App {
   Object.values(components).forEach((component) => {
     app.component(component.name, component);
   });
-  [Message, MessageBox].forEach((component) => {
+  [Message, MessageBox, ImgPreview].forEach((component) => {
     component.install(app);
   });
   return app;

@@ -18,7 +18,7 @@
       },
       methods: {
         show() {
-          
+          this.$ImgPreview.show(this.imgs);
         },
       },
     };
