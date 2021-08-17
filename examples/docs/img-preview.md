@@ -6,20 +6,19 @@
 
 :::demo
 ```html
-
-<template>
-    <ki-img-preview :imgs='imgs' />
-</template>
-
-<script>
-    export default {
-      data() {
-        return {
-          imgs: ['https://picsum.photos/id/236/1000/600', 'https://picsum.photos/id/237/600/400'],
-        };
-      },
-    };
-</script>
+  <template>
+      <ki-img-preview :imgs='imgs' />
+  </template>
+  
+  <script>
+      export default {
+        data() {
+          return {
+            imgs: ['https://picsum.photos/id/236/1000/600', 'https://picsum.photos/id/237/600/400'],
+          };
+        },
+      };
+  </script>
 ```
 :::
 
