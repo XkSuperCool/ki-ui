@@ -45,6 +45,7 @@ const components = {
   Pagination,
   Switch,
   Table,
+  ImgPreview,
 };
 
 const install = function(app: App): App {

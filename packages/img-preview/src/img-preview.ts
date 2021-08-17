@@ -28,6 +28,7 @@ export default defineComponent({
     const imgs = ref<string[]>([]);
     const index = ref(0);
     const isPreview = ref(false);
+    const isShowImgList = props.imgs.length > 0;
 
     const unWatch = watchEffect(() => {
       imgs.value = props.imgs;
@@ -96,6 +97,15 @@ export default defineComponent({
     return () => h('div', {
       class: 'ki-img-preview',
     }, [
+      isShowImgList ? h('div', {
+        class: 'ki-img-list',
+      }, imgs.value.map((url, index) => h('img', {
+        src: url,
+        style: {
+          objectFit: 'cover',
+        },
+        onClick: () => show(imgs.value, index),
+      }))) : '',
       (imgs.value.length > 0 && isPreview.value) ? h('div', {
         class: 'ki-preview-container',
       }, [
@@ -108,7 +118,9 @@ export default defineComponent({
         h('div', {
           class: 'ki-preview-content',
         }, h('img', {
-          style: `transform: scale(${style.scale}) rotate(${style.rotate}deg)`,
+          style: {
+            transform: `scale(${style.scale}) rotate(${style.rotate}deg)`,
+          },
           src: imgs.value[index.value],
         })),
         h('div', {
