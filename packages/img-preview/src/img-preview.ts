@@ -146,7 +146,12 @@ export default defineComponent({
           h(Icon, {
             title: '缩小',
             type: 'search-minus',
-            onClick: () => style.scale = evaluate(`${style.scale} - ${options.scale}`),
+            onClick: () => {
+              const scale = evaluate(`${style.scale} - ${options.scale}`);
+              if (scale >= 0.2) {
+                style.scale = scale;
+              }
+            },
           }),
           h(Icon, {
             title: '左旋转',
