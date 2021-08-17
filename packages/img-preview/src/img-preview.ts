@@ -99,13 +99,25 @@ export default defineComponent({
     }, [
       isShowImgList ? h('div', {
         class: 'ki-img-list',
-      }, imgs.value.map((url, index) => h('img', {
-        src: url,
-        style: {
-          objectFit: 'cover',
-        },
-        onClick: () => show(imgs.value, index),
-      }))) : '',
+      }, imgs.value.map((url, index) => h('div', {
+        class: 'ki-img-item',
+      }, [
+        h('img', {
+          src: url,
+          style: {
+            objectFit: 'cover',
+          },
+        }),
+        h('div', {
+          class: 'ki-img-mask',
+          onClick: () => show(imgs.value, index),
+        }, h(Icon, {
+          type: 'search-plus',
+          style: {
+            fontSize: '18px',
+          },
+        })),
+      ]))) : '',
       (imgs.value.length > 0 && isPreview.value) ? h('div', {
         class: 'ki-preview-container',
       }, [
