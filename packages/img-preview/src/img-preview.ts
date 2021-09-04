@@ -1,4 +1,7 @@
-import {defineComponent, h, PropType, ref, watchEffect, onUnmounted, reactive, getCurrentInstance} from 'vue';
+import {
+  defineComponent, h, PropType, ref, watchEffect, onUnmounted,
+  reactive, getCurrentInstance,
+} from 'vue';
 import Icon from '../../icon';
 import type { Options, Show, ImgPreview } from './img-preview.type.d';
 import { evaluate } from 'mathjs';
@@ -66,11 +69,13 @@ export default defineComponent({
     const handlePrev = () => {
       const activeIndex = index.value -= 1;
       index.value = activeIndex === -1 ? (imgs.value.length - 1) : activeIndex;
+      handleResetPosition();
     };
     // 切换下一张
     const handleNext = () => {
       const activeIndex = index.value += 1;
       index.value = activeIndex === imgs.value.length ? 0 : activeIndex;
+      handleResetPosition();
     };
 
     const changeImgNode = () => imgs.value.length >= 2 ? [
@@ -92,6 +97,66 @@ export default defineComponent({
     const handleRestore = () => {
       style.rotate = 0;
       style.scale = 1;
+      handleResetPosition();
+    };
+
+    // 图片拖动
+    const containerRef = ref<HTMLImageElement>();
+    // 记录位置信息
+    const position = {
+      mouseX: 0,
+      mouseY: 0,
+      imgX: 0,
+      imgY: 0,
+    };
+    let flag = false;
+    // 还原位置信息
+    const handleResetPosition = () => {
+      if (containerRef.value) {
+        containerRef.value.style.transform = 'translate(0, 0)';
+        position.imgX = position.imgY = 0;
+      }
+    };
+    // 鼠标按下记录当前鼠标位置，flag 设置为 true
+    const handleMousedown = (event: MouseEvent) => {
+      event.preventDefault();
+      const { clientY, clientX } = event;
+      position.mouseX = clientX;
+      position.mouseY = clientY;
+      flag = true;
+    };
+    // 关闭 flag = false
+    const handleMouseup = () => {
+      flag = false;
+      if (containerRef.value) {
+        containerRef.value.style.cursor = 'grab';
+        position.imgX = middlePosition.x;
+        position.imgY = middlePosition.y;
+      }
+    }
+    // 中间变量：基于图片的 translate 位置，使其下一次鼠标按下进行拖动时能平滑衔接
+    const middlePosition = {
+      x: 0,
+      y: 0,
+    };
+    // 只有 flag = true 时才进行图片移动操作
+    const handleMousemove = (event: MouseEvent) => {
+      event.preventDefault();
+      if (!flag) return;
+      const { clientY, clientX } = event;
+      const { mouseX, mouseY, imgY, imgX } = position;
+      // 获取最新的位置
+      const x = clientX - mouseX + imgX;
+      const y = clientY - mouseY + imgY;
+      const container = containerRef.value;
+      if (container) {
+        // 拖动修改图片 translate 实现图片移动
+        container.style.cursor = 'grabbing';
+        container.style.transform = `translate(${x}px, ${y}px)`;
+      }
+      // 记录当前图片的 translate 位置
+      middlePosition.x = x;
+      middlePosition.y = y;
     };
 
     return () => h('div', {
@@ -129,6 +194,10 @@ export default defineComponent({
         changeImgNode(),
         h('div', {
           class: 'ki-preview-content',
+          ref: containerRef,
+          onMousedown: handleMousedown,
+          onMousemove: handleMousemove,
+          onMouseup: handleMouseup,
         }, h('img', {
           style: {
             transform: `scale(${style.scale}) rotate(${style.rotate}deg)`,
