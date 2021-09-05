@@ -101,6 +101,7 @@ export default defineComponent({
     };
 
     // 图片拖动
+    // todo: bug， 1. 鼠标移出屏幕鼠标抬起无法触发 mouseup 事件导致 flag 一直是 true, 2. 图片放大导致 container 比他小事件触发范围应该和图片一样大
     const containerRef = ref<HTMLImageElement>();
     // 记录位置信息
     const position = {
