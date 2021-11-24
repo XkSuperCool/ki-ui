@@ -14,7 +14,7 @@
       export default {
         data() {
           return {
-            imgs: ['https://picsum.photos/id/236/1000/600', 'https://picsum.photos/id/237/600/400'],
+            imgs: ['https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg', 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg'],
           };
         },
       };
@@ -37,7 +37,7 @@
     export default {
       data() {
         return {
-          imgs: ['https://picsum.photos/id/236/1000/600', 'https://picsum.photos/id/237/600/400'],
+          imgs: ['https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg', 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg'],
         };
       },
       methods: {
