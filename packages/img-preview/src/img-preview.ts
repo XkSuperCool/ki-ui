@@ -103,7 +103,7 @@ export default defineComponent({
     };
 
     // 图片拖动
-    // todo: bug， 1. 鼠标移出屏幕鼠标抬起无法触发 mouseup 事件导致 flag 一直是 true, 2. 图片放大导致 container 比他小事件触发范围应该和图片一样大
+    // todo: bug 1. 图片放大导致 container 比他小事件触发范围应该和图片一样大
     const containerRef = ref<HTMLImageElement>();
     // 记录位置信息
     const position = {
@@ -201,6 +201,7 @@ export default defineComponent({
           onMousedown: handleMousedown,
           onMousemove: handleMousemove,
           onMouseup: handleMouseup,
+          onMouseleave: handleMouseup, // 鼠标离开时也关闭拖动，避免鼠标拖动离开页面无法触发 mouseup 事件带来的 bug
         }, h('img', {
           style: {
             transform: `scale(${style.scale}) rotateZ(${style.rotateZ}deg) rotateY(${style.rotateY}deg)`,
