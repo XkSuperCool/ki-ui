@@ -44,7 +44,8 @@ export default defineComponent({
 
     const style = reactive({
       scale: 1,
-      rotate: 0,
+      rotateZ: 0,
+      rotateY: 0,
     });
 
     const options = reactive<Options>({
@@ -95,7 +96,8 @@ export default defineComponent({
 
     // 还原
     const handleRestore = () => {
-      style.rotate = 0;
+      style.rotateZ = 0;
+      style.rotateY = 0;
       style.scale = 1;
       handleResetPosition();
     };
@@ -201,7 +203,7 @@ export default defineComponent({
           onMouseup: handleMouseup,
         }, h('img', {
           style: {
-            transform: `scale(${style.scale}) rotate(${style.rotate}deg)`,
+            transform: `scale(${style.scale}) rotateZ(${style.rotateZ}deg) rotateY(${style.rotateY}deg)`,
           },
           src: imgs.value[index.value],
         })),
@@ -226,18 +228,23 @@ export default defineComponent({
           h(Icon, {
             title: '左旋转',
             type: 'rotate-left',
-            onClick: () => style.rotate += -options.rotate,
+            onClick: () => style.rotateZ += -options.rotate,
           }),
           h(Icon, {
             title: '右旋转',
             type: 'rotate-right',
-            onClick: () => style.rotate += options.rotate,
+            onClick: () => style.rotateZ += options.rotate,
           }),
           h(Icon, {
             title: '还原',
             type: 'refresh',
             onClick: handleRestore,
           }),
+          h(Icon, {
+            title: '反转',
+            type: 'arrows-h',
+            onClick: () => style.rotateY = style.rotateY === 0 ? 180 : 0,
+          })
         ]),
       ]) : '',
     ]);

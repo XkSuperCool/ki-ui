@@ -1,0 +1,100 @@
+.ki-img-preview .ki-icon {
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+.ki-img-preview .ki-img-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+.ki-img-preview .ki-img-list img {
+  width: 100%;
+  display: block;
+}
+.ki-img-preview .ki-img-list .ki-img-item:last-child {
+  margin-right: 0;
+}
+.ki-img-preview .ki-img-list .ki-img-item {
+  width: 180px;
+  display: flex;
+  position: relative;
+  margin-right: 10px;
+  cursor: pointer;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.ki-img-preview .ki-img-list .ki-img-item .ki-img-mask {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: all 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.ki-img-preview .ki-img-list .ki-img-item .ki-img-mask:hover {
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.ki-img-preview .ki-preview-container {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 1024;
+}
+.ki-img-preview .ki-preview-container .ki-preview-close {
+  font-size: 25px;
+  position: absolute;
+  right: 6%;
+  top: 6%;
+  z-index: 1024;
+}
+.ki-img-preview .ki-preview-container .ki-preview-prev,
+.ki-img-preview .ki-preview-container .ki-preview-next {
+  font-size: 40px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1024;
+}
+.ki-img-preview .ki-preview-container .ki-preview-prev {
+  left: 10%;
+}
+.ki-img-preview .ki-preview-container .ki-preview-next {
+  right: 10%;
+}
+.ki-img-preview .ki-preview-container .ki-preview-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+}
+.ki-img-preview .ki-preview-container img {
+  max-width: 90%;
+  max-height: 100%;
+  transition: all 0.3s;
+  pointer-events: none;
+}
+.ki-img-preview .ki-preview-container .ki-preview-control {
+  width: 300px;
+  height: 44px;
+  background-color: #606266;
+  border-radius: 25px;
+  position: absolute;
+  bottom: 6%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 10px;
+}
