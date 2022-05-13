@@ -16,6 +16,7 @@ export interface Header {
   title: string;
   logo: string;
   github: string;
+  beta?: boolean;
 }
 
 export interface Config {
