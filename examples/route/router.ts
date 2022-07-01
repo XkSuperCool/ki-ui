@@ -23,15 +23,6 @@ const router = createRouter({
       path: '/',
       redirect: '/install',
     },
-    {
-      path: '/virtual-tree',
-      meta: {
-        single: true,
-        title: 'Virtual Tree',
-        beta: true,
-      },
-      component: () => import('../docs/virtual-tree.md'),
-    },
     ...routes,
   ],
 });
