@@ -231,6 +231,7 @@
 | row | textarea 的 row | number | — | 2 |
 | size | 输入框大小 | string | small / medium / large / mini | medium |
 | disabled | 是否禁用 | boolean | true / false | false |
+| readonly | 是否只读 | boolean | true / false | false |
 | clearable | 是否可清空 | boolean | true / false | false |
 | suffixIcon | 	输入框后置 icon name | string | Font Awesome 有效的 icon name | — |
 | prefixIcon | 	输入框前置 icon name | string | Font Awesome 有效的 icon name | — |

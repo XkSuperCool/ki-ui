@@ -6,6 +6,7 @@
         :disabled='disabled'
         :value='modelValue'
         :placeholder='placeholder'
+        :readonly="readonly"
         :class='{disabled: disabled, error: validateStatus !== undefined && !validateStatus}'
         @input='handleInput'
         @focus='handleFocus'
@@ -29,6 +30,7 @@
           :disabled='disabled'
           :min='minLength'
           :max='maxLength'
+          :readonly="readonly"
           @input='handleInput'
           @focus='handleFocus'
           @blur='handleBlur'
@@ -91,6 +93,7 @@ export default defineComponent({
       default: 'medium',
     },
     disabled: Boolean,
+    readonly: Boolean,
     modelValue: String,
     clearable: Boolean,
     suffixIcon: String,
