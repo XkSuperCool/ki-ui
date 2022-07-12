@@ -170,6 +170,7 @@ export default function useCalendar() {
     currentDate.day = date.getDate()
     const current = generateCalendar()
     onClickCell(current)
+    return calendarActiveItem
   }
 
   function formatDate(d: Required<CalendarDateItem>) {

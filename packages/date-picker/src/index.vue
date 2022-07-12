@@ -71,6 +71,12 @@ export default defineComponent({
             </div>
           </template>
         </div>
+
+        <div class="ki-picker-footer">
+          <div class="ki-picker-footer-now" @click="toNow">
+            此刻
+          </div>
+        </div>
       </div>
     </Teleport>
   </div>
