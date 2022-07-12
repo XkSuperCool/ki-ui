@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent, Teleport } from 'vue'
 import type { PropType } from 'vue'
-import { Input } from '@/index'
+import { Input, Icon } from '@/index'
 import useCalendar from '../../calendar/src/useCalendar'
 import { useDatePicker } from './composable/useDatePicker'
 
@@ -10,6 +10,7 @@ export default defineComponent({
 
   components: {
     Input,
+    Icon,
     // eslint-disable-next-line
     Teleport: Teleport as any
   },
@@ -25,11 +26,7 @@ export default defineComponent({
     const calendar = useCalendar()
 
     return {
-      WEEKS: calendar.WEEKS,
-      calendar: calendar.calendar,
-      isSameDay: calendar.isSameDay,
-      calendarActiveItem: calendar.calendarActiveItem,
-
+      ...calendar,
       ...useDatePicker(calendar),
     }
   }
@@ -42,6 +39,15 @@ export default defineComponent({
 
     <Teleport v-if="isOpen" :to="to" :disabled="!to">
       <div class="ki-picker-panel">
+        <div class="ki-picker-tools">
+          <Icon @click="toPrevMonth" class="ki-picker-change-month" type="angle-left" />
+          <div class="ki-picker-current-date">
+            {{ currentDate.year }} 年
+            {{ currentDate.month }} 月
+          </div>
+          <Icon @click="toNextMonth" class="ki-picker-change-month" type="angle-right" />
+        </div>
+
         <div class="ki-picker-week">
           <div class="ki-week-item" v-for="week in WEEKS" :key="week">
             {{ week }}
