@@ -26,9 +26,7 @@
             :class="{
               prev: date.prev,
               next: date.next,
-              active:
-                calendarActiveItem.day === date.day &&
-                calendarActiveItem.month === date.month
+              active: isSameDay(calendarActiveItem, date)
             }"
             @click="onClickCell(date)"
           >
@@ -64,7 +62,8 @@ export default defineComponent({
       onClickCell,
       toNextMonth,
       toPrevMonth,
-      toCurrentDate
+      toCurrentDate,
+      isSameDay
     } = useCalendar()
 
     return {
@@ -72,6 +71,7 @@ export default defineComponent({
       calendar,
       currentDate,
       calendarActiveItem,
+      isSameDay,
       onClickCell: (date: Parameters<typeof onClickCell>[0]) => {
         onClickCell(date)
         emit('on-click', date)

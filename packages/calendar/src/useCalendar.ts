@@ -154,6 +154,7 @@ export default function useCalendar() {
     } else if (date.next) {
       toNextMonth()
     }
+		calendarActiveItem.year = date.year
     calendarActiveItem.day = date.day
     calendarActiveItem.month = date.month
     currentDate.day = date.day as number
@@ -179,6 +180,10 @@ export default function useCalendar() {
 		return date;
   }
 
+	function isSameDay(a: CalendarDateItem, b: CalendarDateItem) {
+		return a.month === b.month && a.year === b.year && a.day === b.day;
+	}
+
   toCurrentDate()
 
   return {
@@ -190,6 +195,7 @@ export default function useCalendar() {
     toNextMonth,
     toPrevMonth,
     toCurrentDate,
-		formatDate
+		formatDate,
+		isSameDay
   }
 }
