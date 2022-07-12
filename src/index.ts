@@ -14,6 +14,7 @@ import Pagination from 'packages/pagination';
 import Switch from 'packages/switch';
 import Table from 'packages/table';
 import ImgPreview from 'packages/img-preview';
+import DatePicker from 'packages/date-picker';
 import { Form, FormItem } from 'packages/form';
 import { RadioGroup, Radio } from 'packages/radio';
 import { Checkbox, CheckboxGroup } from 'packages/checkbox';
@@ -46,6 +47,7 @@ const components = {
   Switch,
   Table,
   ImgPreview,
+  DatePicker,
 };
 
 const install = function(app: App): App {
@@ -89,4 +91,5 @@ export {
   Switch,
   Table,
   ImgPreview,
+  DatePicker,
 }

@@ -93,6 +93,12 @@ const config: Config = {
           component: () => import('./docs/select.md'),
         },
         {
+          title: 'DatePicker 日期选择器',
+          name: 'date-picker',
+          path: '/date-picker',
+          component: () => import('./docs/date-picker.md')
+        },
+        {
           title: 'Switch 开关',
           name: 'switch',
           path: '/switch',
