@@ -22,24 +22,15 @@ export default defineComponent({
   },
 
   setup() {
-    const {
-      WEEKS,
-      calendar,
-      currentDate,
-      calendarActiveItem,
-      ...apis
-    } = useCalendar()
-
-    const { selectDate, isOpen, onFocus, handleSelectDate } = useDatePicker(apis)
+    const calendar = useCalendar()
 
     return {
-      WEEKS,
-      calendar,
+      WEEKS: calendar.WEEKS,
+      calendar: calendar.calendar,
+      isSameDay: calendar.isSameDay,
+      calendarActiveItem: calendar.calendarActiveItem,
 
-      selectDate,
-      isOpen,
-      onFocus,
-      handleSelectDate
+      ...useDatePicker(calendar),
     }
   }
 })
@@ -63,7 +54,8 @@ export default defineComponent({
               class="ki-picker-cell"
               :class="{
                 prev: cell.prev,
-                next: cell.next
+                next: cell.next,
+                active: isSameDay(calendarActiveItem, cell)
               }"
               @click="handleSelectDate(cell)"
               v-for="(cell, cellIndex) in row"
