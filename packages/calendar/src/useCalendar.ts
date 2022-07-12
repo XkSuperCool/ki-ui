@@ -63,7 +63,7 @@ export default function useCalendar() {
         last = new Date(currentDate.year - 1, 12, 0).getDate()
       } else {
         // 下个月
-        last = new Date(currentDate.year, currentDate.month + 1, 0).getDate()
+        last = new Date(currentDate.year, currentDate.month - 1, 0).getDate()
       }
       // (currentDate.firstDayWeek - 1): 减一后的值才为该填充的数量
       // (columnIndex + 1): index 从 0 开始，所以要加 1
