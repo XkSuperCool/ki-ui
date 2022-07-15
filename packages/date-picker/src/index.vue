@@ -18,7 +18,7 @@ export default defineComponent({
   props: {
     to: {
       type: [String, Boolean] as PropType<string | false>,
-      default: false
+      default: 'body'
     }
   },
 
@@ -27,7 +27,7 @@ export default defineComponent({
 
     return {
       ...calendar,
-      ...useDatePicker(calendar),
+      ...useDatePicker(calendar)
     }
   }
 })
@@ -35,17 +35,30 @@ export default defineComponent({
 
 <template>
   <div class="ki-date-picker">
-    <Input :model-value="selectDate.toLocaleDateString()" readonly @focus="onFocus" />
-
+    <Input
+      :model-value="selectDate.toLocaleDateString()"
+      readonly
+      @focus="onFocus"
+    />
     <Teleport v-if="isOpen" :to="to" :disabled="!to">
-      <div class="ki-picker-panel">
+      <div
+        class="ki-picker-panel"
+        :style="{ left: panelPosition.left + 'px', top: panelPosition.top + 'px' }"
+      >
         <div class="ki-picker-tools">
-          <Icon @click="toPrevMonth" class="ki-picker-change-month" type="angle-left" />
+          <Icon
+            @click="toPrevMonth"
+            class="ki-picker-change-month"
+            type="angle-left"
+          />
           <div class="ki-picker-current-date">
-            {{ currentDate.year }} 年
-            {{ currentDate.month }} 月
+            {{ currentDate.year }} 年 {{ currentDate.month }} 月
           </div>
-          <Icon @click="toNextMonth" class="ki-picker-change-month" type="angle-right" />
+          <Icon
+            @click="toNextMonth"
+            class="ki-picker-change-month"
+            type="angle-right"
+          />
         </div>
 
         <div class="ki-picker-week">
@@ -73,9 +86,7 @@ export default defineComponent({
         </div>
 
         <div class="ki-picker-footer">
-          <div class="ki-picker-footer-now" @click="toNow">
-            此刻
-          </div>
+          <div class="ki-picker-footer-now" @click="toNow">此刻</div>
         </div>
       </div>
     </Teleport>
