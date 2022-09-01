@@ -19,3 +19,27 @@
   </script>
 ```
 :::
+
+### 禁用特定时间
+禁用特定时间
+
+::: demo
+```html
+  <template>
+    <div>
+      <date-picker :is-date-disabled="disabledDate"/>
+    </div>
+  </template>
+
+  <script>
+    export default {
+      methods: {
+        disabledDate(time) {
+          const date = new Date(time).getDate()
+          return date < 15
+        }
+      }
+    }
+  </script>
+```
+:::

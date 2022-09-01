@@ -19,11 +19,16 @@ export default defineComponent({
     to: {
       type: [String, Boolean] as PropType<string | false>,
       default: 'body'
+    },
+
+    isDateDisabled: {
+      type: Function as PropType<(time: number) => boolean>,
+      default: () => false
     }
   },
 
-  setup() {
-    const calendar = useCalendar()
+  setup(props) {
+    const calendar = useCalendar({ isDateDisabled: props.isDateDisabled })
 
     return {
       ...calendar,
@@ -43,7 +48,10 @@ export default defineComponent({
     <Teleport v-if="isOpen" :to="to" :disabled="!to">
       <div
         class="ki-picker-panel"
-        :style="{ left: panelPosition.left + 'px', top: panelPosition.top + 'px' }"
+        :style="{
+          left: panelPosition.left + 'px',
+          top: panelPosition.top + 'px'
+        }"
       >
         <div class="ki-picker-tools">
           <Icon
@@ -72,11 +80,11 @@ export default defineComponent({
             <div
               class="ki-picker-cell"
               :class="{
-                prev: cell.prev,
+                prev: cell.prev || cell.disabled,
                 next: cell.next,
                 active: isSameDay(calendarActiveItem, cell)
               }"
-              @click="handleSelectDate(cell)"
+              @click="!cell.disabled && handleSelectDate(cell)"
               v-for="(cell, cellIndex) in row"
               :key="cellIndex"
             >

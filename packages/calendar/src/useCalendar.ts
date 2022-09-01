@@ -7,10 +7,15 @@ export interface CalendarDateItem {
   next?: boolean
   prev?: boolean
   current?: boolean
+  disabled?: boolean
+}
+
+interface Options {
+  isDateDisabled?: (time: number) => boolean
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export default function useCalendar() {
+export default function useCalendar(options?: Options) {
   const ROW_NUM = 6
   const COLUMN_NUM = 7
   const WEEKS = ['一', '二', '三', '四', '五', '六', '日']
@@ -111,6 +116,12 @@ export default function useCalendar() {
         ) {
           current = item
         }
+        
+        if (options?.isDateDisabled) {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          item.disabled = options.isDateDisabled(new Date(item.year!, item.month! - 1, item.day).getTime())
+        }
+
         arr.push(item)
       }
       calendar.push(arr)
